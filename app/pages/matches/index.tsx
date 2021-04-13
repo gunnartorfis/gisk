@@ -23,7 +23,7 @@ export const MatchesList = () => {
         {matches.map((match) => (
           <li key={match.id}>
             <Link href={`/matches/${match.id}`}>
-              <a>{match.name}</a>
+              <a>{match.id}</a>
             </Link>
           </li>
         ))}
