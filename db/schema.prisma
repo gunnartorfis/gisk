@@ -10,8 +10,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// --------------------------------------
-
 model User {
   id             Int      @id @default(autoincrement())
   createdAt      DateTime @default(now())
@@ -21,8 +19,11 @@ model User {
   hashedPassword String?
   role           String   @default("USER")
 
-  tokens   Token[]
-  sessions Session[]
+  tokens           Token[]
+  sessions         Session[]
+  groups           Group[]
+  userGroupMatches UserGroupMatch[]
+  userGroup        UserGroup[]
 }
 
 model Session {
@@ -57,9 +58,57 @@ model Token {
   @@unique([hashedToken, type])
 }
 
-// NOTE: It's highly recommended to use an enum for the token type
-//       but enums only work in Postgres.
-//       See: https://blitzjs.com/docs/database-overview#switch-to-postgresql
-// enum TokenType {
-//   RESET_PASSWORD
-// }
+model UserGroup {
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  group     Group    @relation(fields: [groupId], references: [id])
+  groupId   Int
+  role      String   @default("USER")
+  pending   Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@id([userId, groupId])
+}
+
+model Group {
+  id             Int              @id @default(autoincrement())
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  name           String?
+  inviteCode     String           @unique
+  users          User             @relation(fields: [id], references: [id])
+  UserGroupMatch UserGroupMatch[]
+  UserGroup      UserGroup[]
+}
+
+model Team {
+  id          Int      @id @default(autoincrement())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        Int
+  image       String?
+  homeMatches Match[]  @relation("homeMatches")
+  awayMatches Match[]  @relation("awayMatches")
+}
+
+model Match {
+  id         Int      @id @default(autoincrement())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  homeTeam   Team     @relation("homeMatches", fields: [id], references: [id])
+  awayTeam   Team     @relation("awayMatches", fields: [id], references: [id])
+  kickOff    DateTime
+  resultHome Int?
+  resultAway Int?
+}
+
+model UserGroupMatch {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  result1   Int
+  resultX   Int
+  result2   Int
+  user      User     @relation(fields: [id], references: [id])
+  group     Group    @relation(fields: [id], references: [id])
+}
