@@ -56,6 +56,11 @@ const GroupsPage: BlitzPage = () => {
             <a>Create Group</a>
           </Link>
         </Button>
+        <Button variant="outline">
+          <Link href="/groups/new">
+            <a>Got an invite code?</a>
+          </Link>
+        </Button>
 
         <Suspense fallback={<div>Loading...</div>}>
           <GroupsList />
