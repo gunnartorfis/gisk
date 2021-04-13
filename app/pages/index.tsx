@@ -7,21 +7,27 @@ import { BlitzPage, Link, useMutation } from "blitz"
 import { Suspense } from "react"
 
 const Dashboard = () => {
-  return (
-    <Box>
-      <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-        <Button>
-          <Link href="/groups">Groups</Link>
-        </Button>
-        <Button>
-          <Link href="/matches">Matches</Link>
-        </Button>
-      </Grid>
-    </Box>
-  )
+  const currentUser = useCurrentUser()
+
+  if (currentUser) {
+    return (
+      <Box>
+        <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+          <Button>
+            <Link href="/groups">Groups</Link>
+          </Button>
+          <Button>
+            <Link href="/matches">Matches</Link>
+          </Button>
+        </Grid>
+      </Box>
+    )
+  }
+
+  return <UserInfo />
 }
 
-const UserInfo = () => {
+const UserInfo = ({ hideLoginSignup }: { hideLoginSignup?: boolean }) => {
   const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
 
@@ -43,22 +49,26 @@ const UserInfo = () => {
         </Box>
       </Box>
     )
-  } else {
-    return (
-      <>
-        <Button variant="solid">
-          <Link href="/signup">
-            <a className="">
-              <strong>Sign Up</strong>
-            </a>
-          </Link>
-        </Button>
-        <Button>
-          <Link href="/login">Login</Link>
-        </Button>
-      </>
-    )
   }
+
+  if (hideLoginSignup) {
+    return null
+  }
+
+  return (
+    <>
+      <Button variant="solid">
+        <Link href="/signup">
+          <a className="">
+            <strong>Sign Up</strong>
+          </a>
+        </Link>
+      </Button>
+      <Button>
+        <Link href="/login">Login</Link>
+      </Button>
+    </>
+  )
 }
 
 const Home: BlitzPage = () => {
@@ -99,7 +109,7 @@ const Home: BlitzPage = () => {
             Made by Gunnar with Blitz
           </a>
           <Suspense fallback="Loading...">
-            <UserInfo />
+            <UserInfo hideLoginSignup />
           </Suspense>
         </Box>
       </footer>
