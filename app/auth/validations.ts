@@ -1,6 +1,6 @@
 import * as z from "zod"
 
-const password = z.string().min(10).max(100)
+const password = z.string().min(5).max(100)
 
 export const Signup = z.object({
   email: z.string().email(),

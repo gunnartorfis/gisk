@@ -3,6 +3,7 @@ import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import login from "app/auth/mutations/login"
 import { Login } from "app/auth/validations"
+import { Container, Text } from "@chakra-ui/layout"
 
 type LoginFormProps = {
   onSuccess?: () => void
@@ -12,8 +13,10 @@ export const LoginForm = (props: LoginFormProps) => {
   const [loginMutation] = useMutation(login)
 
   return (
-    <div>
-      <h1>Login</h1>
+    <Container centerContent>
+      <Text fontSize="3xl" textAlign="center" as="b">
+        Login
+      </Text>
 
       <Form
         submitText="Login"
@@ -47,7 +50,7 @@ export const LoginForm = (props: LoginFormProps) => {
       <div style={{ marginTop: "1rem" }}>
         Or <Link href="/signup">Sign Up</Link>
       </div>
-    </div>
+    </Container>
   )
 }
 
