@@ -823,6 +823,21 @@
   dependencies:
     "@chakra-ui/utils" "1.0.2"
 
+"@chakra-ui/icon@1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icon/-/icon-1.1.6.tgz#ccad476148d7edd5c49f1621ea53f2ed01ec2c5e"
+  integrity sha512-BK1tQC9tmZw/YQQJX9KUOqJJUazj7UdHXwa+jPfa6fgwexhsVIMKqucc6FQhbUNG+HvVzcHy7lINEJcct+VqgQ==
+  dependencies:
+    "@chakra-ui/utils" "1.5.2"
+
+"@chakra-ui/icons@1.0.10":
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/icons/-/icons-1.0.10.tgz#19fac3b73f574162a8e64fa086c3d0adff7a53fd"
+  integrity sha512-D93O7uQ07VjINd51gIRpd7kcMme/jTRtsefbuawYxmIbe6uDaNAIaYfDHM/lJPomdk/iaSXC68ESK6vyyfif+A==
+  dependencies:
+    "@chakra-ui/icon" "1.1.6"
+    "@types/react" "^17.0.0"
+
 "@chakra-ui/image@1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@chakra-ui/image/-/image-1.0.2.tgz#737c4dc91f4428aa5a60f190908f53b970bba51c"
@@ -1168,6 +1183,15 @@
     css-box-model "1.2.1"
     lodash.mergewith "4.6.2"
     object-assign "4.1.1"
+
+"@chakra-ui/utils@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@chakra-ui/utils/-/utils-1.5.2.tgz#48bcbaf4856bd9c1c877b69c7edc7cb767454dc9"
+  integrity sha512-oGBIx93b4bDHm6fpRZp6QQ5hJQOElVi2yI1/ptlSiCCSOKfyuqh8fu+PYMsinWXp44kmTQ4gfEhuRIY4Z/vhbg==
+  dependencies:
+    "@types/lodash.mergewith" "4.6.6"
+    css-box-model "1.2.1"
+    lodash.mergewith "4.6.2"
 
 "@chakra-ui/visually-hidden@1.0.2":
   version "1.0.2"
@@ -2240,7 +2264,7 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@17.0.3", "@types/react@>=16.9.0":
+"@types/react@*", "@types/react@17.0.3", "@types/react@>=16.9.0", "@types/react@^17.0.0":
   version "17.0.3"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.3.tgz#ba6e215368501ac3826951eef2904574c262cc79"
   integrity sha512-wYOUxIgs2HZZ0ACNiIayItyluADNbONl7kt8lkLjVK8IitMH5QMyAh75Fwhmo37r1m7L2JaFj03sIfxBVDvRAg==
@@ -4851,6 +4875,11 @@ execa@^5.0.0:
     onetime "^5.1.2"
     signal-exit "^3.0.3"
     strip-final-newline "^2.0.0"
+
+exenv@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+  integrity sha1-KueOhdmJQVhnCwPUe+wfA72Ru50=
 
 exit@^0.1.2:
   version "0.1.2"
@@ -8776,7 +8805,7 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@15.7.2, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9083,6 +9112,21 @@ react-is@16.13.1, react-is@^16.7.0, react-is@^16.8.1:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
+
+react-lifecycles-compat@^3.0.0:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+  integrity sha512-fBASbA6LnOU9dOU2eW7aQ8xmYBSXUIWr+UmF9b1efZBazGNO+rcXT/icdKnYm2pTwcRylVUYwW7H1PHfLekVzA==
+
+react-modal@3.13.1:
+  version "3.13.1"
+  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.13.1.tgz#a02dce63bbfee7582936f1e9835d518ef8f56453"
+  integrity sha512-m6yXK7I4YKssQnsjHK7xITSXy2O81BSOHOsg0/uWAsdKtuT9HF2tdoYhRuxNNQg2V+LgepsoHUPJKS8m6no+eg==
+  dependencies:
+    exenv "^1.2.0"
+    prop-types "^15.5.10"
+    react-lifecycles-compat "^3.0.0"
+    warning "^4.0.3"
 
 react-query@2.5.12:
   version "2.5.12"
