@@ -1,25 +1,13 @@
 import { Button } from "@chakra-ui/button"
 import { Box, Center, Container, Grid, Text } from "@chakra-ui/layout"
-import {
-  FormControl,
-  FormLabel,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { useDisclosure } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
 import CreateLeagueModal from "app/core/components/CreateLeagueModal"
 import Welcome from "app/core/components/Welcome"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import LeagueInvite from "app/leagues/components/LeagueInvite"
-import createLeague from "app/leagues/mutations/createLeague"
-import { BlitzPage, Link, useMutation, useRouter } from "blitz"
+import { BlitzPage, Link, useMutation } from "blitz"
 import React, { Suspense } from "react"
 import { FiTv, FiUsers } from "react-icons/fi"
 
