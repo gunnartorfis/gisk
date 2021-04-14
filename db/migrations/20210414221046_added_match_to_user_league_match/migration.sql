@@ -1,0 +1,2 @@
+-- AddForeignKey
+ALTER TABLE "UserLeagueMatch" ADD FOREIGN KEY ("id") REFERENCES "Match"("id") ON DELETE CASCADE ON UPDATE CASCADE;

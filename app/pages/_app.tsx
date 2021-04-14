@@ -8,13 +8,14 @@ import {
 } from "blitz"
 import { ErrorBoundary } from "react-error-boundary"
 import { queryCache } from "react-query"
-import LoginForm from "app/auth/components/LoginForm"
+import LoginForm from "app/auth/pages/login"
 import React from "react"
 import { ChakraProvider } from "@chakra-ui/react"
 
 import { extendTheme } from "@chakra-ui/react"
 import ButtonTheme from "app/core/chakraTheme/Button"
 import Colors from "app/core/chakraTheme/colors"
+import Home from "."
 const theme = extendTheme({
   components: {
     Button: ButtonTheme,
@@ -45,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
-    return <LoginForm onSuccess={resetErrorBoundary} />
+    return null
   } else if (error instanceof AuthorizationError) {
     return (
       <ErrorComponent

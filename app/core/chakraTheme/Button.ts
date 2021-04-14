@@ -23,8 +23,9 @@ const ButtonTheme = {
     solid: {
       bg: "primary",
       color: "white",
+      borderRadius: "400px",
       ":hover": {
-        bg: "primarydarker",
+        bg: "secondary",
       },
     },
     outline: {
