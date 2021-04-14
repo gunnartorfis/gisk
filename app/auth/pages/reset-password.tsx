@@ -28,7 +28,10 @@ const ResetPasswordPage: BlitzPage = () => {
       ) : (
         <Form
           submitText="Reset Password"
-          schema={ResetPassword.omit({ token: true })}
+          schema={ResetPassword.refine((x) => ({
+            password: x.password,
+            passwordConfirmation: x.passwordConfirmation,
+          }))}
           initialValues={{ password: "", passwordConfirmation: "" }}
           onSubmit={async (values) => {
             try {
