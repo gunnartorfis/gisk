@@ -20,7 +20,6 @@ model User {
   role              String            @default("USER")
   tokens            Token[]
   sessions          Session[]
-  leagues           League[]
   userLeagueMatches UserLeagueMatch[]
   userLeague        UserLeague[]
 }
@@ -63,7 +62,6 @@ model UserLeague {
   league    League   @relation(fields: [leagueId], references: [id])
   leagueId  Int
   role      String   @default("USER")
-  pending   Boolean  @default(true)
   createdAt DateTime @default(now())
 
   @@id([userId, leagueId])
@@ -75,7 +73,6 @@ model League {
   updatedAt       DateTime          @updatedAt
   name            String?
   inviteCode      String            @unique
-  users           User              @relation(fields: [id], references: [id])
   UserLeagueMatch UserLeagueMatch[]
   UserLeague      UserLeague[]
 }
@@ -84,21 +81,23 @@ model Team {
   id          Int      @id @default(autoincrement())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  name        Int
-  image       String?
+  name        String   @unique
+  countryCode String   @unique
+  group       String
   homeMatches Match[]  @relation("homeMatches")
   awayMatches Match[]  @relation("awayMatches")
 }
 
 model Match {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  homeTeam   Team     @relation("homeMatches", fields: [id], references: [id])
-  awayTeam   Team     @relation("awayMatches", fields: [id], references: [id])
-  kickOff    DateTime
-  resultHome Int?
-  resultAway Int?
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  homeTeam          Team              @relation("homeMatches", fields: [id], references: [id])
+  awayTeam          Team              @relation("awayMatches", fields: [id], references: [id])
+  kickOff           DateTime
+  resultHome        Int?
+  resultAway        Int?
+  userLeagueMatches UserLeagueMatch[]
 }
 
 model UserLeagueMatch {
@@ -110,4 +109,5 @@ model UserLeagueMatch {
   result2   Int
   user      User     @relation(fields: [id], references: [id])
   league    League   @relation(fields: [id], references: [id])
+  match     Match    @relation(fields: [id], references: [id])
 }

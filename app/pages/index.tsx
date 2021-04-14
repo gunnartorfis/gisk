@@ -13,6 +13,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
+import CreateLeagueModal from "app/core/components/CreateLeagueModal"
+import Welcome from "app/core/components/Welcome"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import LeagueInvite from "app/leagues/components/LeagueInvite"
@@ -66,15 +68,12 @@ const DashboardItem: React.FunctionComponent<{
 const Dashboard = () => {
   const currentUser = useCurrentUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const router = useRouter()
-  const initialRef = React.useRef<any>(null)
-  const [createLeagueMutation, { isLoading }] = useMutation(createLeague)
 
   if (!currentUser) {
     return <UserInfo />
   }
 
-  const userIsNotInLeague = currentUser.leagues?.length === 0
+  const userIsNotInLeague = currentUser.userLeague?.length === 0
 
   if (userIsNotInLeague) {
     return (
@@ -93,45 +92,7 @@ const Dashboard = () => {
           <Box w="2px" h="100px" bg="gray.100" marginX="80px" />
           <LeagueInvite />
         </Box>
-        <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault()
-              }}
-            >
-              <ModalHeader>New league</ModalHeader>
-              <ModalBody pb={6}>
-                <FormControl>
-                  <FormLabel>League name</FormLabel>
-                  <Input ref={initialRef} placeholder="League name" />
-                </FormControl>
-              </ModalBody>
-
-              <ModalFooter>
-                <Button
-                  colorScheme="blue"
-                  type="submit"
-                  mr={3}
-                  onClick={async () => {
-                    if (initialRef?.current !== null) {
-                      await createLeagueMutation({
-                        name: initialRef.current?.value,
-                      })
-                      router.push("/matches")
-                    }
-                  }}
-                >
-                  Save
-                </Button>
-                <Button variant="ghost" onClick={onClose} disabled={isLoading}>
-                  Cancel
-                </Button>
-              </ModalFooter>
-            </form>
-          </ModalContent>
-        </Modal>
+        <CreateLeagueModal isOpen={isOpen} onClose={onClose} />
       </Center>
     )
   }
@@ -180,54 +141,17 @@ const UserInfo = ({ hideLoginSignup }: { hideLoginSignup?: boolean }) => {
     return null
   }
 
-  return (
-    <>
-      <Button variant="solid">
-        <Link href="/signup">
-          <a className="">
-            <strong>Sign Up</strong>
-          </a>
-        </Link>
-      </Button>
-      <Button>
-        <Link href="/login">Login</Link>
-      </Button>
-    </>
-  )
+  return <Welcome />
 }
 
 const Home: BlitzPage = () => {
   return (
     <div className="container">
-      {/* <Container> */}
-      <header></header>
       <main>
         <Suspense fallback="Loading...">
           <Dashboard />
         </Suspense>
       </main>
-      {/* </Container> */}
-
-      <footer>
-        <Box
-          bg="gray.100"
-          w="100%"
-          h="60px"
-          border="1px"
-          padding="0 16px"
-          borderColor="#eaeaea"
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-        >
-          <a href="https://twitter.com/gunnarthedev" target="_blank" rel="noopener noreferrer">
-            Made by Gunnar with Blitz
-          </a>
-          <Suspense fallback="Loading...">
-            <UserInfo hideLoginSignup />
-          </Suspense>
-        </Box>
-      </footer>
 
       <style jsx global>{`
         @import url("https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;700&display=swap");
@@ -246,7 +170,6 @@ const Home: BlitzPage = () => {
           box-sizing: border-box;
         }
         .container {
-          min-height: 100vh;
           display: flex;
           flex-direction: column;
           justify-content: center;

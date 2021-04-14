@@ -7,7 +7,6 @@ import {
   SunIcon,
 } from "@chakra-ui/icons"
 import {
-  Avatar,
   Box,
   Button,
   Collapse,
@@ -25,17 +24,21 @@ import {
   PopoverTrigger,
   Stack,
   Text,
-  useBreakpointValue,
   useColorMode,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { League } from "@prisma/client"
 import logout from "app/auth/mutations/logout"
 import getLeagues from "app/leagues/queries/getLeagues"
-import { useMutation, useQuery } from "blitz"
-import { Suspense } from "react"
-import { FiLogOut, FiSettings, FiCoffee } from "react-icons/fi"
-import Colors from "../chakraTheme/colors"
+import { useMutation, useQuery, useSession } from "blitz"
+import { Suspense, useEffect } from "react"
+import { FiCoffee, FiLogOut, FiSettings } from "react-icons/fi"
+import CreateLeagueModal, {
+  CREATE_LEAGUE_MODAL_LEAGUE_CREATED,
+} from "../components/CreateLeagueModal"
+import GradientTitle from "../components/GradientTitle"
+import Emitter from "../eventEmitter/emitter"
 import { useCurrentUser } from "../hooks/useCurrentUser"
 
 export const HeaderFallback = () => {
@@ -54,21 +57,61 @@ export const HeaderFallback = () => {
   )
 }
 
-const useNavItems = () => {
-  const [{ leagues }] = useQuery(getLeagues, {})
+const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () => void }) => {
+  const { userId, isLoading } = useSession()
+  const getLeaguesQueryDisabled = !userId && !isLoading
+
+  const [{ leagues } = { leagues: [] as League[] }, { refetch }] = useQuery(
+    getLeagues,
+    {},
+    {
+      enabled: !getLeaguesQueryDisabled,
+    }
+  )
+
+  useEffect(() => {
+    const onLeagueCreated = () => {
+      refetch()
+    }
+    Emitter.on(CREATE_LEAGUE_MODAL_LEAGUE_CREATED, onLeagueCreated)
+
+    return () => {
+      Emitter.off(CREATE_LEAGUE_MODAL_LEAGUE_CREATED, onLeagueCreated)
+    }
+  }, [refetch])
+
+  if (getLeaguesQueryDisabled) {
+    return []
+  }
 
   const navItems: Array<NavItem> = [
     {
       label: "Leagues",
-      children: leagues.map((g) => ({
-        label: g.name ?? "",
-        subLabel: "",
-        href: `/leagues/${g.id}`,
-      })),
+      children:
+        leagues.length > 0
+          ? [
+              ...leagues.map((g) => ({
+                label: g.name ?? "",
+                subLabel: "",
+                href: `/leagues/${g.id}`,
+              })),
+              {
+                label: "New league",
+                action: () => {
+                  onClickCreateNewLeague()
+                },
+              },
+            ]
+          : undefined,
+      href: leagues.length === 0 ? "/" : undefined,
     },
     {
       label: "Matches",
       href: "/matches",
+    },
+    {
+      label: "Teams",
+      href: "/teams",
     },
   ]
 
@@ -77,7 +120,17 @@ const useNavItems = () => {
 
 export default function Header() {
   const { isOpen, onToggle } = useDisclosure()
+  const {
+    isOpen: isOpenCreateModal,
+    onOpen: onOpenCreateModal,
+    onClose: onCloseCreateModal,
+  } = useDisclosure()
   const { colorMode, toggleColorMode } = useColorMode()
+  const navItems = useNavItems({
+    onClickCreateNewLeague: () => {
+      onOpenCreateModal()
+    },
+  })
 
   return (
     <Box>
@@ -104,41 +157,26 @@ export default function Header() {
             aria-label={"Toggle Navigation"}
           />
         </Flex>
-        <Flex flex={{ base: 1 }} justify={{ base: "center", md: "start" }}>
+        <Flex flex={{ base: 1 }} justify={{ base: "start", md: "start" }}>
           <Link
             href="/"
             _hover={{
               textDecor: "none",
             }}
           >
-            <Text
-              textAlign={useBreakpointValue({ base: "center", md: "left" })}
-              fontFamily={"heading"}
-              fontWeight="extrabold"
-              bgGradient={`linear(to-l, ${Colors.secondary},${Colors.primary})"`}
-              // bgGradient="linear(to-l, #7928CA,#FF0080)"
-              bgClip="text"
-              fontSize={["xl", "xl"]}
-              _selection={{
-                color: "white",
-                background: Colors.secondary,
-              }}
-              color={useColorModeValue("gray.800", "white")}
-            >
-              Euro 2020
-            </Text>
+            <GradientTitle smaller>Euro 2020</GradientTitle>
           </Link>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <Suspense fallback="">
-              <DesktopNav />
+              <DesktopNav navItems={navItems} />
             </Suspense>
           </Flex>
         </Flex>
-        <Flex dir="row" alignItems="center">
-          <Box cursor="pointer" onClick={toggleColorMode} mr="8px">
+        <Flex dir="row" alignItems="center" justifyContent="center">
+          <Flex flex={1} cursor="pointer" onClick={toggleColorMode} mr="8px">
             {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-          </Box>
+          </Flex>
           <Suspense fallback="Loading...">
             <HeaderUser />
           </Suspense>
@@ -147,9 +185,10 @@ export default function Header() {
 
       <Collapse in={isOpen} animateOpacity>
         <Suspense fallback="">
-          <MobileNav />
+          <MobileNav navItems={navItems} />
         </Suspense>
       </Collapse>
+      <CreateLeagueModal onClose={onCloseCreateModal} isOpen={isOpenCreateModal} />
     </Box>
   )
 }
@@ -163,12 +202,7 @@ const HeaderUser = () => {
       <Flex alignItems={"center"}>
         <Menu>
           <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"}>
-            <Avatar
-              size={"sm"}
-              src={
-                "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
-              }
-            />
+            <Text>{currentUser.name}</Text>
           </MenuButton>
           <MenuList>
             <MenuItem icon={<FiSettings />}>Settings</MenuItem>
@@ -188,31 +222,12 @@ const HeaderUser = () => {
     )
   }
 
-  return (
-    <Stack flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
-      <Button as={"a"} fontSize={"sm"} fontWeight={400} variant={"link"} href={"/login"}>
-        Sign In
-      </Button>
-      <Button
-        display={{ base: "none", md: "inline-flex" }}
-        fontSize={"sm"}
-        fontWeight={600}
-        color={"white"}
-        bg={"pink.400"}
-        href={"/signup"}
-        _hover={{
-          bg: "pink.300",
-        }}
-      >
-        Sign Up
-      </Button>
-    </Stack>
-  )
+  return null
 }
 
-const DesktopNav = () => {
-  const navItems = useNavItems()
-
+const DesktopNav: React.FunctionComponent<{
+  navItems: Array<NavItem>
+}> = ({ navItems }) => {
   const linkColor = useColorModeValue("gray.600", "gray.200")
   const linkColorHover = useColorModeValue("gray.800", "white")
   const popoverContentBgColor = useColorModeValue("white", "gray.800")
@@ -221,7 +236,7 @@ const DesktopNav = () => {
     <Stack direction={"row"} spacing={4}>
       {navItems.map((navItem) => (
         <Box key={navItem.label}>
-          <Popover trigger={"hover"} placement={"bottom-start"}>
+          <Popover>
             <PopoverTrigger>
               <Link
                 p={2}
@@ -238,22 +253,24 @@ const DesktopNav = () => {
               </Link>
             </PopoverTrigger>
 
-            {navItem.children && (
-              <PopoverContent
-                border={0}
-                boxShadow={"xl"}
-                bg={popoverContentBgColor}
-                p={4}
-                rounded={"xl"}
-                minW={"sm"}
-              >
-                <Stack>
-                  {navItem.children.map((child) => (
-                    <DesktopSubNav key={child.label} {...child} />
-                  ))}
-                </Stack>
+            {navItem.children ? (
+              <PopoverContent>
+                <Box
+                  border={0}
+                  boxShadow={"xl"}
+                  bg={popoverContentBgColor}
+                  p={4}
+                  rounded={"xl"}
+                  minW={"sm"}
+                >
+                  <Stack>
+                    {navItem.children.map((child) => (
+                      <DesktopSubNav key={child.label} {...child} />
+                    ))}
+                  </Stack>
+                </Box>
               </PopoverContent>
-            )}
+            ) : null}
           </Popover>
         </Box>
       ))}
@@ -261,10 +278,11 @@ const DesktopNav = () => {
   )
 }
 
-const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+const DesktopSubNav = ({ label, href, subLabel, action }: NavItem) => {
   return (
     <Link
       href={href}
+      onClick={action ? action : () => {}}
       role={"group"}
       display={"block"}
       p={2}
@@ -273,7 +291,12 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
-          <Text transition={"all .3s ease"} _groupHover={{ color: "primary.400" }} fontWeight={500}>
+          <Text
+            transition={"all .3s ease"}
+            _groupHover={{ color: action ? "secondary" : "primary.400" }}
+            color={action ? "primary" : undefined}
+            fontWeight={500}
+          >
             {label}
           </Text>
           <Text fontSize={"sm"}>{subLabel}</Text>
@@ -294,8 +317,9 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   )
 }
 
-const MobileNav = () => {
-  const navItems = useNavItems()
+const MobileNav: React.FunctionComponent<{
+  navItems: Array<NavItem>
+}> = ({ navItems }) => {
   return (
     <Stack bg={useColorModeValue("white", "gray.800")} p={4} display={{ md: "none" }}>
       {navItems.map((navItem) => (
@@ -305,9 +329,8 @@ const MobileNav = () => {
   )
 }
 
-const MobileNavItem = ({ label, children, href }: NavItem) => {
+const MobileNavItem = ({ label, children, href, action }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure()
-
   return (
     <Stack spacing={4} onClick={children && onToggle}>
       <Flex
@@ -323,7 +346,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         <Text fontWeight={600} color={useColorModeValue("gray.600", "gray.200")}>
           {label}
         </Text>
-        {children && (
+        {children ? (
           <Icon
             as={ChevronDownIcon}
             transition={"all .25s ease-in-out"}
@@ -331,7 +354,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
             w={6}
             h={6}
           />
-        )}
+        ) : null}
       </Flex>
 
       <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
@@ -343,12 +366,22 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           borderColor={useColorModeValue("gray.200", "gray.700")}
           align={"start"}
         >
-          {children &&
-            children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
-                {child.label}
-              </Link>
-            ))}
+          {children
+            ? children.map((child) => {
+                return (
+                  <Link
+                    key={child.label}
+                    py={2}
+                    href={child.href}
+                    onClick={child.action ? child.action : () => {}}
+                    color={child.action ? "primary" : undefined}
+                    fontWeight={child.action ? "bold" : undefined}
+                  >
+                    {child.label}
+                  </Link>
+                )
+              })
+            : null}
         </Stack>
       </Collapse>
     </Stack>
@@ -360,45 +393,5 @@ interface NavItem {
   subLabel?: string
   children?: Array<NavItem>
   href?: string
+  action?: () => void
 }
-
-const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Leagues",
-    children: [
-      {
-        label: "Explore Design Work",
-        subLabel: "Trending Design to inspire you",
-        href: "#",
-      },
-      {
-        label: "New & Noteworthy",
-        subLabel: "Up-and-coming Designers",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Find Work",
-    children: [
-      {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
-        href: "#",
-      },
-      {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Learn Design",
-    href: "#",
-  },
-  {
-    label: "Hire Designers",
-    href: "#",
-  },
-]

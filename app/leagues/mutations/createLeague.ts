@@ -25,24 +25,28 @@ const createLeague = resolver.pipe(
   async (input, ctx) => {
     const userId = ctx.session.userId
     const inviteCode = makeInviteCode()
-    await db.league.create({
+
+    const newLeague = await db.league.create({
       data: {
         name: input.name,
         inviteCode,
-        users: {
-          connect: {
-            id: userId,
-          },
-        },
         UserLeague: {
           create: {
             userId,
             role: "ADMIN",
-            pending: false,
           },
         },
       },
     })
+
+    // ToDo connect matches to every user in league and also on user join? Whats the best way to do this
+    // const matches = db.userLeagueMatch.create({
+    //   data: {
+    //     match,
+    //   },
+    // })
+
+    return newLeague
   }
 )
 

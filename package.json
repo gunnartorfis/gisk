@@ -28,13 +28,17 @@
       "eslint --fix"
     ]
   },
+  "resolutions": {
+    "zod": "3.0.0-alpha.33"
+  },
   "dependencies": {
     "@chakra-ui/icons": "1.0.10",
     "@chakra-ui/react": "1.1.2",
     "@emotion/react": "11.1.4",
     "@emotion/styled": "11.0.0",
-    "@prisma/client": "~2.19",
+    "@prisma/client": "2.21.1",
     "blitz": "0.33.1",
+    "eventemitter3": "4.0.7",
     "final-form": "4.20.2",
     "framer-motion": "3.2.0",
     "react": "0.0.0-experimental-6a589ad71",
@@ -44,7 +48,7 @@
     "react-icons": "4.2.0",
     "react-modal": "3.13.1",
     "typescript": "~4.1",
-    "zod": "1.11.13"
+    "zod": "3.0.0-alpha.33"
   },
   "devDependencies": {
     "@types/preview-email": "2.0.0",

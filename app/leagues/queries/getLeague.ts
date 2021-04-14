@@ -3,13 +3,21 @@ import db from "db"
 import * as z from "zod"
 
 const GetLeague = z.object({
-  // This accepts type of undefined, but is required at runtime
-  id: z.number().optional().refine(Boolean, "Required"),
+  id: z.string().transform((val) => Number.parseInt(val)),
 })
 
 export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), async ({ id }) => {
-  // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-  const league = await db.league.findFirst({ where: { id } })
+  const league = await db.league.findFirst({
+    where: { id },
+    include: {
+      UserLeague: {
+        include: {
+          user: true,
+        },
+      },
+      UserLeagueMatch: true,
+    },
+  })
 
   if (!league) throw new NotFoundError()
 

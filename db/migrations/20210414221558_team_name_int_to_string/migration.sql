@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Team" ALTER COLUMN "name" SET DATA TYPE TEXT;
