@@ -14,7 +14,11 @@ export default resolver.pipe(
           inviteCode,
         },
         include: {
-          users: true,
+          UserLeague: {
+            include: {
+              user: true,
+            },
+          },
         },
       })
       return league
