@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  Heading,
-  Link,
-  Stack,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Box, Button, Flex, FormControl, Link, Stack, useColorModeValue } from "@chakra-ui/react"
 import Form, { FormContext, FORM_ERROR } from "app/core/components/Form"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import Layout from "app/core/layouts/Layout"

@@ -1,21 +1,18 @@
-import {
-  AppProps,
-  ErrorComponent,
-  useRouter,
-  AuthenticationError,
-  AuthorizationError,
-  ErrorFallbackProps,
-} from "blitz"
-import { ErrorBoundary } from "react-error-boundary"
-import { queryCache } from "react-query"
-import LoginForm from "app/auth/pages/login"
-import React from "react"
-import { ChakraProvider } from "@chakra-ui/react"
-
-import { extendTheme } from "@chakra-ui/react"
+import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 import ButtonTheme from "app/core/chakraTheme/Button"
 import Colors from "app/core/chakraTheme/colors"
-import Home from "."
+import {
+  AppProps,
+  AuthenticationError,
+  AuthorizationError,
+  ErrorComponent,
+  ErrorFallbackProps,
+  useRouter,
+} from "blitz"
+import React from "react"
+import { ErrorBoundary } from "react-error-boundary"
+import { queryCache } from "react-query"
+
 const theme = extendTheme({
   components: {
     Button: ButtonTheme,
