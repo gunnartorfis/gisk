@@ -1,30 +1,155 @@
 import { Button } from "@chakra-ui/button"
-import { Center, Grid, Text, Box } from "@chakra-ui/layout"
+import { Box, Center, Container, Grid, Text } from "@chakra-ui/layout"
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
+} from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
-import { BlitzPage, Link, useMutation } from "blitz"
-import { Suspense } from "react"
+import LeagueInvite from "app/leagues/components/LeagueInvite"
+import createLeague from "app/leagues/mutations/createLeague"
+import { BlitzPage, Link, useMutation, useRouter } from "blitz"
+import React, { Suspense } from "react"
+import { FiTv, FiUsers } from "react-icons/fi"
+
+const DashboardItem: React.FunctionComponent<{
+  href: string
+}> = ({ children, href }) => {
+  return (
+    <Link href={href}>
+      <Box
+        padding="40px"
+        bg="primary"
+        borderRadius="base"
+        color="white"
+        fontSize="3xl"
+        fontWeight="semibold"
+        cursor="pointer"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        w="200px"
+        h="200px"
+        _hover={{
+          bg: "primarydarker",
+        }}
+        role="group"
+      >
+        <Box
+          transition="transform .2s"
+          _groupHover={{
+            transform: "scale(1.2)",
+          }}
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          _hover={{}}
+        >
+          {children}
+        </Box>
+      </Box>
+    </Link>
+  )
+}
 
 const Dashboard = () => {
   const currentUser = useCurrentUser()
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const router = useRouter()
+  const initialRef = React.useRef<any>(null)
+  const [createLeagueMutation, { isLoading }] = useMutation(createLeague)
 
-  if (currentUser) {
+  if (!currentUser) {
+    return <UserInfo />
+  }
+
+  const userIsNotInLeague = currentUser.leagues?.length === 0
+
+  if (userIsNotInLeague) {
     return (
-      <Box>
-        <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-          <Button>
-            <Link href="/groups">Groups</Link>
-          </Button>
-          <Button>
-            <Link href="/matches">Matches</Link>
-          </Button>
-        </Grid>
-      </Box>
+      <Center mt="16px">
+        <Box
+          display="flex"
+          flexDirection="row"
+          w="100%"
+          alignItems="center"
+          justifyContent="space-between"
+          border="1px"
+          borderColor="gray.100"
+          padding="40px"
+        >
+          <Button onClick={onOpen}>Create a league</Button>
+          <Box w="2px" h="100px" bg="gray.100" marginX="80px" />
+          <LeagueInvite />
+        </Box>
+        <Modal initialFocusRef={initialRef} isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+              }}
+            >
+              <ModalHeader>New league</ModalHeader>
+              <ModalBody pb={6}>
+                <FormControl>
+                  <FormLabel>League name</FormLabel>
+                  <Input ref={initialRef} placeholder="League name" />
+                </FormControl>
+              </ModalBody>
+
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  type="submit"
+                  mr={3}
+                  onClick={async () => {
+                    if (initialRef?.current !== null) {
+                      await createLeagueMutation({
+                        name: initialRef.current?.value,
+                      })
+                      router.push("/matches")
+                    }
+                  }}
+                >
+                  Save
+                </Button>
+                <Button variant="ghost" onClick={onClose} disabled={isLoading}>
+                  Cancel
+                </Button>
+              </ModalFooter>
+            </form>
+          </ModalContent>
+        </Modal>
+      </Center>
     )
   }
 
-  return <UserInfo />
+  return (
+    <Container>
+      <Grid templateColumns="repeat(2, 1fr)" gap={6}>
+        <DashboardItem href="/leagues">
+          <FiUsers color="white" size="40px" />
+          Leagues
+        </DashboardItem>
+        <DashboardItem href="/matches">
+          <FiTv color="white" size="40px" />
+          Matches
+        </DashboardItem>
+      </Grid>
+    </Container>
+  )
 }
 
 const UserInfo = ({ hideLoginSignup }: { hideLoginSignup?: boolean }) => {
@@ -74,24 +199,14 @@ const UserInfo = ({ hideLoginSignup }: { hideLoginSignup?: boolean }) => {
 const Home: BlitzPage = () => {
   return (
     <div className="container">
+      {/* <Container> */}
+      <header></header>
       <main>
-        <Center flexDirection="column">
-          <Text
-            fontSize="6xl"
-            textAlign="center"
-            fontWeight="extrabold"
-            bgGradient="linear(to-l, #7928CA,#FF0080)"
-            bgClip="text"
-          >
-            Euro 2020
-          </Text>
-        </Center>
-        <div className="buttons" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-          <Suspense fallback="Loading...">
-            <Dashboard />
-          </Suspense>
-        </div>
+        <Suspense fallback="Loading...">
+          <Dashboard />
+        </Suspense>
       </main>
+      {/* </Container> */}
 
       <footer>
         <Box

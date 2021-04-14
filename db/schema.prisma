@@ -11,18 +11,18 @@ generator client {
 }
 
 model User {
-  id               Int              @id @default(autoincrement())
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
-  name             String?
-  email            String           @unique
-  hashedPassword   String?
-  role             String           @default("USER")
-  tokens           Token[]
-  sessions         Session[]
-  groups           Group[]
-  userGroupMatches UserGroupMatch[]
-  userGroup        UserGroup[]
+  id                Int               @id @default(autoincrement())
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  name              String?
+  email             String            @unique
+  hashedPassword    String?
+  role              String            @default("USER")
+  tokens            Token[]
+  sessions          Session[]
+  leagues           League[]
+  userLeagueMatches UserLeagueMatch[]
+  userLeague        UserLeague[]
 }
 
 model Session {
@@ -57,27 +57,27 @@ model Token {
   @@unique([hashedToken, type])
 }
 
-model UserGroup {
+model UserLeague {
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
-  group     Group    @relation(fields: [groupId], references: [id])
-  groupId   Int
+  league    League   @relation(fields: [leagueId], references: [id])
+  leagueId  Int
   role      String   @default("USER")
   pending   Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  @@id([userId, groupId])
+  @@id([userId, leagueId])
 }
 
-model Group {
-  id             Int              @id @default(autoincrement())
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
-  name           String?
-  inviteCode     String           @unique
-  users          User             @relation(fields: [id], references: [id])
-  UserGroupMatch UserGroupMatch[]
-  UserGroup      UserGroup[]
+model League {
+  id              Int               @id @default(autoincrement())
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  name            String?
+  inviteCode      String            @unique
+  users           User              @relation(fields: [id], references: [id])
+  UserLeagueMatch UserLeagueMatch[]
+  UserLeague      UserLeague[]
 }
 
 model Team {
@@ -101,7 +101,7 @@ model Match {
   resultAway Int?
 }
 
-model UserGroupMatch {
+model UserLeagueMatch {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -109,5 +109,5 @@ model UserGroupMatch {
   resultX   Int
   result2   Int
   user      User     @relation(fields: [id], references: [id])
-  group     Group    @relation(fields: [id], references: [id])
+  league    League   @relation(fields: [id], references: [id])
 }

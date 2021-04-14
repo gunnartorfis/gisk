@@ -9,7 +9,7 @@ import {
 import { ErrorBoundary } from "react-error-boundary"
 import { queryCache } from "react-query"
 import LoginForm from "app/auth/components/LoginForm"
-
+import React from "react"
 import { ChakraProvider } from "@chakra-ui/react"
 
 import { extendTheme } from "@chakra-ui/react"

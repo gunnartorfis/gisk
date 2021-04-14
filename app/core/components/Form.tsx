@@ -1,5 +1,5 @@
 import { Button } from "@chakra-ui/button"
-import { ReactNode, PropsWithoutRef } from "react"
+import { createContext, ReactNode, PropsWithoutRef } from "react"
 import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
 import * as z from "zod"
 export { FORM_ERROR } from "final-form"
@@ -14,6 +14,12 @@ export interface FormProps<S extends z.ZodType<any, any>>
   onSubmit: FinalFormProps<z.infer<S>>["onSubmit"]
   initialValues?: FinalFormProps<z.infer<S>>["initialValues"]
 }
+
+export const FormContext = createContext<{
+  submitting: boolean
+}>({
+  submitting: false,
+})
 
 export function Form<S extends z.ZodType<any, any>>({
   children,
@@ -38,7 +44,7 @@ export function Form<S extends z.ZodType<any, any>>({
       render={({ handleSubmit, submitting, submitError }) => (
         <form onSubmit={handleSubmit} className="form" {...props}>
           {/* Form fields supplied as children are rendered here */}
-          {children}
+          <FormContext.Provider value={{ submitting }}>{children}</FormContext.Provider>
 
           {submitError && (
             <div role="alert" style={{ color: "red" }}>
