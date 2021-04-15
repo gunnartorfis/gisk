@@ -84,6 +84,17 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
     return []
   }
 
+  if (!leagues) {
+    return [
+      {
+        label: "New league",
+        action: () => {
+          onClickCreateNewLeague()
+        },
+      },
+    ]
+  }
+
   const navItems: Array<NavItem> = [
     {
       label: "Leagues",
@@ -223,7 +234,18 @@ const HeaderUser = () => {
     return (
       <Flex alignItems={"center"} display={{ base: "none", md: "inherit" }}>
         <Menu>
-          <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"}>
+          <MenuButton
+            onMouseDown={(event) => {
+              event.preventDefault()
+            }}
+            onClick={(event) => {
+              event.preventDefault()
+            }}
+            as={Button}
+            rounded={"full"}
+            variant={"link"}
+            cursor={"pointer"}
+          >
             <Text>{currentUser.name}</Text>
           </MenuButton>
           <MenuList>
