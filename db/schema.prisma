@@ -11,7 +11,7 @@ generator client {
 }
 
 model User {
-  id                Int               @id @default(autoincrement())
+  id                String            @id @default(uuid())
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   name              String?
@@ -25,7 +25,7 @@ model User {
 }
 
 model Session {
-  id                 Int       @id @default(autoincrement())
+  id                 String    @id @default(uuid())
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   expiresAt          DateTime?
@@ -35,12 +35,12 @@ model Session {
   publicData         String?
   privateData        String?
 
-  user   User? @relation(fields: [userId], references: [id])
-  userId Int?
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String?
 }
 
 model Token {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   hashedToken String
@@ -50,17 +50,17 @@ model Token {
   expiresAt   DateTime
   sentTo      String
 
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
 
   @@unique([hashedToken, type])
 }
 
 model UserLeague {
   user      User     @relation(fields: [userId], references: [id])
-  userId    Int
+  userId    String
   league    League   @relation(fields: [leagueId], references: [id])
-  leagueId  Int
+  leagueId  String
   role      String   @default("USER")
   createdAt DateTime @default(now())
 
@@ -68,17 +68,16 @@ model UserLeague {
 }
 
 model League {
-  id              Int               @id @default(autoincrement())
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  name            String?
-  inviteCode      String            @unique
-  UserLeagueMatch UserLeagueMatch[]
-  UserLeague      UserLeague[]
+  id         String       @id @default(uuid())
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  name       String?
+  inviteCode String       @unique
+  UserLeague UserLeague[]
 }
 
 model Team {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String   @unique
@@ -89,27 +88,31 @@ model Team {
 }
 
 model Match {
-  id                Int               @id @default(autoincrement())
+  id                String            @id @default(uuid())
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
-  homeTeam          Team              @relation("homeMatches", fields: [id], references: [id])
-  awayTeam          Team              @relation("awayMatches", fields: [id], references: [id])
+  homeTeam          Team              @relation("homeMatches", fields: [homeTeamId], references: [id])
+  homeTeamId        String
+  awayTeam          Team              @relation("awayMatches", fields: [awayTeamId], references: [id])
+  awayTeamId        String
   kickOff           DateTime
   resultHome        Int?
   resultAway        Int?
   round             String
   arena             String
   userLeagueMatches UserLeagueMatch[]
+
+  @@unique([homeTeamId, awayTeamId, kickOff])
 }
 
 model UserLeagueMatch {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  result1   Int
-  resultX   Int
-  result2   Int
-  user      User     @relation(fields: [id], references: [id])
-  league    League   @relation(fields: [id], references: [id])
-  match     Match    @relation(fields: [id], references: [id])
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  resultHome Int
+  resultAway Int
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  match      Match    @relation(fields: [matchId], references: [id])
+  matchId    String
 }

@@ -17,12 +17,11 @@ export function forgotPasswordMailer({ to, token }: ResetPasswordMailer) {
   const resetUrl = `${origin}/reset-password?token=${token}`
 
   const msg = {
-    from: "TODO@example.com",
+    from: "euro2020@euro2020.com",
     to,
     subject: "Your Password Reset Instructions",
     html: `
       <h1>Reset Your Password</h1>
-      <h3>NOTE: You must set up a production email integration in mailers/forgotPasswordMailer.ts</h3>
 
       <a href="${resetUrl}">
         Click here to set a new password

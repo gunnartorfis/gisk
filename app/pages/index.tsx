@@ -92,16 +92,9 @@ const Dashboard = () => {
 
   return (
     <Container>
-      <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-        <DashboardItem href="/leagues">
-          <FiUsers color="white" size="40px" />
-          Leagues
-        </DashboardItem>
-        <DashboardItem href="/matches">
-          <FiTv color="white" size="40px" />
-          Matches
-        </DashboardItem>
-      </Grid>
+      <Text fontSize="3xl" fontWeight="bold">
+        I need some content.
+      </Text>
     </Container>
   )
 }

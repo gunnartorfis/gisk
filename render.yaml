@@ -16,6 +16,8 @@ services:
           property: connectionString
       - key: SESSION_SECRET_KEY
         generateValue: true
+      - key: APP_ORIGIN
+        value: https://euro2020.onrender.com
 
 databases:
   - name: euro2020-db

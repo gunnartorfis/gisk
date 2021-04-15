@@ -1,25 +1,60 @@
-import { paginate, resolver } from "blitz"
-import db, { Prisma } from "db"
+import { resolver } from "blitz"
+import db from "db"
 
-interface GetMatchesInput
-  extends Pick<Prisma.MatchFindManyArgs, "where" | "orderBy" | "skip" | "take"> {}
+export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
+  const userId = ctx.session.userId
 
-export default resolver.pipe(
-  resolver.authorize(),
-  async ({ where, orderBy, skip = 0, take = 100 }: GetMatchesInput) => {
-    // TODO: in multi-tenant app, you must add validation to ensure correct tenant
-    const { items: matches, hasMore, nextPage, count } = await paginate({
-      skip,
-      take,
-      count: () => db.match.count({ where }),
-      query: (paginateArgs) => db.match.findMany({ ...paginateArgs, where, orderBy }),
+  const userLeagueMatchInclude = {
+    match: {
+      include: {
+        awayTeam: true,
+        homeTeam: true,
+      },
+    },
+  }
+
+  const userMatches = await db.userLeagueMatch.findMany({
+    where: {
+      user: { id: userId },
+    },
+    include: userLeagueMatchInclude,
+  })
+
+  const allMatches = await db.match.findMany()
+  const missingMatches = allMatches.filter((m) => {
+    const includesMatch = userMatches
+      .map((um) => {
+        return um.match.id
+      })
+      ?.includes(m.id)
+    return !includesMatch
+  })
+
+  for (let i = 0; i < missingMatches.length; i++) {
+    const missingMatch = missingMatches[i]
+    const newMatch = await db.userLeagueMatch.create({
+      data: {
+        resultAway: 0,
+        resultHome: 0,
+        match: {
+          connect: {
+            id: missingMatch.id,
+          },
+        },
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+      include: userLeagueMatchInclude,
     })
 
-    return {
-      matches,
-      nextPage,
-      hasMore,
-      count,
-    }
+    userMatches.push(newMatch)
   }
-)
+
+  userMatches.sort((a, b) => {
+    return a.match.kickOff.getDate() - b.match.kickOff.getDate()
+  })
+  return userMatches
+})

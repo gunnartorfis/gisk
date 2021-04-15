@@ -3,7 +3,7 @@ import db from "db"
 import * as z from "zod"
 
 const GetLeague = z.object({
-  id: z.string().transform((val) => Number.parseInt(val)),
+  id: z.string(),
 })
 
 export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), async ({ id }) => {
@@ -15,7 +15,6 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
           user: true,
         },
       },
-      UserLeagueMatch: true,
     },
   })
 
