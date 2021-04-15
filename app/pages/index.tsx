@@ -10,6 +10,8 @@ import LeagueInvite from "app/leagues/components/LeagueInvite"
 import { BlitzPage, Link, useMutation } from "blitz"
 import React, { Suspense } from "react"
 import { FiTv, FiUsers } from "react-icons/fi"
+import matches from "app/core/matches"
+import dayjs from "dayjs"
 
 const DashboardItem: React.FunctionComponent<{
   href: string
@@ -84,6 +86,9 @@ const Dashboard = () => {
       </Center>
     )
   }
+
+  const match = matches[5]
+  console.debug(dayjs(match.kickOff, "DD/MM/YYYY HH:mm").toDate())
 
   return (
     <Container>

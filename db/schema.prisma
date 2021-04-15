@@ -97,6 +97,8 @@ model Match {
   kickOff           DateTime
   resultHome        Int?
   resultAway        Int?
+  round             String
+  arena             String
   userLeagueMatches UserLeagueMatch[]
 }
 
