@@ -20,10 +20,10 @@ export const LeagueInviteInput = () => {
         const newInviteCode = e.target.value
         if (newInviteCode.length === 6) {
           try {
-            await invoke(addUserToLeagueIfExists, {
+            const league = await invoke(addUserToLeagueIfExists, {
               inviteCode: newInviteCode,
             })
-            router.push("/")
+            router.push(`/leagues/${league.id}`)
           } catch (error) {
             console.log("Error adding user to league: ", error)
           }
