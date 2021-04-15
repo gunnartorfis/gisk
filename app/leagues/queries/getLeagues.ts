@@ -6,7 +6,7 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
   const leagues = await db.league.findMany({
     where: {
       UserLeague: {
-        every: {
+        some: {
           userId,
         },
       },
