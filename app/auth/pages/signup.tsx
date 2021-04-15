@@ -70,7 +70,7 @@ const SignupPage: BlitzPage = () => {
               <FormControl id="name">
                 <LabeledTextField name="name" label="Name" placeholder="Name" type="text" />
               </FormControl>
-              <Stack spacing={10}>
+              <Stack spacing={4}>
                 <Stack
                   direction={{ base: "column", sm: "row" }}
                   align={"start"}
@@ -85,6 +85,11 @@ const SignupPage: BlitzPage = () => {
                     </Button>
                   )}
                 </FormContext.Consumer>
+                <Link href="/login">
+                  <Button variant="ghost" w="100%">
+                    Log in instead
+                  </Button>
+                </Link>
               </Stack>
             </Stack>
           </Box>

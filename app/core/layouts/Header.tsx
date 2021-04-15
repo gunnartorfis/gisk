@@ -31,7 +31,7 @@ import {
 import { League } from "@prisma/client"
 import logout from "app/auth/mutations/logout"
 import getLeagues from "app/leagues/queries/getLeagues"
-import { useMutation, useQuery, useSession } from "blitz"
+import { useMutation, useQuery, useRouter, useSession } from "blitz"
 import { Suspense, useEffect } from "react"
 import { FiCoffee, FiLogOut, FiSettings } from "react-icons/fi"
 import CreateLeagueModal, {
@@ -61,7 +61,7 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
   const { userId, isLoading } = useSession()
   const getLeaguesQueryDisabled = !userId && !isLoading
 
-  const [{ leagues } = { leagues: [] as League[] }, { refetch }] = useQuery(
+  const [leagues, { refetch }] = useQuery(
     getLeagues,
     {},
     {
@@ -160,12 +160,33 @@ export default function Header() {
         <Flex flex={{ base: 1 }} justify={{ base: "start", md: "start" }}>
           <Link
             href="/"
+            display={{ md: "inherit", base: "none" }}
             _hover={{
               textDecor: "none",
             }}
           >
             <GradientTitle smaller>Euro 2020</GradientTitle>
           </Link>
+          <Box
+            display={{ base: "inherit", md: "none" }}
+            position="absolute"
+            left="50px"
+            right="50px"
+            top={0}
+            h="60px"
+          >
+            <Flex h="100%" w="100%" alignItems="center" justifyContent="center">
+              <Link
+                href="/"
+                h="24px"
+                _hover={{
+                  textDecor: "none",
+                }}
+              >
+                <GradientTitle smaller>Euro 2020</GradientTitle>
+              </Link>
+            </Flex>
+          </Box>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
             <Suspense fallback="">
@@ -195,18 +216,26 @@ export default function Header() {
 
 const HeaderUser = () => {
   const currentUser = useCurrentUser()
+  const router = useRouter()
   const [logoutMutation] = useMutation(logout)
 
   if (currentUser) {
     return (
-      <Flex alignItems={"center"}>
+      <Flex alignItems={"center"} display={{ base: "none", md: "inherit" }}>
         <Menu>
           <MenuButton as={Button} rounded={"full"} variant={"link"} cursor={"pointer"}>
             <Text>{currentUser.name}</Text>
           </MenuButton>
           <MenuList>
-            <MenuItem icon={<FiSettings />}>Settings</MenuItem>
-            <MenuItem icon={<FiCoffee />}>Buy me coffee</MenuItem>
+            <MenuItem
+              icon={<FiSettings />}
+              onClick={() => {
+                router.push("/settings")
+              }}
+            >
+              Settings
+            </MenuItem>
+            {/* <MenuItem icon={<FiCoffee />}>Buy me coffee</MenuItem> */}
             <MenuDivider />
             <MenuItem
               icon={<FiLogOut />}
@@ -228,50 +257,33 @@ const HeaderUser = () => {
 const DesktopNav: React.FunctionComponent<{
   navItems: Array<NavItem>
 }> = ({ navItems }) => {
-  const linkColor = useColorModeValue("gray.600", "gray.200")
-  const linkColorHover = useColorModeValue("gray.800", "white")
   const popoverContentBgColor = useColorModeValue("white", "gray.800")
 
   return (
     <Stack direction={"row"} spacing={4}>
       {navItems.map((navItem) => (
         <Box key={navItem.label}>
-          <Popover>
-            <PopoverTrigger>
-              <Link
-                p={2}
-                href={navItem.href ?? "#"}
-                fontSize={"sm"}
-                fontWeight={500}
-                color={linkColor}
-                _hover={{
-                  textDecoration: "none",
-                  color: linkColorHover,
-                }}
-              >
-                {navItem.label}
-              </Link>
-            </PopoverTrigger>
-
-            {navItem.children ? (
-              <PopoverContent>
-                <Box
-                  border={0}
-                  boxShadow={"xl"}
-                  bg={popoverContentBgColor}
-                  p={4}
-                  rounded={"xl"}
-                  minW={"sm"}
-                >
-                  <Stack>
-                    {navItem.children.map((child) => (
-                      <DesktopSubNav key={child.label} {...child} />
-                    ))}
-                  </Stack>
-                </Box>
-              </PopoverContent>
+          <Menu>
+            <MenuButton
+              as={Link}
+              href={navItem.href}
+              onClick={() => {
+                navItem.action?.()
+              }}
+              cursor="pointer"
+            >
+              {navItem.label}
+            </MenuButton>
+            {navItem?.children?.length ? (
+              <MenuList boxShadow="xl" p={4} rounded="xl" minW="sm" bg={popoverContentBgColor}>
+                <Stack>
+                  {navItem?.children?.map((child) => (
+                    <DesktopSubNav key={child.label} {...child} />
+                  ))}
+                </Stack>
+              </MenuList>
             ) : null}
-          </Popover>
+          </Menu>
         </Box>
       ))}
     </Stack>
@@ -320,9 +332,33 @@ const DesktopSubNav = ({ label, href, subLabel, action }: NavItem) => {
 const MobileNav: React.FunctionComponent<{
   navItems: Array<NavItem>
 }> = ({ navItems }) => {
+  const currentUser = useCurrentUser()
+  const [logoutMutation] = useMutation(logout)
+
   return (
     <Stack bg={useColorModeValue("white", "gray.800")} p={4} display={{ md: "none" }}>
-      {navItems.map((navItem) => (
+      {[
+        ...navItems,
+        {
+          label: `${currentUser?.name ?? "Settings"}`,
+          children: [
+            {
+              label: "Settings",
+              href: "/settings",
+            },
+            // {
+            //   label: "Buy me coffee",
+            //   href: "/coffee",
+            // },
+            {
+              label: "Logout",
+              action: async () => {
+                await logoutMutation()
+              },
+            },
+          ],
+        },
+      ].map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
     </Stack>

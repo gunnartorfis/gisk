@@ -1,4 +1,5 @@
 import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import LoginPage from "app/auth/pages/login"
 import ButtonTheme from "app/core/chakraTheme/Button"
 import Colors from "app/core/chakraTheme/colors"
 import {
@@ -43,7 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
-    return null
+    return <LoginPage />
   } else if (error instanceof AuthorizationError) {
     return (
       <ErrorComponent
