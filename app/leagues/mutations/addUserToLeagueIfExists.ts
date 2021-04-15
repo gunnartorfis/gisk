@@ -20,21 +20,25 @@ const addUserToLeagueIfExists = resolver.pipe(
     if (!league) {
       throw new NotFoundError()
     }
-    await db.league.update({
+
+    const updatedLeague = await db.league.update({
       where: {
         inviteCode,
       },
       data: {
         UserLeague: {
-          connect: {
-            userId_leagueId: {
-              leagueId: league.id,
-              userId,
+          create: {
+            user: {
+              connect: {
+                id: userId,
+              },
             },
           },
         },
       },
     })
+
+    return updatedLeague
   }
 )
 
