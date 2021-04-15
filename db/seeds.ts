@@ -1,4 +1,9 @@
-import db from "./index"
+import db, { Team } from "./index"
+import dayjs from "dayjs"
+import matches from "./matches"
+
+import customParseFormat from "dayjs/plugin/customParseFormat"
+dayjs.extend(customParseFormat)
 
 const teams: Array<{
   name: string
@@ -32,10 +37,35 @@ const teams: Array<{
 ]
 
 const seed = async () => {
+  const teamsDB: Array<Team> = []
   for (let i = 0; i < teams.length; i++) {
     const team = teams[i]
-    await db.team.create({
+    const teamDB = await db.team.create({
       data: { name: team.name, countryCode: team.countryCode, group: team.group },
+    })
+
+    teamsDB.push(teamDB)
+  }
+
+  for (let i = 0; i < matches.length; i++) {
+    const match = matches[i]
+
+    await db.match.create({
+      data: {
+        homeTeam: {
+          connect: {
+            name: match.homeTeamName,
+          },
+        },
+        awayTeam: {
+          connect: {
+            name: match.awayTeamName,
+          },
+        },
+        arena: match.arena,
+        round: `${match.round}`,
+        kickOff: dayjs(match.kickOff, "DD/MM/YYYY HH:mm").toDate(),
+      },
     })
   }
 }

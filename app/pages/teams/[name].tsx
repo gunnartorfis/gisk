@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/layout"
+import { Flex, Text } from "@chakra-ui/layout"
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 import Layout from "app/core/layouts/Layout"
 import getTeam from "app/teams/queries/getTeam"
@@ -28,7 +28,12 @@ export const TeamDetails = () => {
   // })
 
   return (
-    <Flex direction="row" wrap="wrap">
+    <Flex direction="column" wrap="wrap">
+      <Text fontSize="3xl" fontWeight="semibold">
+        {team.name}
+      </Text>
+
+      <Text>Matches</Text>
       {team.homeMatches.map((match) => (
         <Flex key={match.id} flex={1} p="40px" direction="column">
           <Table variant="simple" mt="8px" w="180px">

@@ -38,6 +38,7 @@
     "@emotion/styled": "11.0.0",
     "@prisma/client": "2.21.1",
     "blitz": "0.33.1",
+    "dayjs": "1.10.4",
     "eventemitter3": "4.0.7",
     "final-form": "4.20.2",
     "framer-motion": "3.2.0",

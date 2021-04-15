@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/layout"
+import { Flex, Text } from "@chakra-ui/layout"
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 import Layout from "app/core/layouts/Layout"
 import getTeams from "app/teams/queries/getTeams"
@@ -6,9 +6,7 @@ import { BlitzPage, Head, Image, Link, useQuery } from "blitz"
 import { Suspense } from "react"
 
 export const TeamsList = () => {
-  const [teams] = useQuery(getTeams, {
-    orderBy: { id: "asc" },
-  })
+  const [teams] = useQuery(getTeams, {})
 
   const groups = Array.from(new Set(teams.map((t) => t.group)))
   const teamsByGroups = groups.map((group) => ({
@@ -40,7 +38,9 @@ export const TeamsList = () => {
                   </Td>
                   <Td isTruncated w="160px" cursor="pointer">
                     <Link href={`/teams/${team.name}`}>
-                      {team.name} ({team.countryCode})
+                      <Text>
+                        {team.name} ({team.countryCode})
+                      </Text>
                     </Link>
                   </Td>
                 </Tr>
