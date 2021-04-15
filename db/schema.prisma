@@ -11,7 +11,7 @@ generator client {
 }
 
 model User {
-  id                String            @id @default(uuid())
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   name              String?
@@ -25,7 +25,7 @@ model User {
 }
 
 model Session {
-  id                 String    @id @default(uuid())
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
   expiresAt          DateTime?
@@ -36,11 +36,11 @@ model Session {
   privateData        String?
 
   user   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  userId String? @db.Uuid
 }
 
 model Token {
-  id          String   @id @default(uuid())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   hashedToken String
@@ -51,16 +51,16 @@ model Token {
   sentTo      String
 
   user   User   @relation(fields: [userId], references: [id])
-  userId String
+  userId String @db.Uuid
 
   @@unique([hashedToken, type])
 }
 
 model UserLeague {
   user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  userId    String   @db.Uuid
   league    League   @relation(fields: [leagueId], references: [id])
-  leagueId  String
+  leagueId  String   @db.Uuid
   role      String   @default("USER")
   createdAt DateTime @default(now())
 
@@ -68,7 +68,7 @@ model UserLeague {
 }
 
 model League {
-  id         String       @id @default(uuid())
+  id         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
   name       String?
@@ -77,7 +77,7 @@ model League {
 }
 
 model Team {
-  id          String   @id @default(uuid())
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   name        String   @unique
@@ -88,13 +88,13 @@ model Team {
 }
 
 model Match {
-  id                String            @id @default(uuid())
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
   homeTeam          Team              @relation("homeMatches", fields: [homeTeamId], references: [id])
-  homeTeamId        String
+  homeTeamId        String            @db.Uuid
   awayTeam          Team              @relation("awayMatches", fields: [awayTeamId], references: [id])
-  awayTeamId        String
+  awayTeamId        String            @db.Uuid
   kickOff           DateTime
   resultHome        Int?
   resultAway        Int?
@@ -106,13 +106,13 @@ model Match {
 }
 
 model UserLeagueMatch {
-  id         String   @id @default(uuid())
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   resultHome Int
   resultAway Int
   user       User     @relation(fields: [userId], references: [id])
-  userId     String
+  userId     String   @db.Uuid
   match      Match    @relation(fields: [matchId], references: [id])
-  matchId    String
+  matchId    String   @db.Uuid
 }
