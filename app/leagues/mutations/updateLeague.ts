@@ -4,7 +4,7 @@ import * as z from "zod"
 
 const UpdateLeague = z
   .object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
   })
   .nonstrict()

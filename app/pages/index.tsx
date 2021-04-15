@@ -87,9 +87,6 @@ const Dashboard = () => {
     )
   }
 
-  const match = matches[5]
-  console.debug(dayjs(match.kickOff, "DD/MM/YYYY HH:mm").toDate())
-
   return (
     <Container>
       <Text fontSize="3xl" fontWeight="bold">
