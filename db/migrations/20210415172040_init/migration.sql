@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT,
@@ -13,7 +13,7 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Session" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "expiresAt" TIMESTAMP(3),
@@ -22,29 +22,29 @@ CREATE TABLE "Session" (
     "antiCSRFToken" TEXT,
     "publicData" TEXT,
     "privateData" TEXT,
-    "userId" TEXT,
+    "userId" UUID,
 
     PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "Token" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "hashedToken" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "sentTo" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
 
     PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "UserLeague" (
-    "userId" TEXT NOT NULL,
-    "leagueId" TEXT NOT NULL,
+    "userId" UUID NOT NULL,
+    "leagueId" UUID NOT NULL,
     "role" TEXT NOT NULL DEFAULT E'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
@@ -53,7 +53,7 @@ CREATE TABLE "UserLeague" (
 
 -- CreateTable
 CREATE TABLE "League" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT,
@@ -64,7 +64,7 @@ CREATE TABLE "League" (
 
 -- CreateTable
 CREATE TABLE "Team" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
@@ -76,11 +76,11 @@ CREATE TABLE "Team" (
 
 -- CreateTable
 CREATE TABLE "Match" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "homeTeamId" TEXT NOT NULL,
-    "awayTeamId" TEXT NOT NULL,
+    "homeTeamId" UUID NOT NULL,
+    "awayTeamId" UUID NOT NULL,
     "kickOff" TIMESTAMP(3) NOT NULL,
     "resultHome" INTEGER,
     "resultAway" INTEGER,
@@ -92,12 +92,13 @@ CREATE TABLE "Match" (
 
 -- CreateTable
 CREATE TABLE "UserLeagueMatch" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "result1" INTEGER NOT NULL,
-    "resultX" INTEGER NOT NULL,
-    "result2" INTEGER NOT NULL,
+    "resultHome" INTEGER NOT NULL,
+    "resultAway" INTEGER NOT NULL,
+    "userId" UUID NOT NULL,
+    "matchId" UUID NOT NULL,
 
     PRIMARY KEY ("id")
 );
@@ -136,16 +137,13 @@ ALTER TABLE "UserLeague" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON D
 ALTER TABLE "UserLeague" ADD FOREIGN KEY ("leagueId") REFERENCES "League"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Match" ADD FOREIGN KEY ("id") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Match" ADD FOREIGN KEY ("homeTeamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Match" ADD FOREIGN KEY ("id") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Match" ADD FOREIGN KEY ("awayTeamId") REFERENCES "Team"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserLeagueMatch" ADD FOREIGN KEY ("id") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserLeagueMatch" ADD FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserLeagueMatch" ADD FOREIGN KEY ("id") REFERENCES "League"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "UserLeagueMatch" ADD FOREIGN KEY ("id") REFERENCES "Match"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "UserLeagueMatch" ADD FOREIGN KEY ("matchId") REFERENCES "Match"("id") ON DELETE CASCADE ON UPDATE CASCADE;
