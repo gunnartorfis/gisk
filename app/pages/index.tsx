@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/button"
-import { Box, Center, Container, Grid, Text } from "@chakra-ui/layout"
-import { useDisclosure } from "@chakra-ui/react"
+import { Box, Center, Container, Text } from "@chakra-ui/layout"
+import { ListItem, UnorderedList, useDisclosure } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
 import CreateLeagueModal from "app/core/components/CreateLeagueModal"
 import Welcome from "app/core/components/Welcome"
@@ -9,9 +9,22 @@ import Layout from "app/core/layouts/Layout"
 import LeagueInvite from "app/leagues/components/LeagueInvite"
 import { BlitzPage, Link, useMutation } from "blitz"
 import React, { Suspense } from "react"
-import { FiTv, FiUsers } from "react-icons/fi"
-import matches from "app/core/matches"
-import dayjs from "dayjs"
+
+export const CORRECT_RESULT = "correct_result"
+export const CORRECT_SCORE = "correct_score"
+
+export const scoring = [
+  {
+    rule: "Correct result (1X2)",
+    key: CORRECT_RESULT,
+    score: 1,
+  },
+  {
+    rule: "Correct score",
+    key: CORRECT_SCORE,
+    score: 2,
+  },
+]
 
 const DashboardItem: React.FunctionComponent<{
   href: string
@@ -71,15 +84,25 @@ const Dashboard = () => {
         <Box
           display="flex"
           flexDirection="row"
+          flexWrap="wrap"
           w="100%"
           alignItems="center"
           justifyContent="space-between"
-          border="1px"
+          border={["0", "1px"]}
           borderColor="gray.100"
           padding="40px"
+          margin={["0px 40px", 0]}
         >
-          <Button onClick={onOpen}>Create a league</Button>
-          <Box w="2px" h="100px" bg="gray.100" marginX="80px" />
+          <Button onClick={onOpen} mb={["32px", 0]}>
+            Create a league
+          </Button>
+          <Box
+            w="2px"
+            h="100px"
+            bg="gray.100"
+            marginX="80px"
+            display={{ base: "none", md: "block" }}
+          />
           <LeagueInvite />
         </Box>
         <CreateLeagueModal isOpen={isOpen} onClose={onClose} />
@@ -90,8 +113,21 @@ const Dashboard = () => {
   return (
     <Container>
       <Text fontSize="3xl" fontWeight="bold">
-        I need some content.
+        Scoring
       </Text>
+      <Text mt="8px" mb="8px">
+        Hvað segiði með þessar reglur boys?
+      </Text>
+      <UnorderedList>
+        {scoring.map(({ score, rule }) => (
+          <ListItem key={`${score}.${rule}`}>
+            <Text display="inline">{rule}: </Text>
+            <Text display="inline" fontWeight="semibold">
+              {score} point
+            </Text>
+          </ListItem>
+        ))}
+      </UnorderedList>
     </Container>
   )
 }

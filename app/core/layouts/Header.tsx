@@ -19,24 +19,21 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   Stack,
   Text,
   useColorMode,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { League } from "@prisma/client"
 import logout from "app/auth/mutations/logout"
 import getLeagues from "app/leagues/queries/getLeagues"
 import { useMutation, useQuery, useRouter, useSession } from "blitz"
 import { Suspense, useEffect } from "react"
-import { FiCoffee, FiLogOut, FiSettings } from "react-icons/fi"
+import { FiLogOut, FiSettings } from "react-icons/fi"
 import CreateLeagueModal, {
   CREATE_LEAGUE_MODAL_LEAGUE_CREATED,
 } from "../components/CreateLeagueModal"
+import Dropdown from "../components/Dropdown"
 import GradientTitle from "../components/GradientTitle"
 import Emitter from "../eventEmitter/emitter"
 import { useCurrentUser } from "../hooks/useCurrentUser"
@@ -232,44 +229,27 @@ const HeaderUser = () => {
 
   if (currentUser) {
     return (
-      <Flex alignItems={"center"} display={{ base: "none", md: "inherit" }}>
-        <Menu>
-          <MenuButton
-            onMouseDown={(event) => {
-              event.preventDefault()
+      <Box display={{ base: "none", md: "inherit" }}>
+        <Dropdown right="16px" top="60px">
+          <Dropdown.Summary>{currentUser.name}</Dropdown.Summary>
+          <Dropdown.Item
+            key="settings"
+            title="Settings"
+            icon={<FiSettings />}
+            onClick={() => {
+              router.push("/settings")
             }}
-            onClick={(event) => {
-              event.preventDefault()
+          ></Dropdown.Item>
+          <Dropdown.Item
+            key="logout"
+            title="Logout"
+            icon={<FiLogOut />}
+            onClick={async () => {
+              await logoutMutation()
             }}
-            as={Button}
-            rounded={"full"}
-            variant={"link"}
-            cursor={"pointer"}
-          >
-            <Text>{currentUser.name}</Text>
-          </MenuButton>
-          <MenuList>
-            <MenuItem
-              icon={<FiSettings />}
-              onClick={() => {
-                router.push("/settings")
-              }}
-            >
-              Settings
-            </MenuItem>
-            {/* <MenuItem icon={<FiCoffee />}>Buy me coffee</MenuItem> */}
-            <MenuDivider />
-            <MenuItem
-              icon={<FiLogOut />}
-              onClick={async () => {
-                await logoutMutation()
-              }}
-            >
-              Log out
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      </Flex>
+          ></Dropdown.Item>
+        </Dropdown>
+      </Box>
     )
   }
 
@@ -280,33 +260,22 @@ const DesktopNav: React.FunctionComponent<{
   navItems: Array<NavItem>
 }> = ({ navItems }) => {
   const popoverContentBgColor = useColorModeValue("white", "gray.800")
-
   return (
     <Stack direction={"row"} spacing={4}>
       {navItems.map((navItem) => (
-        <Box key={navItem.label}>
-          <Menu>
-            <MenuButton
-              as={Link}
+        <Dropdown left="155px" top="60px" key={navItem.label}>
+          <Dropdown.Summary href={navItem.href}>{navItem.label}</Dropdown.Summary>
+          {navItem.children?.map((navItem) => (
+            <Dropdown.Item
+              title={navItem.label}
+              key={navItem.label}
               href={navItem.href}
               onClick={() => {
                 navItem.action?.()
               }}
-              cursor="pointer"
-            >
-              {navItem.label}
-            </MenuButton>
-            {navItem?.children?.length ? (
-              <MenuList boxShadow="xl" p={4} rounded="xl" minW="sm" bg={popoverContentBgColor}>
-                <Stack>
-                  {navItem?.children?.map((child) => (
-                    <DesktopSubNav key={child.label} {...child} />
-                  ))}
-                </Stack>
-              </MenuList>
-            ) : null}
-          </Menu>
-        </Box>
+            />
+          ))}
+        </Dropdown>
       ))}
     </Stack>
   )

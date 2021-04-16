@@ -1,0 +1,21 @@
+details summary {
+  list-style: none;
+  cursor: pointer;
+}
+details summary::marker {
+  display: none;
+}
+details[open] summary ~ * {
+  animation: sweep 0.2s ease-in-out;
+}
+
+@keyframes sweep {
+  0% {
+    opacity: 0;
+    margin-top: -10px;
+  }
+  100% {
+    opacity: 1;
+    margin-top: 0px;
+  }
+}

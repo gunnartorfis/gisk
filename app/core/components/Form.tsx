@@ -1,4 +1,5 @@
 import { Button } from "@chakra-ui/button"
+import { Box } from "@chakra-ui/layout"
 import { createContext, ReactNode, PropsWithoutRef } from "react"
 import { Form as FinalForm, FormProps as FinalFormProps } from "react-final-form"
 import * as z from "zod"
@@ -17,6 +18,7 @@ export interface FormProps<S extends z.ZodType<any, any>>
 
 export const FormContext = createContext<{
   submitting: boolean
+  submitError?: string
 }>({
   submitting: false,
 })
@@ -41,30 +43,37 @@ export function Form<S extends z.ZodType<any, any>>({
         }
       }}
       onSubmit={onSubmit}
-      render={({ handleSubmit, submitting, submitError }) => (
-        <form onSubmit={handleSubmit} className="form" {...props}>
-          {/* Form fields supplied as children are rendered here */}
-          <FormContext.Provider value={{ submitting }}>{children}</FormContext.Provider>
+      render={({ handleSubmit, submitting, submitError }) => {
+        console.log({
+          submitError,
+        })
+        return (
+          <form onSubmit={handleSubmit} className="form" {...props}>
+            {/* Form fields supplied as children are rendered here */}
+            <FormContext.Provider value={{ submitting, submitError }}>
+              {children}
+            </FormContext.Provider>
 
-          {submitError && (
-            <div role="alert" style={{ color: "red" }}>
-              {submitError}
-            </div>
-          )}
+            {submitText ? (
+              <Button type="submit" disabled={submitting}>
+                {submitText}
+              </Button>
+            ) : null}
 
-          {submitText && (
-            <Button type="submit" disabled={submitting}>
-              {submitText}
-            </Button>
-          )}
+            {submitText && submitError ? (
+              <Box role="alert" style={{ color: "red" }}>
+                {submitError}
+              </Box>
+            ) : null}
 
-          <style global jsx>{`
-            .form > * + * {
-              margin-top: 1rem;
-            }
-          `}</style>
-        </form>
-      )}
+            <style global jsx>{`
+              .form > * + * {
+                margin-top: 1rem;
+              }
+            `}</style>
+          </form>
+        )
+      }}
     />
   )
 }

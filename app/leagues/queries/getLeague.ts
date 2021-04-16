@@ -6,9 +6,16 @@ const GetLeague = z.object({
   id: z.string(),
 })
 
-export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), async ({ id }) => {
+export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), async ({ id }, ctx) => {
   const league = await db.league.findFirst({
-    where: { id },
+    where: {
+      id,
+      UserLeague: {
+        some: {
+          userId: ctx.session.userId,
+        },
+      },
+    },
     include: {
       UserLeague: {
         include: {
@@ -18,7 +25,23 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
     },
   })
 
+  const usersInLeague = league?.UserLeague.map((ul) => ul.userId)
+
+  const predictionsForUsers = await db.userLeagueMatch.findMany({
+    where: {
+      userId: {
+        in: usersInLeague,
+      },
+    },
+  })
+
   if (!league) throw new NotFoundError()
 
-  return league
+  return {
+    ...league,
+    UserLeague: league.UserLeague.map((ul) => ({
+      ...ul,
+      predictions: predictionsForUsers.filter((p) => p.userId === ul.userId),
+    })),
+  }
 })
