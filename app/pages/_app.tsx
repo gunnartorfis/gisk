@@ -13,6 +13,7 @@ import {
 import React from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { queryCache } from "react-query"
+import "./_app.css"
 
 const theme = extendTheme({
   components: {
