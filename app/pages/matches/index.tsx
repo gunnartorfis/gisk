@@ -12,6 +12,13 @@ import {
   Tr,
   useColorModeValue,
   useToast,
+  Alert,
+  AlertIcon,
+  FormControl,
+  FormLabel,
+  Center,
+  Button,
+  Stack,
 } from "@chakra-ui/react"
 import { Match, Team, UserLeagueMatch } from "@prisma/client"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -34,8 +41,9 @@ export const MatchesList = () => {
 
   const router = useRouter()
   const toast = useToast()
-  const bgColorMode = useColorModeValue("white", "gray.900")
-  const tableBgColorMode = useColorModeValue("gray.50", "gray.700")
+  const tableBgColorMode = useColorModeValue("white", "gray.700")
+  const bgColorMode = useColorModeValue("gray.50", "gray.900")
+  const questionsBg = useColorModeValue("white", "gray.700")
   if (user?.userLeague?.length === 0) {
     router.push("/")
     return null
@@ -56,7 +64,6 @@ export const MatchesList = () => {
   }) => {
     try {
       if (newValue) {
-        console.log("AA", newValue)
         await invoke(updateResultForUser, {
           userMatchId,
           newValue,
@@ -104,8 +111,47 @@ export const MatchesList = () => {
     }
   })
 
+  const leagueHasStarted = false
+
   return (
     <Box pb="16px" bg={bgColorMode}>
+      {leagueHasStarted ? null : (
+        <details>
+          <summary>
+            <Alert status="info">
+              <AlertIcon />
+              Answer questions before the league starts for a chance to earn bonus points!
+            </Alert>
+          </summary>
+
+          <Stack
+            padding="32px"
+            border="1px"
+            borderColor="gray.200"
+            spacing={4}
+            rounded="md"
+            maxW={["100%", "500px"]}
+            margin="16px auto"
+            boxShadow="md"
+            bg={questionsBg}
+          >
+            <FormControl>
+              <FormLabel>Which country will win Euro 2020?</FormLabel>
+              <Input placeholder="Answer" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Which country will be runner up?</FormLabel>
+              <Input placeholder="Answer" />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Who will be the top scorer?</FormLabel>
+              <Input placeholder="Answer" />
+            </FormControl>
+
+            <Button>Save</Button>
+          </Stack>
+        </details>
+      )}
       {Object.keys(matchesByDate).map((date) => {
         const matchesForDay = matchesByDate[date]
         return (

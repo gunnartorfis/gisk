@@ -21,7 +21,7 @@ import getTeams from "app/teams/queries/getTeams"
 import { useMutation } from "blitz"
 import React, { forwardRef, useRef } from "react"
 import DatePicker from "react-datepicker"
-import { MatchWithTeams } from ".."
+import { MatchWithTeams } from "../../pages/admin"
 
 const MatchDrawer: React.FunctionComponent<{
   isOpen: boolean
@@ -164,7 +164,7 @@ const MatchDrawer: React.FunctionComponent<{
                     awayTeamId: awayTeamRef.current.value,
                     resultHome: Number.parseInt(homeResultRef.current.value),
                     resultAway: Number.parseInt(awayResultRef.current.value),
-                    kickOff,
+                    kickOff: kickOff ?? match?.kickOff,
                   }
                   if (match) {
                     await updateMutation({

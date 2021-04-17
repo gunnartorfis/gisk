@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/button"
 import { Box, Center, Container, Text } from "@chakra-ui/layout"
-import { ListItem, UnorderedList, useDisclosure } from "@chakra-ui/react"
+import { ListItem, UnorderedList, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
 import CreateLeagueModal from "app/core/components/CreateLeagueModal"
 import Welcome from "app/core/components/Welcome"
@@ -29,6 +29,7 @@ export const scoring = [
 const Dashboard = () => {
   const currentUser = useCurrentUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const notInLeagueBg = useColorModeValue("white", "gray.900")
 
   if (!currentUser) {
     return <UserInfo />
@@ -47,7 +48,7 @@ const Dashboard = () => {
           alignItems="center"
           justifyContent="space-between"
           borderRadius="md"
-          bg="white"
+          bg={notInLeagueBg}
           boxShadow="md"
           padding="40px"
           margin={["0px 40px", 0]}
