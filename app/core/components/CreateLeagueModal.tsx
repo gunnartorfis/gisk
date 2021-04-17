@@ -14,6 +14,7 @@ import {
 import createLeague from "app/leagues/mutations/createLeague"
 import { useMutation, useRouter } from "blitz"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import Emitter from "../eventEmitter/emitter"
 
 export const CREATE_LEAGUE_MODAL_LEAGUE_CREATED = "CREATE_LEAGUE_MODAL_LEAGUE_CREATED"
@@ -26,7 +27,7 @@ const CreateLeagueModal: React.FunctionComponent<UseDisclosureProps> = ({
   const router = useRouter()
   const initialRef = React.useRef<any>(null)
   const [createLeagueMutation, { isLoading }] = useMutation(createLeague)
-
+  const { t } = useTranslation()
   const _onClose = () => {
     onClose?.()
   }
@@ -40,11 +41,11 @@ const CreateLeagueModal: React.FunctionComponent<UseDisclosureProps> = ({
             e.preventDefault()
           }}
         >
-          <ModalHeader>New league</ModalHeader>
+          <ModalHeader>{t("NEW_LEAGUE")}</ModalHeader>
           <ModalBody pb={6}>
             <FormControl>
-              <FormLabel>League name</FormLabel>
-              <Input ref={initialRef} placeholder="League name" />
+              <FormLabel>{t("LEAGUE_NAME")}</FormLabel>
+              <Input ref={initialRef} placeholder={t("LEAGUE_NAME")} />
             </FormControl>
           </ModalBody>
 
@@ -64,10 +65,10 @@ const CreateLeagueModal: React.FunctionComponent<UseDisclosureProps> = ({
                 }
               }}
             >
-              Save
+              {t("CREATE")}
             </Button>
             <Button variant="ghost" onClick={onClose} disabled={isLoading}>
-              Cancel
+              {t("CANCEL")}
             </Button>
           </ModalFooter>
         </form>

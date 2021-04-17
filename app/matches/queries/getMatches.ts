@@ -1,4 +1,5 @@
 import { resolver } from "blitz"
+import dayjs from "dayjs"
 import db from "db"
 
 export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
@@ -54,7 +55,7 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
   }
 
   userMatches.sort((a, b) => {
-    return a.match.kickOff.getDate() - b.match.kickOff.getDate()
+    return dayjs(a.match.kickOff).unix() - dayjs(b.match.kickOff).unix()
   })
   return userMatches
 })

@@ -9,27 +9,16 @@ import Layout from "app/core/layouts/Layout"
 import LeagueInvite from "app/leagues/components/LeagueInvite"
 import { BlitzPage, useMutation } from "blitz"
 import React, { Suspense } from "react"
+import { useTranslation } from "react-i18next"
 
 export const CORRECT_RESULT = "correct_result"
 export const CORRECT_SCORE = "correct_score"
-
-export const scoring = [
-  {
-    rule: "Correct result (1X2)",
-    key: CORRECT_RESULT,
-    score: 1,
-  },
-  {
-    rule: "Correct score",
-    key: CORRECT_SCORE,
-    score: 2,
-  },
-]
 
 const Dashboard = () => {
   const currentUser = useCurrentUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const notInLeagueBg = useColorModeValue("white", "gray.900")
+  const { t } = useTranslation()
 
   if (!currentUser) {
     return <UserInfo />
@@ -46,21 +35,21 @@ const Dashboard = () => {
           flexWrap="wrap"
           w="100%"
           alignItems="center"
-          justifyContent="space-between"
+          justifyContent="center"
           borderRadius="md"
           bg={notInLeagueBg}
           boxShadow="md"
-          padding="40px"
+          padding="40px 80px"
           margin={["0px 40px", 0]}
         >
           <Button onClick={onOpen} mb={["32px", 0]}>
-            Create a league
+            {t("NEW_LEAGUE")}
           </Button>
           <Box
             w="2px"
             h="100px"
             bg="gray.100"
-            marginX="80px"
+            marginX="40px"
             display={{ base: "none", md: "block" }}
           />
           <LeagueInvite />
@@ -73,17 +62,25 @@ const Dashboard = () => {
   return (
     <Container>
       <Text fontSize="3xl" fontWeight="bold">
-        Scoring
-      </Text>
-      <Text mt="8px" mb="8px">
-        Hvað segiði með þessar reglur boys?
+        {t("SCORING")}
       </Text>
       <UnorderedList>
-        {scoring.map(({ score, rule }) => (
+        {[
+          {
+            rule: t("SCORING_RULE_1"),
+            key: CORRECT_RESULT,
+            score: 1,
+          },
+          {
+            rule: t("SCORING_RULE_2"),
+            key: CORRECT_SCORE,
+            score: 2,
+          },
+        ].map(({ score, rule }) => (
           <ListItem key={`${score}.${rule}`}>
             <Text display="inline">{rule}: </Text>
             <Text display="inline" fontWeight="semibold">
-              {score} point
+              {score} {t("POINT")}
             </Text>
           </ListItem>
         ))}
@@ -109,7 +106,7 @@ const UserInfo = ({ hideLoginSignup }: { hideLoginSignup?: boolean }) => {
               await logoutMutation()
             }}
           >
-            Logout
+            {t("LOGOUT")}
           </Button>
         </Box>
       </Box>
@@ -127,7 +124,7 @@ const Home: BlitzPage = () => {
   return (
     <div className="container">
       <main>
-        <Suspense fallback="Loading...">
+        <Suspense fallback="">
           <Dashboard />
         </Suspense>
       </main>

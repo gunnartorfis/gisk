@@ -140,8 +140,15 @@ const MatchDrawer: React.FunctionComponent<{
                         // eslint-disable-next-line no-restricted-globals
                         const shouldDelete = confirm("Are you sure you want to delete this match?")
                         if (shouldDelete) {
-                          await deleteMutation({ id: match.id })
-                          close()
+                          // eslint-disable-next-line no-restricted-globals
+                          const confirmed = confirm(
+                            "IMPORTANT: Doing this will delete all predictions for all users in the system."
+                          )
+
+                          if (confirmed) {
+                            await deleteMutation({ id: match.id })
+                            close()
+                          }
                         }
                       }}
                     >
@@ -159,12 +166,14 @@ const MatchDrawer: React.FunctionComponent<{
               <Button
                 disabled={isSubmitting}
                 onClick={async () => {
+                  const homeResult = homeResultRef.current.value
+                  const awayResult = awayResultRef.current.value
                   const newMatch = {
                     homeTeamId: homeTeamRef.current.value,
                     awayTeamId: awayTeamRef.current.value,
-                    resultHome: Number.parseInt(homeResultRef.current.value),
-                    resultAway: Number.parseInt(awayResultRef.current.value),
-                    kickOff: kickOff ?? match?.kickOff,
+                    resultHome: homeResult ? Number.parseInt(homeResult) : null,
+                    resultAway: awayResult ? Number.parseInt(awayResult) : null,
+                    kickOff: kickOff ?? match?.kickOff ?? new Date(),
                   }
                   if (match) {
                     await updateMutation({

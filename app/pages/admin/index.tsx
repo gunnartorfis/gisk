@@ -36,7 +36,7 @@ export const AdminList = () => {
   const tableBgColorMode = useColorModeValue("gray.50", "gray.700")
 
   if (isLoading) {
-    return <p>Loading...</p>
+    return <p></p>
   }
 
   const getDateWithoutTimeFromDate = (date: Date) => {
@@ -188,7 +188,7 @@ const AdminPage: BlitzPage = () => {
       </Head>
 
       <div>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
           <AdminList />
         </Suspense>
       </div>

@@ -71,7 +71,7 @@ const TeamDetailPage: BlitzPage = () => {
       </Head>
 
       <div>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
           <TeamDetails />
         </Suspense>
       </div>

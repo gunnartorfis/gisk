@@ -5,27 +5,25 @@ import { Form, FORM_ERROR } from "app/core/components/Form"
 import { ForgotPassword } from "app/auth/validations"
 import forgotPassword from "app/auth/mutations/forgotPassword"
 import { Container, Text } from "@chakra-ui/layout"
+import { useTranslation } from "react-i18next"
 
 const ForgotPasswordPage: BlitzPage = () => {
   const [forgotPasswordMutation, { isSuccess }] = useMutation(forgotPassword)
-
+  const { t } = useTranslation()
   return (
     <Container centerContent>
       <Text fontSize="3xl" textAlign="center" as="b">
-        Forgot your password?
+        {t("FORGOT_PASSWORD")}
       </Text>
 
       {isSuccess ? (
         <div>
-          <h2>Request Submitted</h2>
-          <p>
-            If your email is in our system, you will receive instructions to reset your password
-            shortly.
-          </p>
+          <h2>{t("REQUEST_SUBMITTED")}</h2>
+          <p>{t("RESET_PASSWORD_INSTRUCTIONS")}</p>
         </div>
       ) : (
         <Form
-          submitText="Send Reset Password Instructions"
+          submitText={t("SEND_RESET_PASSWORD_INSTRUCTIONS")}
           schema={ForgotPassword}
           initialValues={{ email: "" }}
           onSubmit={async (values) => {
@@ -38,7 +36,7 @@ const ForgotPasswordPage: BlitzPage = () => {
             }
           }}
         >
-          <LabeledTextField name="email" label="Email" placeholder="Email" />
+          <LabeledTextField name="email" label={t("EMAIL")} placeholder={t("EMAIL")} />
         </Form>
       )}
     </Container>

@@ -19,11 +19,12 @@ const ItemSeparator = () => {
 }
 
 const Item: React.FunctionComponent<{
-  title: string
+  title?: string
   icon?: JSX.Element
   href?: string
-  onClick: (itemTitle: string) => void
-}> = ({ title, icon, onClick, href }) => {
+  onClick?: (itemTitle?: string) => void
+  render?: () => JSX.Element
+}> = ({ children, title, icon, onClick, href, render }) => {
   const bg = useColorModeValue("white", "gray.500")
   const renderChildren = () => (
     <Flex
@@ -38,8 +39,12 @@ const Item: React.FunctionComponent<{
         onClick?.(title)
       }}
     >
-      <Text mr="8px">{title}</Text>
-      {icon || null}
+      {children || (
+        <>
+          <Text mr="8px">{title}</Text>
+          {icon || null}
+        </>
+      )}
     </Flex>
   )
 
@@ -56,11 +61,12 @@ const Dropdown: React.FunctionComponent<{
   right?: AbsoluteValue
   left?: AbsoluteValue
   bottom?: AbsoluteValue
+  onClickItemWithKey?: (key: string) => void
 }> & {
   Item: typeof Item
   Summary: typeof Summary
   ItemSeperator?: typeof ItemSeparator
-} = ({ children, ...props }) => {
+} = ({ children, onClickItemWithKey, ...props }) => {
   let summaryChild: any
   const otherChildren: any[] = []
 
@@ -74,7 +80,8 @@ const Dropdown: React.FunctionComponent<{
           React.cloneElement(child, {
             ...child.props,
             onClick: () => {
-              child.props?.onClick()
+              child.props?.onClick?.()
+              onClickItemWithKey?.(child.key)
               onClickOutside()
             },
           })

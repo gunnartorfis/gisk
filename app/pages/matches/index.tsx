@@ -1,8 +1,14 @@
 import {
+  Alert,
+  AlertIcon,
   Box,
-  Image,
+  Button,
   Flex,
+  FormControl,
+  FormLabel,
+  Image,
   Input,
+  Stack,
   Table,
   Tbody,
   Td,
@@ -12,13 +18,6 @@ import {
   Tr,
   useColorModeValue,
   useToast,
-  Alert,
-  AlertIcon,
-  FormControl,
-  FormLabel,
-  Center,
-  Button,
-  Stack,
 } from "@chakra-ui/react"
 import { Match, Team, UserLeagueMatch } from "@prisma/client"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -27,7 +26,8 @@ import updateResultForUser from "app/matches/mutations/updateResultForUser"
 import getMatches from "app/matches/queries/getMatches"
 import { BlitzPage, Head, invoke, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
-import { Suspense, useState } from "react"
+import { Suspense } from "react"
+import { useTranslation } from "react-i18next"
 
 export const MatchesList = () => {
   const user = useCurrentUser()
@@ -44,6 +44,7 @@ export const MatchesList = () => {
   const tableBgColorMode = useColorModeValue("white", "gray.700")
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
   const questionsBg = useColorModeValue("white", "gray.700")
+  const { t } = useTranslation()
   if (user?.userLeague?.length === 0) {
     router.push("/")
     return null
@@ -120,7 +121,7 @@ export const MatchesList = () => {
           <summary>
             <Alert status="info">
               <AlertIcon />
-              Answer questions before the league starts for a chance to earn bonus points!
+              {t("QUIZ_ALERT")}
             </Alert>
           </summary>
 
@@ -136,19 +137,25 @@ export const MatchesList = () => {
             bg={questionsBg}
           >
             <FormControl>
-              <FormLabel>Which country will win Euro 2020?</FormLabel>
-              <Input placeholder="Answer" />
+              <FormLabel>{t("QUIZ_QUESTION_1")}</FormLabel>
+              <Input placeholder={t("ANSWER")} />
             </FormControl>
             <FormControl>
-              <FormLabel>Which country will be runner up?</FormLabel>
-              <Input placeholder="Answer" />
+              <FormLabel>{t("QUIZ_QUESTION_2")}</FormLabel>
+              <Input placeholder={t("ANSWER")} />
             </FormControl>
             <FormControl>
-              <FormLabel>Who will be the top scorer?</FormLabel>
-              <Input placeholder="Answer" />
+              <FormLabel>{t("QUIZ_QUESTION_3")}</FormLabel>
+              <Input placeholder={t("ANSWER")} />
             </FormControl>
 
-            <Button>Save</Button>
+            <Button
+              onClick={() => {
+                alert("Oops. I do nothing at the moment.")
+              }}
+            >
+              {t("UPDATE")}
+            </Button>
           </Stack>
         </details>
       )}
@@ -180,13 +187,13 @@ export const MatchesList = () => {
                 <Thead>
                   <Tr>
                     <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
-                      Home
+                      {t("HOME")}
                     </Th>
                     <Th colSpan={3} textAlign="center">
-                      Prediction
+                      {t("PREDICTION")}
                     </Th>
                     <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
-                      Away
+                      {t("AWAY")}
                     </Th>
                   </Tr>
                 </Thead>
@@ -283,7 +290,7 @@ const MatchesPage: BlitzPage = () => {
         <title>Matches</title>
       </Head>
 
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<div></div>}>
         <MatchesList />
       </Suspense>
     </>

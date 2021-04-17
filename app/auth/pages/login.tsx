@@ -3,12 +3,14 @@ import Form, { FormContext, FORM_ERROR } from "app/core/components/Form"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import Layout from "app/core/layouts/Layout"
 import { BlitzPage, useMutation, useRouter } from "blitz"
+import { useTranslation } from "react-i18next"
 import login from "../mutations/login"
 import { Login } from "../validations"
 
 export const LoginPage: BlitzPage = () => {
   const [loginMutation] = useMutation(login)
   const router = useRouter()
+  const { t } = useTranslation()
 
   const bgColorMode = useColorModeValue("gray.50", "gray.800")
   const boxColorMode = useColorModeValue("white", "gray.700")
@@ -42,13 +44,18 @@ export const LoginPage: BlitzPage = () => {
               <Box rounded={"lg"} bg={boxColorMode} boxShadow={"lg"} p={8}>
                 <Stack spacing={4}>
                   <FormControl id="email">
-                    <LabeledTextField name="email" label="Email" placeholder="Email" type="email" />
+                    <LabeledTextField
+                      name="email"
+                      label={t("EMAIL")}
+                      placeholder={t("EMAIL")}
+                      type="email"
+                    />
                   </FormControl>
                   <FormControl id="password">
                     <LabeledTextField
                       name="password"
-                      label="Password"
-                      placeholder="Password"
+                      label={t("PASSWORD")}
+                      placeholder={t("PASSWORD")}
                       type="password"
                     />
                   </FormControl>
@@ -64,16 +71,16 @@ export const LoginPage: BlitzPage = () => {
                       justify={"flex-end"}
                     >
                       <Link color={"blue.400"} href="/forgot-password">
-                        Forgot password?
+                        {t("FORGOT_PASSWORD")}
                       </Link>
                     </Stack>
                     <Button type="submit" disabled={submitting}>
-                      Log in
+                      {t("LOGIN_BUTTON")}
                     </Button>
 
                     <Link href="/signup">
                       <Button variant="ghost" w="100%">
-                        Sign up instead
+                        {t("LOGIN_FORM_SIGNUP")}
                       </Button>
                     </Link>
                   </Stack>
