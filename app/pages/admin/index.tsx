@@ -33,7 +33,7 @@ export const AdminList = () => {
   const match = useRef<MatchWithTeams | undefined>()
 
   const bgColorMode = useColorModeValue("white", "gray.900")
-  const tableBgColorMode = useColorModeValue("gray.50", "gray.900")
+  const tableBgColorMode = useColorModeValue("gray.50", "gray.700")
 
   if (isLoading) {
     return <p>Loading...</p>

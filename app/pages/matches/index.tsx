@@ -1,4 +1,18 @@
-import { Box, Image, Flex, Input, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react"
+import {
+  Box,
+  Image,
+  Flex,
+  Input,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  useColorModeValue,
+  useToast,
+} from "@chakra-ui/react"
 import { Match, Team, UserLeagueMatch } from "@prisma/client"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
@@ -6,7 +20,7 @@ import updateResultForUser from "app/matches/mutations/updateResultForUser"
 import getMatches from "app/matches/queries/getMatches"
 import { BlitzPage, Head, invoke, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
-import { Suspense } from "react"
+import { Suspense, useState } from "react"
 
 export const MatchesList = () => {
   const user = useCurrentUser()
@@ -19,6 +33,9 @@ export const MatchesList = () => {
   )
 
   const router = useRouter()
+  const toast = useToast()
+  const bgColorMode = useColorModeValue("white", "gray.900")
+  const tableBgColorMode = useColorModeValue("gray.50", "gray.700")
   if (user?.userLeague?.length === 0) {
     router.push("/")
     return null
@@ -37,11 +54,31 @@ export const MatchesList = () => {
     newValue: number
     resultKey: "resultHome" | "resultAway"
   }) => {
-    await invoke(updateResultForUser, {
-      userMatchId,
-      newValue,
-      resultKey,
-    })
+    try {
+      if (newValue) {
+        console.log("AA", newValue)
+        await invoke(updateResultForUser, {
+          userMatchId,
+          newValue,
+          resultKey,
+        })
+        toast({
+          title: "Success!",
+          description: "Score updated.",
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+        })
+      }
+    } catch (error) {
+      toast({
+        title: "Oops.",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      })
+    }
   }
 
   const getDateWithoutTimeFromDate = (date: Date) => {
@@ -58,7 +95,7 @@ export const MatchesList = () => {
   } = {}
   matches?.forEach((m) => {
     const currentMatchDate = dayjs(getDateWithoutTimeFromDate(m.match.kickOff)).format(
-      "DD. MMM YYYY"
+      "DD. MMMM YYYY"
     )
     if (currentMatchDate in matchesByDate) {
       matchesByDate[currentMatchDate].push(m)
@@ -68,7 +105,7 @@ export const MatchesList = () => {
   })
 
   return (
-    <Box pb="16px">
+    <Box pb="16px" bg={bgColorMode}>
       {Object.keys(matchesByDate).map((date) => {
         const matchesForDay = matchesByDate[date]
         return (
@@ -78,12 +115,12 @@ export const MatchesList = () => {
             </Text>
             <Box
               p="16px"
-              bg="white"
               borderRadius="md"
               boxShadow="md"
               display="inline-block"
               margin="0 auto"
               mt={["8px", "20px"]}
+              bg={tableBgColorMode}
             >
               <Table
                 variant="simple"
@@ -92,6 +129,7 @@ export const MatchesList = () => {
                 style={{
                   tableLayout: "fixed",
                 }}
+                bg={tableBgColorMode}
               >
                 <Thead>
                   <Tr>
@@ -133,6 +171,7 @@ export const MatchesList = () => {
                           defaultValue={m.resultHome}
                           w="60px"
                           type="number"
+                          disabled={new Date() > m.match.kickOff}
                           onChange={(e) =>
                             onChangeResult({
                               userMatchId: m.id,
@@ -152,6 +191,7 @@ export const MatchesList = () => {
                           defaultValue={m.resultAway}
                           w="60px"
                           type="number"
+                          disabled={new Date() > m.match.kickOff}
                           onChange={(e) =>
                             onChangeResult({
                               userMatchId: m.id,
