@@ -1,6 +1,6 @@
 import { DeleteIcon } from "@chakra-ui/icons"
 import { Box, Container, Flex, Text } from "@chakra-ui/layout"
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { Table, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import removeUserFromLeagueIfExists from "app/leagues/mutations/removeUserFromLeagueIfExists"
@@ -8,24 +8,63 @@ import getLeague from "app/leagues/queries/getLeague"
 import getMatchResults from "app/matches/queries/getMatchResults"
 import { BlitzPage, Head, useMutation, useQuery, useRouter } from "blitz"
 import React, { Suspense } from "react"
+import { useTranslation } from "react-i18next"
+import { FiStar } from "react-icons/fi"
 
 export const League = () => {
   const router = useRouter()
   const currentUser = useCurrentUser()
   const [removeUser, { isLoading: isRemovingUser }] = useMutation(removeUserFromLeagueIfExists)
   const leagueId = router.params.id
-  const [league, { isLoading, error }] = useQuery(getLeague, {
+  const [league, { isLoading }] = useQuery(getLeague, {
     id: leagueId,
   })
+  const toast = useToast()
   const [matches, { isLoading: isLoadingMatches }] = useQuery(getMatchResults, {})
-  if (error) {
-    return <Text>ERror! </Text>
-  }
+  const { t } = useTranslation()
+
   if (isLoading || isLoadingMatches) {
     return <Text>Loading</Text>
   }
   const userIsLeagueAdmin =
     currentUser?.userLeague.find((l) => l.leagueId === leagueId)?.role === "ADMIN"
+
+  const usersWithScore = league.UserLeague.map((ul) => {
+    let score = 0
+    ul.predictions.forEach((prediction) => {
+      const match = matches.find((m) => m.id === prediction.matchId)
+      if (match) {
+        const { resultHome, resultAway } = match
+        if (resultHome !== null && resultAway !== null) {
+          if (resultHome === prediction.resultHome && resultAway === prediction.resultAway) {
+            score += 1
+          }
+
+          if (resultHome === resultAway && prediction.resultHome === prediction.resultAway) {
+            score += 1
+          } else {
+            const resultMatch = Math.sign(resultHome - resultAway)
+            const resultUser = Math.sign(prediction.resultHome - prediction.resultAway)
+            if (resultMatch === resultUser) {
+              score += 1
+            }
+          }
+        }
+      }
+    })
+
+    return {
+      ...ul,
+      score,
+    }
+  })
+
+  usersWithScore.sort((a, b) => b.score - a.score)
+
+  const leagueWithScores = {
+    ...league,
+    UserLeague: usersWithScore,
+  }
 
   return (
     <Flex direction="column">
@@ -34,62 +73,46 @@ export const League = () => {
           {league.name}
         </Text>
         <Text fontSize="1xl">
-          Invite code: <strong>{league.inviteCode}</strong>
+          {t("INVITE_CODE")}: <strong>{league.inviteCode}</strong>
         </Text>
       </Box>
       <Table variant="simple" mt="32px">
         <Thead>
           <Tr>
-            <Th>Name</Th>
-            <Th isNumeric>Score</Th>
-            {userIsLeagueAdmin ? <Th>-</Th> : null}
+            <Th>{t("NAME")}</Th>
+            <Th isNumeric>{t("SCORE")}</Th>
+            {userIsLeagueAdmin ? <Th></Th> : null}
           </Tr>
         </Thead>
         <Tbody>
-          {league.UserLeague.map((ul, i) => (
+          {leagueWithScores.UserLeague.map((ul, i) => (
             <Tr key={ul.userId}>
-              <Td>{ul.user.name}</Td>
-              <Td isNumeric>
-                {(() => {
-                  let score = 0
-                  ul.predictions.forEach((prediction) => {
-                    const match = matches.find((m) => m.id === prediction.matchId)
-                    if (match) {
-                      const { resultHome, resultAway } = match
-                      if (resultHome !== null && resultAway !== null) {
-                        if (
-                          resultHome === prediction.resultHome &&
-                          resultAway === prediction.resultAway
-                        ) {
-                          score += 1
-                        }
-
-                        if (
-                          resultHome === resultAway &&
-                          prediction.resultHome === prediction.resultAway
-                        ) {
-                          score += 1
-                        } else {
-                          const resultMatch = Math.sign(resultHome - resultAway)
-                          const resultUser = Math.sign(
-                            prediction.resultHome - prediction.resultAway
-                          )
-                          if (resultMatch === resultUser) {
-                            score += 1
-                          }
-                        }
-                      }
-                    }
-                  })
-                  return score
-                })()}
+              <Td>
+                <Flex direction="row" alignItems="center">
+                  {ul.user.name}
+                  {ul.role === "ADMIN" ? (
+                    <Box ml="8px">
+                      <FiStar />
+                    </Box>
+                  ) : null}
+                </Flex>
               </Td>
+              <Td isNumeric>{ul.score}</Td>
               {userIsLeagueAdmin ? (
                 <Td
                   color="red.400"
                   cursor="pointer"
                   onClick={async () => {
                     if (!isRemovingUser) {
+                      if (ul.role === "ADMIN") {
+                        return toast({
+                          status: "error",
+                          isClosable: true,
+                          title: "Oops.",
+                          description: "It is not possible to remove an admin.",
+                        })
+                      }
+
                       removeUser({
                         leagueId: ul.leagueId,
                         userId: ul.userId,
@@ -116,7 +139,7 @@ const LeaguesPage: BlitzPage = () => {
       </Head>
 
       <Container paddingTop="16px">
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
           <League />
         </Suspense>
       </Container>

@@ -18,6 +18,7 @@ model User {
   email             String            @unique
   hashedPassword    String?
   role              String            @default("USER")
+  language          String
   tokens            Token[]
   sessions          Session[]
   userLeagueMatches UserLeagueMatch[]

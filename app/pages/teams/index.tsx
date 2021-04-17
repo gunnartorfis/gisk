@@ -1,13 +1,14 @@
-import { Box, Container, Flex, Grid, Text } from "@chakra-ui/layout"
+import { Container, Flex, Text } from "@chakra-ui/layout"
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 import Layout from "app/core/layouts/Layout"
 import getTeams from "app/teams/queries/getTeams"
 import { BlitzPage, Head, Image, Link, useQuery } from "blitz"
 import { Suspense } from "react"
+import { useTranslation } from "react-i18next"
 
 export const TeamsList = () => {
   const [teams] = useQuery(getTeams, {})
-
+  const { t } = useTranslation()
   const groups = Array.from(new Set(teams.map((t) => t.group)))
   const teamsByGroups = groups.map((group) => ({
     group,
@@ -29,9 +30,9 @@ export const TeamsList = () => {
             <Thead>
               <Tr>
                 <Th isTruncated w="120px">
-                  Group {teamsByGroup.group}
+                  {t("GROUP")} {teamsByGroup.group}
                 </Th>
-                <Th isTruncated>Name</Th>
+                <Th isTruncated>{t("NAME")}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -70,7 +71,7 @@ const TeamsPage: BlitzPage = () => {
       </Head>
 
       <div>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<div></div>}>
           <TeamsList />
         </Suspense>
       </div>

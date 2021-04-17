@@ -16,6 +16,7 @@ import { queryCache } from "react-query"
 import "./_app.css"
 import "react-datepicker/dist/react-datepicker.css"
 import InputTheme from "app/core/chakraTheme/Input"
+import "app/core/translations/i18n"
 
 export const theme = extendTheme({
   components: {

@@ -10,9 +10,11 @@ import {
 } from "@chakra-ui/react"
 import Head from "next/head"
 import Link from "next/link"
+import { useTranslation } from "react-i18next"
 import GradientTitle from "./GradientTitle"
 
 export default function Welcome() {
+  const { t } = useTranslation()
   return (
     <>
       <Head>
@@ -31,10 +33,8 @@ export default function Welcome() {
           alignItems="center"
           spacing={{ base: 8, md: 14 }}
         >
-          <GradientTitle>UEFA Euro 2020</GradientTitle>
-          <Text color={"gray.500"}>
-            Compete with your friends! Who's the football genius in your group?
-          </Text>
+          <GradientTitle>{t("WELCOME_TITLE")}</GradientTitle>
+          <Text color={"gray.500"}>{t("WELCOME_DESCRIPTION")}</Text>
           <Stack
             direction={"column"}
             spacing={3}
@@ -42,11 +42,11 @@ export default function Welcome() {
             alignSelf={"center"}
             position={"relative"}
           >
-            <Link href="/signup">
-              <Button>Create an account</Button>
-            </Link>
             <Link href="/login">
-              <Button variant="text">Already have an account?</Button>
+              <Button variant="text">{t("WELCOME_LOGIN")}</Button>
+            </Link>
+            <Link href="/signup">
+              <Button>{t("WELCOME_SIGNUP")}</Button>
             </Link>
             <Box>
               <Icon
@@ -56,7 +56,7 @@ export default function Welcome() {
                 position={"absolute"}
                 right={[0, -71]}
                 left={[71, "unset"]}
-                top={["70px", "10px"]}
+                top={["120px", "10px"]}
                 transform={["rotate(90deg)", "unset"]}
               />
               <Text
@@ -65,10 +65,10 @@ export default function Welcome() {
                 position={"absolute"}
                 right={[0, "-125px"]}
                 left={["40px", "unset"]}
-                top={["100px", "-15px"]}
+                top={["140px", "-15px"]}
                 transform={["rotate(-20deg)", "rotate(10deg)"]}
               >
-                It's 100% free
+                {t("WELCOME_FREE")}
               </Text>
             </Box>
           </Stack>

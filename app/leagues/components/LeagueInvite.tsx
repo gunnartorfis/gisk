@@ -1,6 +1,7 @@
 import { Box, Input, Text } from "@chakra-ui/react"
 import { invoke, useRouter } from "blitz"
 import React from "react"
+import { useTranslation } from "react-i18next"
 import addUserToLeagueIfExists from "../mutations/addUserToLeagueIfExists"
 
 export const LeagueInviteInput = () => {
@@ -38,9 +39,10 @@ export const LeagueInviteInput = () => {
 }
 
 const LeagueInvite = () => {
+  const { t } = useTranslation()
   return (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-      <Text>Got an invite?</Text>
+      <Text>{t("GOT_AN_INVITE")}</Text>
       <LeagueInviteInput />
     </Box>
   )

@@ -26,11 +26,12 @@ import {
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
+import { useTranslation } from "react-i18next"
 import logout from "app/auth/mutations/logout"
 import getLeagues from "app/leagues/queries/getLeagues"
 import { useMutation, useQuery, useRouter, useSession } from "blitz"
 import { Suspense, useEffect } from "react"
-import { FiLogOut, FiSettings } from "react-icons/fi"
+import { FiCoffee, FiLogOut, FiSettings } from "react-icons/fi"
 import CreateLeagueModal, {
   CREATE_LEAGUE_MODAL_LEAGUE_CREATED,
 } from "../components/CreateLeagueModal"
@@ -38,6 +39,7 @@ import Dropdown from "../components/Dropdown"
 import GradientTitle from "../components/GradientTitle"
 import Emitter from "../eventEmitter/emitter"
 import { useCurrentUser } from "../hooks/useCurrentUser"
+import updateUserLanguage from "app/users/mutations/updateUserLanguage"
 
 export const HeaderFallback = () => {
   return (
@@ -58,6 +60,7 @@ export const HeaderFallback = () => {
 const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () => void }) => {
   const { userId, isLoading } = useSession()
   const user = useCurrentUser()
+  const { t, i18n } = useTranslation()
   const getLeaguesQueryDisabled = !userId && !isLoading
 
   const [leagues, { refetch }] = useQuery(
@@ -86,7 +89,7 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
   if (!leagues) {
     return [
       {
-        label: "New league",
+        label: t("NEW_LEAGUE"),
         action: () => {
           onClickCreateNewLeague()
         },
@@ -97,7 +100,7 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
 
   const navItems: Array<NavItem> = [
     {
-      label: "Leagues",
+      label: t("LEAGUES"),
       children:
         leagues.length > 0
           ? [
@@ -107,7 +110,7 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
                 href: `/leagues/${g.id}`,
               })),
               {
-                label: "New league",
+                label: t("NEW_LEAGUE"),
                 action: () => {
                   onClickCreateNewLeague()
                 },
@@ -118,23 +121,44 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
       href: leagues.length === 0 ? "/" : undefined,
     },
     {
-      label: "Matches",
+      label: t("MATCHES"),
       href: "/matches",
     },
     {
-      label: "Teams",
+      label: t("TEAMS"),
       href: "/teams",
     },
   ]
 
   if (user?.role === "ADMIN") {
     navItems.push({
-      label: "Admin",
+      label: t("ADMIN"),
       href: "/admin",
     })
   }
 
   return navItems
+}
+
+const getFlagBasedOnLanguage = (language: string = "is") => {
+  const spanProps = {
+    role: "img",
+    "aria-label": language,
+    fontSize: "40px",
+  }
+
+  let flag = (
+    // eslint-disable-next-line jsx-a11y/accessible-emoji
+    <span {...spanProps}>🇺🇸</span>
+  )
+  if (language === "is") {
+    flag = (
+      // eslint-disable-next-line jsx-a11y/accessible-emoji
+      <span {...spanProps}>🇮🇸</span>
+    )
+  }
+
+  return flag
 }
 
 export default function Header() {
@@ -150,6 +174,9 @@ export default function Header() {
       onOpenCreateModal()
     },
   })
+  const { t, i18n } = useTranslation()
+  const currentUser = useCurrentUser()
+  const [updateUserLanguageMutation] = useMutation(updateUserLanguage)
 
   return (
     <Box>
@@ -186,13 +213,13 @@ export default function Header() {
               textDecor: "none",
             }}
           >
-            <GradientTitle smaller>Euro 2020</GradientTitle>
+            <GradientTitle smaller>{t("NAV_BAR_MOBILE_TITLE")}</GradientTitle>
           </Link>
           <Box
             display={{ base: "inherit", md: "none" }}
             position="absolute"
-            left="50px"
-            right="50px"
+            left="120px"
+            right="120px"
             top={0}
             h="60px"
           >
@@ -204,7 +231,7 @@ export default function Header() {
                   textDecor: "none",
                 }}
               >
-                <GradientTitle smaller>Euro 2020</GradientTitle>
+                <GradientTitle smaller>{t("NAV_BAR_MOBILE_TITLE")}</GradientTitle>
               </Link>
             </Flex>
           </Box>
@@ -216,10 +243,28 @@ export default function Header() {
           </Flex>
         </Flex>
         <Flex dir="row" alignItems="center" justifyContent="center">
-          <Flex flex={1} cursor="pointer" onClick={toggleColorMode} mr="8px">
-            {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+          <Flex flex={1} direction="row" alignItems="center">
+            <Box cursor="pointer" onClick={toggleColorMode} mr="16px">
+              {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            </Box>
+            <Dropdown
+              right="16px"
+              top="60px"
+              onClickItemWithKey={(language) => {
+                i18n.changeLanguage(language)
+                if (currentUser) {
+                  updateUserLanguageMutation({
+                    language,
+                  })
+                }
+              }}
+            >
+              <Dropdown.Summary>{getFlagBasedOnLanguage(i18n.language)}</Dropdown.Summary>
+              <Dropdown.Item key="is">{getFlagBasedOnLanguage("is")}</Dropdown.Item>
+              <Dropdown.Item key="en">{getFlagBasedOnLanguage("en")}</Dropdown.Item>
+            </Dropdown>
           </Flex>
-          <Suspense fallback="Loading...">
+          <Suspense fallback="">
             <HeaderUser />
           </Suspense>
         </Flex>
@@ -240,23 +285,32 @@ const HeaderUser = () => {
   const currentUser = useCurrentUser({ enabled: !!session.userId })
   const router = useRouter()
   const [logoutMutation] = useMutation(logout)
+  const { t } = useTranslation()
 
   if (currentUser) {
     return (
-      <Box display={{ base: "none", md: "inherit" }}>
+      <Box display={{ base: "none", md: "inherit" }} ml="8px">
         <Dropdown right="16px" top="60px">
           <Dropdown.Summary>{currentUser.name}</Dropdown.Summary>
           <Dropdown.Item
             key="settings"
-            title="Settings"
+            title={t("SETTINGS")}
             icon={<FiSettings />}
             onClick={() => {
               router.push("/settings")
             }}
           ></Dropdown.Item>
           <Dropdown.Item
+            key="coffee"
+            title={t("BUY_ME_A_COFFEE")}
+            icon={<FiCoffee />}
+            onClick={() => {
+              window.open("https://www.buymeacoffee.com/gunnar", "_blank")
+            }}
+          ></Dropdown.Item>
+          <Dropdown.Item
             key="logout"
-            title="Logout"
+            title={t("LOGOUT")}
             icon={<FiLogOut />}
             onClick={async () => {
               await logoutMutation()
@@ -312,10 +366,12 @@ const MobileNav: React.FunctionComponent<{
             label: "Settings",
             href: "/settings",
           },
-          // {
-          //   label: "Buy me coffee",
-          //   href: "/coffee",
-          // },
+          {
+            label: "Buy me coffee",
+            action: () => {
+              window.open("https://www.buymeacoffee.com/gunnar", "_blank")
+            },
+          },
           {
             label: "Logout",
             action: async () => {

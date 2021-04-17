@@ -6,11 +6,13 @@ import Layout from "app/core/layouts/Layout"
 import updateUser, { UpdateUserForm } from "app/mutations/updateUser"
 import { BlitzPage, useMutation, useRouter } from "blitz"
 import { Suspense } from "react"
+import { useTranslation } from "react-i18next"
 
 export const SettingsPage: BlitzPage = () => {
   const [updateUserMutation] = useMutation(updateUser)
   const router = useRouter()
   const currentUser = useCurrentUser()
+  const { t } = useTranslation()
 
   return (
     <Form
@@ -29,20 +31,25 @@ export const SettingsPage: BlitzPage = () => {
               <FormControl id="email">
                 <LabeledTextField
                   name="email"
-                  label="Email"
-                  placeholder="Email"
+                  label={t("EMAIL")}
+                  placeholder={t("EMAIL")}
                   type="email"
                   disabled
                   value={currentUser?.email}
                 />
               </FormControl>
               <FormControl id="name">
-                <LabeledTextField name="name" label="Name" placeholder="Name" type="text" />
+                <LabeledTextField
+                  name="name"
+                  label={t("NAME")}
+                  placeholder={t("NAME")}
+                  type="text"
+                />
               </FormControl>
               <FormContext.Consumer>
                 {({ submitting }) => (
                   <Button type="submit" disabled={submitting}>
-                    Save
+                    {t("UPDATE")}
                   </Button>
                 )}
               </FormContext.Consumer>
@@ -56,7 +63,7 @@ export const SettingsPage: BlitzPage = () => {
 
 SettingsPage.getLayout = (page) => (
   <Layout title="Settings">
-    <Suspense fallback="Loading...">{page}</Suspense>
+    <Suspense fallback="">{page}</Suspense>
   </Layout>
 )
 

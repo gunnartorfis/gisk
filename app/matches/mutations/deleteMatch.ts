@@ -14,9 +14,17 @@ const deleteMatch = resolver.pipe(
       throw new Error()
     }
 
+    const { id } = input
+
+    await db.userLeagueMatch.deleteMany({
+      where: {
+        matchId: id,
+      },
+    })
+
     await db.match.delete({
       where: {
-        id: input.id,
+        id,
       },
     })
   }

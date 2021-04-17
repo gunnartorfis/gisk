@@ -7,8 +7,8 @@ const UpdateMatch = z.object({
   homeTeamId: z.string(),
   awayTeamId: z.string(),
   kickOff: z.date(),
-  resultHome: z.optional(z.number()),
-  resultAway: z.optional(z.number()),
+  resultHome: z.nullable(z.number()),
+  resultAway: z.nullable(z.number()),
 })
 
 const updateMatch = resolver.pipe(
