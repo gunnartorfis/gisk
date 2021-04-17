@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/layout"
+import { Box, Container, Flex, Grid, Text } from "@chakra-ui/layout"
 import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
 import Layout from "app/core/layouts/Layout"
 import getTeams from "app/teams/queries/getTeams"
@@ -15,48 +15,50 @@ export const TeamsList = () => {
   }))
 
   return (
-    <Flex direction="row" wrap="wrap">
-      {teamsByGroups.map((teamsByGroup) => (
-        // <Flex key={teamsByGroup.group} flex={1} p="40px" direction="column">
-        <Table
-          variant="simple"
-          mt="8px"
-          w={["100%", "180px"]}
-          style={{
-            tableLayout: "fixed",
-            float: "left",
-          }}
-        >
-          <Thead>
-            <Tr>
-              <Th isTruncated>Group {teamsByGroup.group}</Th>
-              <Th isTruncated>Name</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {teamsByGroup.teams?.map((team) => (
-              <Tr key={team.id}>
-                <Td isTruncated w="auto">
-                  <Image
-                    src={`/teams/${team.countryCode}.png`}
-                    alt={team.countryCode}
-                    width={40}
-                    height={40}
-                  />
-                </Td>
-                <Td isTruncated w="160px" cursor="pointer">
-                  <Link href={`/teams/${team.name}`}>
-                    <Text>
-                      {team.name} ({team.countryCode})
-                    </Text>
-                  </Link>
-                </Td>
+    <Container>
+      <Flex direction="column">
+        {teamsByGroups.map((teamsByGroup) => (
+          <Table
+            variant="simple"
+            key={teamsByGroup.group}
+            mt="8px"
+            style={{
+              tableLayout: "fixed",
+            }}
+          >
+            <Thead>
+              <Tr>
+                <Th isTruncated w="120px">
+                  Group {teamsByGroup.group}
+                </Th>
+                <Th isTruncated>Name</Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      ))}
-    </Flex>
+            </Thead>
+            <Tbody>
+              {teamsByGroup.teams?.map((team) => (
+                <Tr key={team.id}>
+                  <Td isTruncated w="120px">
+                    <Image
+                      src={`/teams/${team.countryCode}.png`}
+                      alt={team.countryCode}
+                      width={40}
+                      height={40}
+                    />
+                  </Td>
+                  <Td isTruncated w="160px" cursor="pointer">
+                    <Link href={`/teams/${team.name}`}>
+                      <Text>
+                        {team.name} ({team.countryCode})
+                      </Text>
+                    </Link>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        ))}
+      </Flex>
+    </Container>
   )
 }
 
