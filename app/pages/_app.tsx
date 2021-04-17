@@ -14,6 +14,7 @@ import React from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { queryCache } from "react-query"
 import "./_app.css"
+import "react-datepicker/dist/react-datepicker.css"
 
 const theme = extendTheme({
   components: {

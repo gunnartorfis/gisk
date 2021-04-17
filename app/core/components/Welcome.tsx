@@ -59,18 +59,21 @@ export default function Welcome() {
               <Icon
                 as={Arrow}
                 color={useColorModeValue("gray.800", "gray.300")}
-                w={71}
+                w={[71, 71]}
                 position={"absolute"}
-                right={-71}
-                top={"10px"}
+                right={[0, -71]}
+                left={[71, "unset"]}
+                top={["70px", "10px"]}
+                transform={["rotate(90deg)", "unset"]}
               />
               <Text
                 fontSize={"lg"}
                 fontFamily={"Caveat"}
                 position={"absolute"}
-                right={"-125px"}
-                top={"-15px"}
-                transform={"rotate(10deg)"}
+                right={[0, "-125px"]}
+                left={["40px", "unset"]}
+                top={["100px", "-15px"]}
+                transform={["rotate(-20deg)", "rotate(10deg)"]}
               >
                 It's 100% free
               </Text>

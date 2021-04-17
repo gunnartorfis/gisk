@@ -19,3 +19,7 @@ details[open] summary ~ * {
     margin-top: 0px;
   }
 }
+
+table  {
+  table-layout: fixed;
+}

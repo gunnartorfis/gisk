@@ -39,10 +39,9 @@ const SignupPage: BlitzPage = () => {
       }}
     >
       <Flex
-        minH={"100vh"}
+        // minH={"100vh"}
         align={"center"}
         justify={"center"}
-        bg={useColorModeValue("gray.50", "gray.800")}
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
@@ -100,10 +99,6 @@ const SignupPage: BlitzPage = () => {
 }
 
 SignupPage.redirectAuthenticatedTo = "/"
-SignupPage.getLayout = (page) => (
-  <Layout isAuth title="Sign Up">
-    {page}
-  </Layout>
-)
+SignupPage.getLayout = (page) => <Layout title="Sign Up">{page}</Layout>
 
 export default SignupPage

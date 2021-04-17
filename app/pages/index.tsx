@@ -7,7 +7,7 @@ import Welcome from "app/core/components/Welcome"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import LeagueInvite from "app/leagues/components/LeagueInvite"
-import { BlitzPage, Link, useMutation } from "blitz"
+import { BlitzPage, useMutation } from "blitz"
 import React, { Suspense } from "react"
 
 export const CORRECT_RESULT = "correct_result"
@@ -25,48 +25,6 @@ export const scoring = [
     score: 2,
   },
 ]
-
-const DashboardItem: React.FunctionComponent<{
-  href: string
-}> = ({ children, href }) => {
-  return (
-    <Link href={href}>
-      <Box
-        padding="40px"
-        bg="primary"
-        borderRadius="base"
-        color="white"
-        fontSize="3xl"
-        fontWeight="semibold"
-        cursor="pointer"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="center"
-        w="200px"
-        h="200px"
-        _hover={{
-          bg: "primarydarker",
-        }}
-        role="group"
-      >
-        <Box
-          transition="transform .2s"
-          _groupHover={{
-            transform: "scale(1.2)",
-          }}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          _hover={{}}
-        >
-          {children}
-        </Box>
-      </Box>
-    </Link>
-  )
-}
 
 const Dashboard = () => {
   const currentUser = useCurrentUser()
@@ -88,8 +46,9 @@ const Dashboard = () => {
           w="100%"
           alignItems="center"
           justifyContent="space-between"
-          border={["0", "1px"]}
-          borderColor="gray.100"
+          borderRadius="md"
+          bg="white"
+          boxShadow="md"
           padding="40px"
           margin={["0px 40px", 0]}
         >

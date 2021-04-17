@@ -44,9 +44,6 @@ export function Form<S extends z.ZodType<any, any>>({
       }}
       onSubmit={onSubmit}
       render={({ handleSubmit, submitting, submitError }) => {
-        console.log({
-          submitError,
-        })
         return (
           <form onSubmit={handleSubmit} className="form" {...props}>
             {/* Form fields supplied as children are rendered here */}

@@ -22,7 +22,7 @@ export const SettingsPage: BlitzPage = () => {
         router.push(next)
       }}
     >
-      <Flex bg={useColorModeValue("white", "gray.800")}>
+      <Flex bg={useColorModeValue("", "gray.800")}>
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Box rounded={"lg"} bg={useColorModeValue("white", "gray.700")} boxShadow={"lg"} p={8}>
             <Stack spacing={4}>

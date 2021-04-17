@@ -23,7 +23,6 @@ export default resolver.pipe(
       })
       return league
     } catch (error) {
-      console.log("error fetching league", error)
       return null
     }
   }

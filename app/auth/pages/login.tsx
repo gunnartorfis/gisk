@@ -37,7 +37,7 @@ export const LoginPage: BlitzPage = () => {
     >
       <FormContext.Consumer>
         {({ submitting, submitError }) => (
-          <Flex minH={"100vh"} align={"center"} justify={"center"} bg={bgColorMode}>
+          <Flex align={"center"} justify={"center"} bg={bgColorMode}>
             <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
               <Box rounded={"lg"} bg={boxColorMode} boxShadow={"lg"} p={8}>
                 <Stack spacing={4}>
@@ -88,10 +88,6 @@ export const LoginPage: BlitzPage = () => {
 }
 
 LoginPage.redirectAuthenticatedTo = "/"
-LoginPage.getLayout = (page) => (
-  <Layout isAuth title="Log In">
-    {page}
-  </Layout>
-)
+LoginPage.getLayout = (page) => <Layout title="Log In">{page}</Layout>
 
 export default LoginPage

@@ -1,6 +1,8 @@
 import React, { ReactNode, Suspense } from "react"
 import { Head } from "blitz"
 import Header, { HeaderFallback } from "./Header"
+import { Box, Container } from "@chakra-ui/layout"
+import { useColorModeValue } from "@chakra-ui/react"
 
 type LayoutProps = {
   title?: string
@@ -20,7 +22,9 @@ const Layout = ({ title, children, isAuth }: LayoutProps) => {
           <Header />
         </Suspense>
       ) : null}
-      {children}
+      <Box width="100%" minH="calc(100vh - 60px)" bg={useColorModeValue("gray.50", "gray.800")}>
+        {children}
+      </Box>
     </>
   )
 }

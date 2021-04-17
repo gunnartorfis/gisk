@@ -27,7 +27,6 @@ export const LeagueInviteInput = () => {
               })
               router.push(`/leagues/${league.id}`)
             } catch (error) {
-              console.log("Error adding user to league: ", error)
               setError("League not found")
             }
           }
