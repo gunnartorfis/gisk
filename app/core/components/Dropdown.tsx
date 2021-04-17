@@ -1,4 +1,4 @@
-import { Box, Flex, Link, ResponsiveValue, Text } from "@chakra-ui/react"
+import { Box, Flex, Link, ResponsiveValue, Text, useColorModeValue } from "@chakra-ui/react"
 import * as CSS from "csstype"
 import React, { useRef } from "react"
 import ReactDOM from "react-dom"
@@ -24,6 +24,7 @@ const Item: React.FunctionComponent<{
   href?: string
   onClick: (itemTitle: string) => void
 }> = ({ title, icon, onClick, href }) => {
+  const bg = useColorModeValue("white", "gray.500")
   const renderChildren = () => (
     <Flex
       direction="row"
@@ -31,14 +32,14 @@ const Item: React.FunctionComponent<{
       p="12px 20px"
       cursor="pointer"
       _hover={{
-        bg: "gray.100",
+        bg,
       }}
       onClick={() => {
         onClick?.(title)
       }}
     >
+      <Text mr="8px">{title}</Text>
       {icon || null}
-      <Text ml="8px">{title}</Text>
     </Flex>
   )
 
@@ -91,6 +92,12 @@ const Dropdown: React.FunctionComponent<{
   const wrapperRef = useRef<any>(null)
   useOutsideAlerter(wrapperRef, onClickOutside)
 
+  const bg = useColorModeValue("gray.50", "gray.600")
+
+  if (otherChildren.length === 0) {
+    return summaryChild
+  }
+
   return (
     <details ref={wrapperRef}>
       {summaryChild}
@@ -100,7 +107,7 @@ const Dropdown: React.FunctionComponent<{
         zIndex={999}
         borderRadius="md"
         boxShadow="md"
-        bg="white"
+        bg={bg}
         {...props}
       >
         {otherChildren}

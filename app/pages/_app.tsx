@@ -15,11 +15,14 @@ import { ErrorBoundary } from "react-error-boundary"
 import { queryCache } from "react-query"
 import "./_app.css"
 import "react-datepicker/dist/react-datepicker.css"
+import InputTheme from "app/core/chakraTheme/Input"
 
-const theme = extendTheme({
+export const theme = extendTheme({
   components: {
     Button: ButtonTheme,
+    Input: InputTheme,
   },
+  useSystemColorMode: true,
   colors: Colors,
 })
 

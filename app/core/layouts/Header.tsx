@@ -1,4 +1,5 @@
 import {
+  AddIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   CloseIcon,
@@ -56,6 +57,7 @@ export const HeaderFallback = () => {
 
 const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () => void }) => {
   const { userId, isLoading } = useSession()
+  const user = useCurrentUser()
   const getLeaguesQueryDisabled = !userId && !isLoading
 
   const [leagues, { refetch }] = useQuery(
@@ -88,6 +90,7 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
         action: () => {
           onClickCreateNewLeague()
         },
+        icon: <AddIcon />,
       },
     ]
   }
@@ -108,6 +111,7 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
                 action: () => {
                   onClickCreateNewLeague()
                 },
+                icon: <AddIcon />,
               },
             ]
           : undefined,
@@ -122,6 +126,13 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
       href: "/teams",
     },
   ]
+
+  if (user?.role === "ADMIN") {
+    navItems.push({
+      label: "Admin",
+      href: "/admin",
+    })
+  }
 
   return navItems
 }
@@ -271,6 +282,7 @@ const DesktopNav: React.FunctionComponent<{
             <Dropdown.Item
               title={navItem.label}
               key={navItem.label}
+              icon={navItem.icon}
               href={navItem.href}
               onClick={() => {
                 navItem.action?.()
@@ -389,4 +401,5 @@ interface NavItem {
   children?: Array<NavItem>
   href?: string
   action?: () => void
+  icon?: JSX.Element
 }

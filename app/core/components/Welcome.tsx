@@ -43,17 +43,10 @@ export default function Welcome() {
             position={"relative"}
           >
             <Link href="/signup">
-              <Button
-                colorScheme={"green"}
-                bg={"green.400"}
-                rounded={"full"}
-                px={6}
-                _hover={{
-                  bg: "green.500",
-                }}
-              >
-                Create an account
-              </Button>
+              <Button>Create an account</Button>
+            </Link>
+            <Link href="/login">
+              <Button variant="text">Already have an account?</Button>
             </Link>
             <Box>
               <Icon

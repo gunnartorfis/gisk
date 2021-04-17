@@ -20,7 +20,7 @@ import getMatchResults from "app/matches/queries/getMatchResults"
 import { BlitzPage, getSession, Head, useQuery } from "blitz"
 import dayjs from "dayjs"
 import { Suspense, useRef, useState } from "react"
-import MatchDrawer from "./components/MatchDrawer"
+import MatchDrawer from "../../core/components/MatchDrawer"
 
 export type MatchWithTeams = Match & {
   homeTeam: Team

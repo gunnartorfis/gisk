@@ -37,7 +37,7 @@ const ButtonTheme = {
       color: "primary",
       padding: "16px",
       ":hover": {
-        color: "primarydarker",
+        color: "secondary",
       },
     },
   },
