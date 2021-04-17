@@ -153,18 +153,20 @@ export default function Header() {
         borderColor={useColorModeValue("gray.200", "gray.900")}
         align={"center"}
       >
-        <Flex
-          flex={{ base: 1, md: "auto" }}
-          ml={{ base: -2 }}
-          display={{ base: "flex", md: "none" }}
-        >
-          <IconButton
-            onClick={onToggle}
-            icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
-            variant={"ghost"}
-            aria-label={"Toggle Navigation"}
-          />
-        </Flex>
+        {navItems.length > 0 ? (
+          <Flex
+            flex={{ base: 1, md: "auto" }}
+            ml={{ base: -2 }}
+            display={{ base: "flex", md: "none" }}
+          >
+            <IconButton
+              onClick={onToggle}
+              icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
+              variant={"ghost"}
+              aria-label={"Toggle Navigation"}
+            />
+          </Flex>
+        ) : null}
         <Flex flex={{ base: 1 }} justify={{ base: "start", md: "start" }}>
           <Link
             href="/"
@@ -223,7 +225,8 @@ export default function Header() {
 }
 
 const HeaderUser = () => {
-  const currentUser = useCurrentUser()
+  const session = useSession()
+  const currentUser = useCurrentUser({ enabled: !!session.userId })
   const router = useRouter()
   const [logoutMutation] = useMutation(logout)
 
@@ -259,7 +262,6 @@ const HeaderUser = () => {
 const DesktopNav: React.FunctionComponent<{
   navItems: Array<NavItem>
 }> = ({ navItems }) => {
-  const popoverContentBgColor = useColorModeValue("white", "gray.800")
   return (
     <Stack direction={"row"} spacing={4}>
       {navItems.map((navItem) => (
@@ -281,75 +283,41 @@ const DesktopNav: React.FunctionComponent<{
   )
 }
 
-const DesktopSubNav = ({ label, href, subLabel, action }: NavItem) => {
-  return (
-    <Link
-      href={href}
-      onClick={action ? action : () => {}}
-      role={"group"}
-      display={"block"}
-      p={2}
-      rounded={"md"}
-      _hover={{ bg: useColorModeValue("primary.50", "gray.900") }}
-    >
-      <Stack direction={"row"} align={"center"}>
-        <Box>
-          <Text
-            transition={"all .3s ease"}
-            _groupHover={{ color: action ? "secondary" : "primary.400" }}
-            color={action ? "primary" : undefined}
-            fontWeight={500}
-          >
-            {label}
-          </Text>
-          <Text fontSize={"sm"}>{subLabel}</Text>
-        </Box>
-        <Flex
-          transition={"all .3s ease"}
-          transform={"translateX(-10px)"}
-          opacity={0}
-          _groupHover={{ opacity: "100%", transform: "translateX(0)" }}
-          justify={"flex-end"}
-          align={"center"}
-          flex={1}
-        >
-          <Icon color={"primary.400"} w={5} h={5} as={ChevronRightIcon} />
-        </Flex>
-      </Stack>
-    </Link>
-  )
-}
-
 const MobileNav: React.FunctionComponent<{
   navItems: Array<NavItem>
 }> = ({ navItems }) => {
   const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
 
+  let navItemsWithSettings = navItems
+  if (currentUser) {
+    navItemsWithSettings = [
+      ...navItems,
+      {
+        label: `${currentUser?.name ?? "Settings"}`,
+        children: [
+          {
+            label: "Settings",
+            href: "/settings",
+          },
+          // {
+          //   label: "Buy me coffee",
+          //   href: "/coffee",
+          // },
+          {
+            label: "Logout",
+            action: async () => {
+              await logoutMutation()
+            },
+          },
+        ],
+      },
+    ]
+  }
+
   return (
     <Stack bg={useColorModeValue("white", "gray.800")} p={4} display={{ md: "none" }}>
-      {[
-        ...navItems,
-        {
-          label: `${currentUser?.name ?? "Settings"}`,
-          children: [
-            {
-              label: "Settings",
-              href: "/settings",
-            },
-            // {
-            //   label: "Buy me coffee",
-            //   href: "/coffee",
-            // },
-            {
-              label: "Logout",
-              action: async () => {
-                await logoutMutation()
-              },
-            },
-          ],
-        },
-      ].map((navItem) => (
+      {navItemsWithSettings.map((navItem) => (
         <MobileNavItem key={navItem.label} {...navItem} />
       ))}
     </Stack>

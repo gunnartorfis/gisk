@@ -12,7 +12,7 @@ const GradientTitle: React.FunctionComponent<{
       bgGradient={`linear(to-l, ${Colors.secondary},${Colors.primary})"`}
       // bgGradient="linear(to-l, #7928CA,#FF0080)"
       bgClip="text"
-      fontSize={smaller ? "xl" : ["100px"]}
+      fontSize={smaller ? "xl" : ["60px", "100px"]}
       _selection={{
         color: "white",
         background: Colors.secondary,

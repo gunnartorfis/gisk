@@ -14,8 +14,6 @@ const updateResultForUser = resolver.pipe(
   async (input) => {
     const { newValue, resultKey, userMatchId } = input
 
-    console.log("AA", input)
-
     await db.userLeagueMatch.update({
       where: {
         id: userMatchId,
