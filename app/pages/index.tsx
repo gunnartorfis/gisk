@@ -92,6 +92,7 @@ const Dashboard = () => {
 const UserInfo = ({ hideLoginSignup }: { hideLoginSignup?: boolean }) => {
   const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
+  const { t } = useTranslation()
 
   if (currentUser) {
     return (
