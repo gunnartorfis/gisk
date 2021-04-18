@@ -1,7 +1,6 @@
 import {
   AddIcon,
   ChevronDownIcon,
-  ChevronRightIcon,
   CloseIcon,
   HamburgerIcon,
   MoonIcon,
@@ -9,28 +8,23 @@ import {
 } from "@chakra-ui/icons"
 import {
   Box,
-  Button,
   Collapse,
   Flex,
   Icon,
   IconButton,
   Link,
-  Menu,
-  MenuButton,
-  MenuDivider,
-  MenuItem,
-  MenuList,
   Stack,
   Text,
   useColorMode,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react"
-import { useTranslation } from "react-i18next"
 import logout from "app/auth/mutations/logout"
 import getLeagues from "app/leagues/queries/getLeagues"
+import updateUserLanguage from "app/users/mutations/updateUserLanguage"
 import { useMutation, useQuery, useRouter, useSession } from "blitz"
 import { Suspense, useEffect } from "react"
+import { useTranslation } from "react-i18next"
 import { FiCoffee, FiLogOut, FiSettings } from "react-icons/fi"
 import CreateLeagueModal, {
   CREATE_LEAGUE_MODAL_LEAGUE_CREATED,
@@ -39,7 +33,6 @@ import Dropdown from "../components/Dropdown"
 import GradientTitle from "../components/GradientTitle"
 import Emitter from "../eventEmitter/emitter"
 import { useCurrentUser } from "../hooks/useCurrentUser"
-import updateUserLanguage from "app/users/mutations/updateUserLanguage"
 
 export const HeaderFallback = () => {
   return (

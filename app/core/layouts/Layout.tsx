@@ -1,8 +1,8 @@
-import React, { ReactNode, Suspense } from "react"
-import { Head } from "blitz"
-import Header, { HeaderFallback } from "./Header"
-import { Box, Container } from "@chakra-ui/layout"
+import { Box } from "@chakra-ui/layout"
 import { useColorModeValue } from "@chakra-ui/react"
+import { Head } from "blitz"
+import React, { ReactNode, Suspense } from "react"
+import Header, { HeaderFallback } from "./Header"
 
 type LayoutProps = {
   title?: string

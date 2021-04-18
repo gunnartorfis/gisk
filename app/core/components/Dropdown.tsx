@@ -1,9 +1,7 @@
 import { Box, Flex, Link, ResponsiveValue, Text, useColorModeValue } from "@chakra-ui/react"
 import * as CSS from "csstype"
 import React, { useRef } from "react"
-import ReactDOM from "react-dom"
 import useOutsideAlerter from "../hooks/useOutsideAlerter"
-import ClientOnlyPortal from "./ClientOnlyPortal"
 
 const Summary: React.FunctionComponent<{
   href?: string

@@ -19,7 +19,7 @@ import Layout from "app/core/layouts/Layout"
 import getMatchResults from "app/matches/queries/getMatchResults"
 import { BlitzPage, getSession, Head, useQuery } from "blitz"
 import dayjs from "dayjs"
-import { Suspense, useRef, useState } from "react"
+import { Suspense, useRef } from "react"
 import MatchDrawer from "../../core/components/MatchDrawer"
 
 export type MatchWithTeams = Match & {
