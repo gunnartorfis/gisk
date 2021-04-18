@@ -1,12 +1,4 @@
-import {
-  Box,
-  Flex,
-  Link,
-  ResponsiveValue,
-  Text,
-  useColorModeValue,
-  useDisclosure,
-} from "@chakra-ui/react"
+import { Box, Flex, Link, ResponsiveValue, Text, useColorModeValue } from "@chakra-ui/react"
 import * as CSS from "csstype"
 import React, { useRef, useState } from "react"
 import useOutsideAlerter from "../hooks/useOutsideAlerter"

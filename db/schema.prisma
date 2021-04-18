@@ -11,18 +11,19 @@ generator client {
 }
 
 model User {
-  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
   name              String?
-  email             String            @unique
+  email             String             @unique
   hashedPassword    String?
-  role              String            @default("USER")
+  role              String             @default("USER")
   language          String?
   tokens            Token[]
   sessions          Session[]
   userLeagueMatches UserLeagueMatch[]
   userLeague        UserLeague[]
+  userQuizQuestion  UserQuizQuestion[]
 }
 
 model Session {
@@ -66,6 +67,33 @@ model UserLeague {
   createdAt DateTime @default(now())
 
   @@id([userId, leagueId])
+}
+
+model QuizQuestion {
+  id               String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  answer           String?
+  UserQuizQuestion UserQuizQuestion[]
+  translations     QuizQuestionTranslation[]
+  deadlineAt       DateTime?
+}
+
+model QuizQuestionTranslation {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  language       String
+  question       String
+  answer         String?
+  quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id])
+  quizQuestionId String       @db.Uuid
+}
+
+model UserQuizQuestion {
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String       @db.Uuid
+  quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id])
+  quizQuestionId String       @db.Uuid
+  answer         String?
+
+  @@unique([userId, quizQuestionId])
 }
 
 model League {

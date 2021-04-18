@@ -73,7 +73,7 @@ export const League = () => {
           {league.name}
         </Text>
         <Text fontSize="1xl">
-          {t("INVITE_CODE")}: <strong>{league.inviteCode}</strong>
+          {t("INVITE_CODE_TO_LEAGUE")}: <strong>{league.inviteCode}</strong>
         </Text>
       </Box>
       <Table variant="simple" mt="32px">

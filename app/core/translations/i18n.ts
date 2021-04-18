@@ -22,6 +22,8 @@ const resources = {
       BUY_ME_A_COFFEE: "Buy me a coffee",
 
       NEW_LEAGUE: "New league",
+
+      JOIN_LEAGUE_MODAL: "Join a league",
       LEAGUE_NAME: "League name",
       GOT_AN_INVITE: "Got an invite?",
       SCORING: "Scoring",
@@ -29,16 +31,19 @@ const resources = {
       SCORING_RULE_2: "Correct score",
       POINT: "point",
 
-      INVITE_CODE: "Invite code to league",
+      INVITE_CODE_TO_LEAGUE: "Invite code to league",
+      INVITE_CODE: "Invite code",
       SCORE: "points",
 
       QUIZ_ALERT: "Answer questions before the league starts for a chance to earn bonus points!",
       QUIZ_QUESTION_1: "Which country will win Euro 2020?",
       QUIZ_QUESTION_2: "Which country will be runner up?",
-      QUIZ_QUESTION_3: "Who will be the top scorer?",
+      QUIZ_QUESTION_3: "Which country will score the most goals?",
+      QUIZ_QUESTION_4: "Which country will concede the most goals?",
       HOME: "Home",
       PREDICTION: "Prediction",
       ANSWER: "Answer",
+      SELECT_A_TEAM: "Select a team",
 
       GROUP: "Group",
 
@@ -80,6 +85,7 @@ const resources = {
       BUY_ME_A_COFFEE: "Viltu splæsa í kaffi?",
 
       NEW_LEAGUE: "Ný deild",
+      JOIN_LEAGUE_MODAL: "Skráning í deild",
       LEAGUE_NAME: "Nafn deildar",
       GOT_AN_INVITE: "Ertu með boð í deild?",
       SCORING: "Stigagjöf",
@@ -87,17 +93,20 @@ const resources = {
       SCORING_RULE_2: "Rétt úrslit",
       POINT: "stig",
 
-      INVITE_CODE: "Boðs kóði í deild",
+      INVITE_CODE_TO_LEAGUE: "Boðs kóði í deild",
+      INVITE_CODE: "Boðs kóði",
       SCORE: "stig",
 
       QUIZ_ALERT:
         "Svaraðu spurningum áður en mótið byrjar til að eiga möguleika á að fá bónus stig!",
       QUIZ_QUESTION_1: "Hvaða þjóð vinnur EM?",
-      QUIZ_QUESTION_2: "Hvaða þjóð lendir í öðru sæti á EM?",
-      QUIZ_QUESTION_3: "Hver verður markakóngur EM?",
+      QUIZ_QUESTION_2: "Hvaða þjóð lendir í öðru sæti?",
+      QUIZ_QUESTION_3: "Hvaða þjóð skorar flest mörk?",
+      QUIZ_QUESTION_4: "Hvaða þjóð fær á sig flest mörk?",
       HOME: "Heimalið",
       PREDICTION: "Útilið",
       ANSWER: "Svar",
+      SELECT_A_TEAM: "Veldu lið",
 
       GROUP: "Riðill",
 
