@@ -1,4 +1,5 @@
 import { Button } from "@chakra-ui/button"
+import { AddIcon } from "@chakra-ui/icons"
 import { Box, Center, Container, Text } from "@chakra-ui/layout"
 import { ListItem, UnorderedList, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
@@ -17,7 +18,7 @@ export const CORRECT_SCORE = "correct_score"
 const Dashboard = () => {
   const currentUser = useCurrentUser()
   const { isOpen, onOpen, onClose } = useDisclosure()
-  const notInLeagueBg = useColorModeValue("white", "gray.900")
+  const notInLeagueBg = useColorModeValue("white", "gray.700")
   const { t } = useTranslation()
 
   if (!currentUser) {
@@ -31,7 +32,7 @@ const Dashboard = () => {
       <Center mt="16px">
         <Box
           display="flex"
-          flexDirection="row"
+          flexDirection="column"
           flexWrap="wrap"
           w="100%"
           alignItems="center"
@@ -40,18 +41,12 @@ const Dashboard = () => {
           bg={notInLeagueBg}
           boxShadow="md"
           padding="40px 80px"
-          margin={["0px 40px", 0]}
+          margin={["0px", 0]}
         >
           <Button onClick={onOpen} mb={["32px", 0]}>
             {t("NEW_LEAGUE")}
+            <AddIcon w={3} h={3} ml="8px" />
           </Button>
-          <Box
-            w="2px"
-            h="100px"
-            bg="gray.100"
-            marginX="40px"
-            display={{ base: "none", md: "block" }}
-          />
           <LeagueInvite />
         </Box>
         <CreateLeagueModal isOpen={isOpen} onClose={onClose} />

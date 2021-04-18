@@ -6,8 +6,10 @@ import {
   Flex,
   FormControl,
   FormLabel,
+  Grid,
   Image,
   Input,
+  Select,
   Stack,
   Table,
   Tbody,
@@ -24,9 +26,12 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import updateResultForUser from "app/matches/mutations/updateResultForUser"
 import getMatches from "app/matches/queries/getMatches"
-import { BlitzPage, Head, invoke, useQuery, useRouter } from "blitz"
+import getQuizQuestions from "app/matches/queries/getQuizQuestions"
+import getTeams from "app/teams/queries/getTeams"
+import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
+import { BlitzPage, Head, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
-import { Suspense } from "react"
+import { Suspense, useRef } from "react"
 import { useTranslation } from "react-i18next"
 
 export const MatchesList = () => {
@@ -38,19 +43,23 @@ export const MatchesList = () => {
       enabled: (user?.userLeague?.length ?? 0) > 0,
     }
   )
+  const [quizQuestions, { isLoading: isLoadingQuiz }] = useQuery(getQuizQuestions, {})
+  const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
+  const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
 
   const router = useRouter()
   const toast = useToast()
   const tableBgColorMode = useColorModeValue("white", "gray.700")
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
   const questionsBg = useColorModeValue("white", "gray.700")
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+
   if (user?.userLeague?.length === 0) {
     router.push("/")
     return null
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingQuiz) {
     return null
   }
 
@@ -112,53 +121,74 @@ export const MatchesList = () => {
     }
   })
 
-  const leagueHasStarted = false
-
   return (
     <Box pb="16px" bg={bgColorMode}>
-      {leagueHasStarted ? null : (
+      {quizQuestions.length > 0 ? (
         <details>
           <summary>
-            <Alert status="info">
+            <Alert bg={questionsBg} status="info">
               <AlertIcon />
               {t("QUIZ_ALERT")}
             </Alert>
           </summary>
 
-          <Stack
+          <Box
             padding="32px"
-            border="1px"
+            borderTop="1px"
+            borderBottom="1px"
             borderColor="gray.200"
-            spacing={4}
-            rounded="md"
-            maxW={["100%", "500px"]}
-            margin="16px auto"
             boxShadow="md"
+            margin="0 auto"
             bg={questionsBg}
           >
-            <FormControl>
-              <FormLabel>{t("QUIZ_QUESTION_1")}</FormLabel>
-              <Input placeholder={t("ANSWER")} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>{t("QUIZ_QUESTION_2")}</FormLabel>
-              <Input placeholder={t("ANSWER")} />
-            </FormControl>
-            <FormControl>
-              <FormLabel>{t("QUIZ_QUESTION_3")}</FormLabel>
-              <Input placeholder={t("ANSWER")} />
-            </FormControl>
+            <Grid templateColumns={{ base: "auto", md: "auto auto" }} gap={5} justifyItems="start">
+              {quizQuestions.map((question) => {
+                return (
+                  <Box key={question.id}>
+                    <FormLabel>
+                      {question.translations.find((t) => t.language === i18n.language)?.question}
+                    </FormLabel>
+                    <Box>
+                      <Select
+                        id={question.id}
+                        defaultValue={
+                          question.UserQuizQuestion.find((uq) => uq.quizQuestionId === question.id)
+                            ?.answer ?? "-1"
+                        }
+                      >
+                        <option disabled value="-1">
+                          {t("SELECT_A_TEAM")}
+                        </option>
+                        {teams?.map((team) => (
+                          <option key={team.id} value={team.id}>
+                            {team.name}
+                          </option>
+                        ))}
+                      </Select>
+                      <Button
+                        disabled={isSubmittingQuiz}
+                        variant="text"
+                        onClick={async () => {
+                          const quizQuestionId = question.id
+                          const answer = (document.getElementById(question.id) as HTMLInputElement)
+                            ?.value
 
-            <Button
-              onClick={() => {
-                alert("Oops. I do nothing at the moment.")
-              }}
-            >
-              {t("UPDATE")}
-            </Button>
-          </Stack>
+                          updateQuizAnswerMutation({
+                            quizQuestionId,
+                            answer,
+                          })
+                        }}
+                      >
+                        {t("UPDATE")}
+                      </Button>
+                    </Box>
+                  </Box>
+                )
+              })}
+            </Grid>
+          </Box>
         </details>
-      )}
+      ) : null}
       {Object.keys(matchesByDate).map((date) => {
         const matchesForDay = matchesByDate[date]
         return (
