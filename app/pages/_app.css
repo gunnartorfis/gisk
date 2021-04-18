@@ -1,8 +1,8 @@
-details summary {
+summary {
   list-style: none;
   cursor: pointer;
 }
-details summary::marker {
+summary::marker {
   display: none;
 }
 details[open] summary ~ * {
