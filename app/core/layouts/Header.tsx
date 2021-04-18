@@ -53,7 +53,7 @@ export const HeaderFallback = () => {
 const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () => void }) => {
   const { userId, isLoading } = useSession()
   const user = useCurrentUser()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const getLeaguesQueryDisabled = !userId && !isLoading
 
   const [leagues, { refetch }] = useQuery(
@@ -86,7 +86,7 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
         action: () => {
           onClickCreateNewLeague()
         },
-        icon: <AddIcon />,
+        icon: <AddIcon w={3} h={3} />,
       },
     ]
   }
@@ -107,7 +107,7 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
                 action: () => {
                   onClickCreateNewLeague()
                 },
-                icon: <AddIcon />,
+                icon: <AddIcon w={3} h={3} />,
               },
             ]
           : undefined,
@@ -290,7 +290,7 @@ const HeaderUser = () => {
             title={t("SETTINGS")}
             icon={<FiSettings />}
             onClick={() => {
-              router.push("/settings")
+              router.push("/settings", undefined, { shallow: true })
             }}
           ></Dropdown.Item>
           <Dropdown.Item
@@ -323,7 +323,7 @@ const DesktopNav: React.FunctionComponent<{
   return (
     <Stack direction={"row"} spacing={4}>
       {navItems.map((navItem) => (
-        <Dropdown left="155px" top="60px" key={navItem.label}>
+        <Dropdown left="140px" top="60px" key={navItem.label}>
           <Dropdown.Summary href={navItem.href}>{navItem.label}</Dropdown.Summary>
           {navItem.children?.map((navItem) => (
             <Dropdown.Item

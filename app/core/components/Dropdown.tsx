@@ -1,6 +1,14 @@
-import { Box, Flex, Link, ResponsiveValue, Text, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  Flex,
+  Link,
+  ResponsiveValue,
+  Text,
+  useColorModeValue,
+  useDisclosure,
+} from "@chakra-ui/react"
 import * as CSS from "csstype"
-import React, { useRef } from "react"
+import React, { useRef, useState } from "react"
 import useOutsideAlerter from "../hooks/useOutsideAlerter"
 
 const Summary: React.FunctionComponent<{
@@ -9,7 +17,7 @@ const Summary: React.FunctionComponent<{
   if (href) {
     return <Link href={href}>{children}</Link>
   }
-  return <summary>{children}</summary>
+  return <Box>{children}</Box>
 }
 
 const ItemSeparator = () => {
@@ -23,7 +31,7 @@ const Item: React.FunctionComponent<{
   onClick?: (itemTitle?: string) => void
   render?: () => JSX.Element
 }> = ({ children, title, icon, onClick, href, render }) => {
-  const bg = useColorModeValue("white", "gray.500")
+  const bg = useColorModeValue("gray.100", "gray.500")
   const renderChildren = () => (
     <Flex
       direction="row"
@@ -67,6 +75,7 @@ const Dropdown: React.FunctionComponent<{
 } = ({ children, onClickItemWithKey, ...props }) => {
   let summaryChild: any
   const otherChildren: any[] = []
+  const [isOpen, setIsOpen] = useState(false)
 
   React.Children.forEach(
     (children as any[]).filter((c) => !!c),
@@ -91,20 +100,26 @@ const Dropdown: React.FunctionComponent<{
   )
 
   const onClickOutside = React.useCallback(() => {
-    wrapperRef.current.open = false
-  }, [])
+    setIsOpen(false)
+  }, [setIsOpen])
 
   const wrapperRef = useRef<any>(null)
   useOutsideAlerter(wrapperRef, onClickOutside)
 
-  const bg = useColorModeValue("gray.50", "gray.600")
+  const bg = useColorModeValue("white", "gray.600")
 
   if (otherChildren.length === 0) {
     return summaryChild
   }
 
   return (
-    <details ref={wrapperRef}>
+    <Box
+      ref={wrapperRef}
+      cursor="pointer"
+      onClick={() => {
+        setIsOpen(!isOpen)
+      }}
+    >
       {summaryChild}
       <Flex
         direction="column"
@@ -113,11 +128,12 @@ const Dropdown: React.FunctionComponent<{
         borderRadius="md"
         boxShadow="md"
         bg={bg}
+        display={isOpen ? "block" : "none"}
         {...props}
       >
         {otherChildren}
       </Flex>
-    </details>
+    </Box>
   )
 }
 
