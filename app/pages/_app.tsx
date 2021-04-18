@@ -2,21 +2,23 @@ import { ChakraProvider, extendTheme } from "@chakra-ui/react"
 import LoginPage from "app/auth/pages/login"
 import ButtonTheme from "app/core/chakraTheme/Button"
 import Colors from "app/core/chakraTheme/colors"
+import Sentry from "integrations/sentry"
 import {
   AppProps,
   AuthenticationError,
   AuthorizationError,
-  ErrorComponent,
   ErrorFallbackProps,
   useRouter,
+  useSession,
 } from "blitz"
-import React from "react"
+import React, { Suspense, useEffect } from "react"
 import { ErrorBoundary } from "react-error-boundary"
 import { queryCache } from "react-query"
 import "./_app.css"
 import "react-datepicker/dist/react-datepicker.css"
 import InputTheme from "app/core/chakraTheme/Input"
 import "app/core/translations/i18n"
+import ErrorComponent from "app/core/components/ErrorComponent"
 
 export const theme = extendTheme({
   components: {
@@ -27,15 +29,33 @@ export const theme = extendTheme({
   colors: Colors,
 })
 
+function SentrySession() {
+  const session = useSession()
+  useEffect(() => {
+    if (session.userId) Sentry.setUser({ id: session.userId.toString() })
+  }, [session])
+
+  return null
+}
+
 export default function App({ Component, pageProps }: AppProps) {
+  // const session = useSession()
   const getLayout = Component.getLayout || ((page) => page)
   const router = useRouter()
 
   return (
     <ChakraProvider theme={theme}>
+      <Suspense fallback="">
+        <SentrySession />
+      </Suspense>
       <ErrorBoundary
         FallbackComponent={RootErrorFallback}
         resetKeys={[router.asPath]}
+        onError={(error, componentStack) => {
+          if (process.env.NODE_ENV === "production") {
+            Sentry.captureException(error, { contexts: { react: { componentStack } } })
+          }
+        }}
         onReset={() => {
           // This ensures the Blitz useQuery hooks will automatically refetch
           // data any time you reset the error boundary
