@@ -237,29 +237,32 @@ export default function Header() {
         </Flex>
         <Flex dir="row" alignItems="center" justifyContent="center">
           <Flex flex={1} direction="row" alignItems="center">
-            <Box cursor="pointer" onClick={toggleColorMode} mr="16px">
+            <Box cursor="pointer" onClick={toggleColorMode}>
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Box>
-            <Dropdown
-              onClickItemWithKey={(language) => {
-                i18n.changeLanguage(language)
-                if (currentUser) {
-                  updateUserLanguageMutation({
-                    language,
-                  })
-                }
-              }}
-            >
-              <Dropdown.Summary>{getFlagBasedOnLanguage(i18n.language)}</Dropdown.Summary>
-              <Dropdown.Items right="16px" top="80px">
-                <Dropdown.Item key="is">{getFlagBasedOnLanguage("is")}</Dropdown.Item>
-                <Dropdown.Item key="en">{getFlagBasedOnLanguage("en")}</Dropdown.Item>
-              </Dropdown.Items>
-            </Dropdown>
           </Flex>
           <Suspense fallback="">
             <HeaderUser />
           </Suspense>
+          <Dropdown
+            containerProps={{
+              marginLeft: "8px",
+            }}
+            onClickItemWithKey={(language) => {
+              i18n.changeLanguage(language)
+              if (currentUser) {
+                updateUserLanguageMutation({
+                  language,
+                })
+              }
+            }}
+          >
+            <Dropdown.Summary>{getFlagBasedOnLanguage(i18n.language)}</Dropdown.Summary>
+            <Dropdown.Items right="16px" top="60px">
+              <Dropdown.Item valueForOnClick="is">{getFlagBasedOnLanguage("is")}</Dropdown.Item>
+              <Dropdown.Item valueForOnClick="en">{getFlagBasedOnLanguage("en")}</Dropdown.Item>
+            </Dropdown.Items>
+          </Dropdown>
         </Flex>
       </Flex>
 
