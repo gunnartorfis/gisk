@@ -241,8 +241,6 @@ export default function Header() {
               {colorMode === "light" ? <MoonIcon /> : <SunIcon />}
             </Box>
             <Dropdown
-              right="16px"
-              top="60px"
               onClickItemWithKey={(language) => {
                 i18n.changeLanguage(language)
                 if (currentUser) {
@@ -253,8 +251,10 @@ export default function Header() {
               }}
             >
               <Dropdown.Summary>{getFlagBasedOnLanguage(i18n.language)}</Dropdown.Summary>
-              <Dropdown.Item key="is">{getFlagBasedOnLanguage("is")}</Dropdown.Item>
-              <Dropdown.Item key="en">{getFlagBasedOnLanguage("en")}</Dropdown.Item>
+              <Dropdown.Items right="16px" top="80px">
+                <Dropdown.Item key="is">{getFlagBasedOnLanguage("is")}</Dropdown.Item>
+                <Dropdown.Item key="en">{getFlagBasedOnLanguage("en")}</Dropdown.Item>
+              </Dropdown.Items>
             </Dropdown>
           </Flex>
           <Suspense fallback="">
@@ -283,32 +283,34 @@ const HeaderUser = () => {
   if (currentUser) {
     return (
       <Box display={{ base: "none", md: "inherit" }} ml="8px">
-        <Dropdown right="16px" top="60px">
+        <Dropdown>
           <Dropdown.Summary>{currentUser.name}</Dropdown.Summary>
-          <Dropdown.Item
-            key="settings"
-            title={t("SETTINGS")}
-            icon={<FiSettings />}
-            onClick={() => {
-              router.push("/settings", undefined, { shallow: true })
-            }}
-          ></Dropdown.Item>
-          <Dropdown.Item
-            key="coffee"
-            title={t("BUY_ME_A_COFFEE")}
-            icon={<FiCoffee />}
-            onClick={() => {
-              window.open("https://www.buymeacoffee.com/gunnar", "_blank")
-            }}
-          ></Dropdown.Item>
-          <Dropdown.Item
-            key="logout"
-            title={t("LOGOUT")}
-            icon={<FiLogOut />}
-            onClick={async () => {
-              await logoutMutation()
-            }}
-          ></Dropdown.Item>
+          <Dropdown.Items right="16px" top="60px">
+            <Dropdown.Item
+              key="settings"
+              title={t("SETTINGS")}
+              icon={<FiSettings />}
+              onClick={() => {
+                router.push("/settings", undefined, { shallow: true })
+              }}
+            ></Dropdown.Item>
+            <Dropdown.Item
+              key="coffee"
+              title={t("BUY_ME_A_COFFEE")}
+              icon={<FiCoffee />}
+              onClick={() => {
+                window.open("https://www.buymeacoffee.com/gunnar", "_blank")
+              }}
+            ></Dropdown.Item>
+            <Dropdown.Item
+              key="logout"
+              title={t("LOGOUT")}
+              icon={<FiLogOut />}
+              onClick={async () => {
+                await logoutMutation()
+              }}
+            ></Dropdown.Item>
+          </Dropdown.Items>
         </Dropdown>
       </Box>
     )
@@ -321,24 +323,28 @@ const DesktopNav: React.FunctionComponent<{
   navItems: Array<NavItem>
 }> = ({ navItems }) => {
   return (
-    <Stack direction={"row"} spacing={4}>
+    <Flex direction="row">
       {navItems.map((navItem) => (
-        <Dropdown left="140px" top="60px" key={navItem.label}>
-          <Dropdown.Summary href={navItem.href}>{navItem.label}</Dropdown.Summary>
-          {navItem.children?.map((navItem) => (
-            <Dropdown.Item
-              title={navItem.label}
-              key={navItem.label}
-              icon={navItem.icon}
-              href={navItem.href}
-              onClick={() => {
-                navItem.action?.()
-              }}
-            />
-          ))}
+        <Dropdown key={navItem.label}>
+          <Dropdown.Summary href={navItem.href} marginRight="16px">
+            {navItem.label}
+          </Dropdown.Summary>
+          <Dropdown.Items left="140px" top="60px">
+            {navItem.children?.map((navItem) => (
+              <Dropdown.Item
+                title={navItem.label}
+                key={navItem.label}
+                icon={navItem.icon}
+                href={navItem.href}
+                onClick={() => {
+                  navItem.action?.()
+                }}
+              />
+            ))}
+          </Dropdown.Items>
         </Dropdown>
       ))}
-    </Stack>
+    </Flex>
   )
 }
 
