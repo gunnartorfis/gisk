@@ -19,6 +19,11 @@ import "react-datepicker/dist/react-datepicker.css"
 import InputTheme from "app/core/chakraTheme/Input"
 import "app/core/translations/i18n"
 import ErrorComponent from "app/core/components/ErrorComponent"
+import ReactGA from "react-ga"
+
+if (process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID) {
+  ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID)
+}
 
 export const theme = extendTheme({
   components: {
@@ -36,6 +41,19 @@ function SentrySession() {
   }, [session])
 
   return null
+}
+
+export function reportWebVitals({ id, name, label, value }) {
+  ReactGA.send(
+    {
+      eventCategory: label === "web-vital" ? "Web Vitals" : "Blitz custom metric",
+      eventAction: name,
+      eventValue: Math.round(name === "CLS" ? value * 1000 : value), // values must be integers
+      eventLabel: id, // id unique to current page load
+      nonInteraction: true, // avoids affecting bounce rate.
+    },
+    ["event"]
+  )
 }
 
 export default function App({ Component, pageProps }: AppProps) {
