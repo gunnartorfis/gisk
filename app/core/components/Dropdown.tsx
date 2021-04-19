@@ -62,9 +62,10 @@ const Item: React.FunctionComponent<{
   href?: string
   onClick?: (itemTitle?: string) => void
   render?: () => JSX.Element
-}> = ({ children, title, icon, onClick, href, render }) => {
+  valueForOnClick?: string
+}> = ({ children, title, icon, onClick, href, render, valueForOnClick }) => {
   const bg = useColorModeValue("gray.100", "gray.500")
-  const { isOpen } = useContext(DropdownContext)
+  const { isOpen, onClickItem } = useContext(DropdownContext)
   const renderChildren = () => (
     <Flex
       direction="row"
@@ -76,6 +77,7 @@ const Item: React.FunctionComponent<{
       }}
       onClick={() => {
         onClick?.(title)
+        onClickItem?.(valueForOnClick ?? "")
       }}
     >
       {children || (
@@ -98,7 +100,10 @@ const Item: React.FunctionComponent<{
   return null
 }
 
-const DropdownContext = createContext({
+const DropdownContext = createContext<{
+  isOpen: boolean
+  onClickItem?: (key: string) => void
+}>({
   isOpen: false,
 })
 
@@ -112,31 +117,7 @@ const Dropdown: React.FunctionComponent<DropdownProps> & {
   Summary: typeof Summary
   ItemSeperator?: typeof ItemSeparator
 } = ({ children, onClickItemWithKey, containerProps = {}, ...props }) => {
-  let summaryChild: any
-  const otherChildren: any[] = []
   const [isOpen, setIsOpen] = useState(false)
-
-  // React.Children.forEach(
-  //   (children as any[]).filter((c) => !!c),
-  //   (child: any) => {
-  //     if (child.type.name === "Summary") {
-  //       summaryChild = child
-  //     } else if (child.type.name === "Item") {
-  //       otherChildren.push(
-  //         React.cloneElement(child, {
-  //           ...child.props,
-  //           onClick: () => {
-  //             child.props?.onClick?.()
-  //             onClickItemWithKey?.(child.key)
-  //             onClickOutside()
-  //           },
-  //         })
-  //       )
-  //     } else {
-  //       otherChildren.push(child)
-  //     }
-  //   }
-  // )
 
   const onClickOutside = React.useCallback(() => {
     setIsOpen(false)
@@ -145,12 +126,13 @@ const Dropdown: React.FunctionComponent<DropdownProps> & {
   const wrapperRef = useRef<any>(null)
   useOutsideAlerter(wrapperRef, onClickOutside)
 
-  // if (otherChildren.length === 0) {
-  //   return summaryChild
-  // }
+  const onClickItem = (key: string) => {
+    console.log("AAAA", key)
+    onClickItemWithKey?.(key)
+  }
 
   return (
-    <DropdownContext.Provider value={{ isOpen }}>
+    <DropdownContext.Provider value={{ isOpen, onClickItem }}>
       <Box
         ref={wrapperRef}
         cursor="pointer"
