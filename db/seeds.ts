@@ -1,11 +1,15 @@
 import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
 import db from "./index"
 import matches from "./matches"
 import teams from "./teams"
 import quizQuestions from "./quizQuestions"
 
 dayjs.extend(customParseFormat)
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 const seed = async () => {
   const teamsDB = await db.team.findMany()
@@ -46,7 +50,8 @@ const seed = async () => {
               },
               arena: match.arena,
               round: `${match.round}`,
-              kickOff: dayjs(match.kickOff, "DD/MM/YYYY HH:mm").toDate(),
+              kickOff: dayjs.tz(match.kickOff, "DD/MM/YYYY HH:mm [CET]", "CET").tz("GMT").toDate(),
+              // kickOff: dayjs(match.kickOff, "DD/MM/YYYY HH:mm").toDate(),
             },
           })
         } catch (error) {}
