@@ -21,9 +21,7 @@ import "app/core/translations/i18n"
 import ErrorComponent from "app/core/components/ErrorComponent"
 import ReactGA from "react-ga"
 
-if (process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID) {
-  ReactGA.initialize(process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_MEASUREMENT_ID)
-}
+ReactGA.initialize("G-1291FQHLBL")
 
 export const theme = extendTheme({
   components: {
