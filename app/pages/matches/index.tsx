@@ -81,23 +81,31 @@ export const MatchesList = () => {
     resultKey: "resultHome" | "resultAway"
   }) => {
     try {
-      if (newValue) {
+      if (newValue && newValue >= 0) {
         await invoke(updateResultForUser, {
           userMatchId,
           newValue,
           resultKey,
         })
         toast({
-          title: "Success!",
-          description: "Score updated.",
+          title: t("SCORE_UPDATED_TITLE"),
+          description: t("SCORE_UPDATED"),
           status: "success",
+          duration: 5000,
+          isClosable: true,
+        })
+      } else {
+        toast({
+          title: t("SCORE_UPDATED_ERROR"),
+          description: t("SCORE_NON_NEGATIVE"),
+          status: "warning",
           duration: 5000,
           isClosable: true,
         })
       }
     } catch (error) {
       toast({
-        title: "Oops.",
+        title: t("SCORE_UPDATED_ERROR"),
         description: error.message,
         status: "error",
         duration: 5000,
