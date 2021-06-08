@@ -23,6 +23,7 @@ import logout from "app/auth/mutations/logout"
 import getLeagues from "app/leagues/queries/getLeagues"
 import updateUserLanguage from "app/users/mutations/updateUserLanguage"
 import { useMutation, useQuery, useRouter, useSession } from "blitz"
+import dayjs from "dayjs"
 import { Suspense, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { FiCoffee, FiLogOut, FiSettings } from "react-icons/fi"
@@ -250,6 +251,7 @@ export default function Header() {
             }}
             onClickItemWithKey={(language) => {
               i18n.changeLanguage(language)
+              dayjs.locale(language)
               if (currentUser) {
                 updateUserLanguageMutation({
                   language,
