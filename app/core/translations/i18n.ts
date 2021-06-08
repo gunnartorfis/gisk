@@ -35,6 +35,8 @@ const resources = {
       INVITE_CODE: "Invite code",
       SCORE: "points",
 
+      MATCHES_TIMEZONE_INFO: "Displayed kickoffs are in Greenwich Mean Time (GMT)",
+
       QUIZ_ALERT: "Answer questions before the league starts for a chance to earn bonus points!",
       QUIZ_QUESTION_1: "Which country will win Euro 2020?",
       QUIZ_QUESTION_2: "Which country will be runner up?",
@@ -42,11 +44,16 @@ const resources = {
       QUIZ_QUESTION_4: "Which country will concede the most goals?",
       HOME: "Home",
       PREDICTION: "Prediction",
+      AWAY: "Away",
       ANSWER: "Answer",
       SELECT_A_TEAM: "Select a team",
 
       GROUP: "Group",
 
+      SCORE_UPDATED_TITLE: "Success!",
+      SCORE_UPDATED_ERROR: "Oops.",
+      SCORE_NON_NEGATIVE: "Score can't be negative",
+      SCORE_UPDATED: "Score updated",
       EMAIL: "Email",
       PASSWORD: "Password",
       NAME: "Name",
@@ -83,6 +90,10 @@ const resources = {
       ADMIN: "Stjórnborð",
       SETTINGS: "Stillingar",
       BUY_ME_A_COFFEE: "Viltu splæsa í kaffi?",
+      SCORE_UPDATED_TITLE: "Tókst!",
+      SCORE_UPDATED_ERROR: "Úps.",
+      SCORE_NON_NEGATIVE: "Spá má ekki vera neikvæð",
+      SCORE_UPDATED: "Spá uppfærð",
 
       NEW_LEAGUE: "Ný deild",
       JOIN_LEAGUE_MODAL: "Skráning í deild",
@@ -93,9 +104,11 @@ const resources = {
       SCORING_RULE_2: "Rétt úrslit",
       POINT: "stig",
 
-      INVITE_CODE_TO_LEAGUE: "Boðs kóði í deild",
-      INVITE_CODE: "Boðs kóði",
+      INVITE_CODE_TO_LEAGUE: "Boðskóði í deild",
+      INVITE_CODE: "Boðskóði",
       SCORE: "stig",
+
+      MATCHES_TIMEZONE_INFO: "Birtar tímasetningar eru í Greenwich Mean Time (GMT)",
 
       QUIZ_ALERT:
         "Svaraðu spurningum áður en mótið byrjar til að eiga möguleika á að fá bónus stig!",
@@ -104,7 +117,8 @@ const resources = {
       QUIZ_QUESTION_3: "Hvaða þjóð skorar flest mörk?",
       QUIZ_QUESTION_4: "Hvaða þjóð fær á sig flest mörk?",
       HOME: "Heimalið",
-      PREDICTION: "Útilið",
+      PREDICTION: "Spá",
+      AWAY: "Útilið",
       ANSWER: "Svar",
       SELECT_A_TEAM: "Veldu lið",
 
