@@ -49,6 +49,7 @@
     "final-form": "4.20.2",
     "framer-motion": "3.2.0",
     "i18next": "20.2.1",
+    "nodemailer": "6.6.1",
     "react": "0.0.0-experimental-6a589ad71",
     "react-datepicker": "3.7.0",
     "react-dom": "0.0.0-experimental-6a589ad71",
