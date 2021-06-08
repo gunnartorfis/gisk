@@ -62,7 +62,7 @@ You can read more about it on the [CLI Overview](https://blitzjs.com/docs/cli-ov
 Here is the starting structure of your app.
 
 ```
-euro2020
+gisk
 ├── app/
 │   ├── api/
 │   ├── auth/
