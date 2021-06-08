@@ -4,13 +4,11 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
   FormLabel,
   Grid,
   Image,
   Input,
   Select,
-  Stack,
   Table,
   Tbody,
   Td,
@@ -205,6 +203,9 @@ export const MatchesList = () => {
           </Box>
         </details>
       ) : null}
+      <Text width="100%" textAlign="center" marginTop="8px">
+        {t("MATCHES_TIMEZONE_INFO")}
+      </Text>
       {Object.keys(matchesByDate).map((date) => {
         const matchesForDay = matchesByDate[date]
         return (
@@ -261,6 +262,7 @@ export const MatchesList = () => {
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.match.homeTeam.countryCode}
                           </Text>
+                          <Text marginLeft="2px">({m.match.homeTeam.group})</Text>
                         </Flex>
                       </Td>
                       <Td>
@@ -315,6 +317,7 @@ export const MatchesList = () => {
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.match.awayTeam.countryCode}
                           </Text>
+                          <Text marginRight="2px">({m.match.awayTeam.group})</Text>
                         </Flex>
                       </Td>
                     </Tr>
