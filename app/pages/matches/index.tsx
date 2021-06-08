@@ -79,7 +79,7 @@ export const MatchesList = () => {
     resultKey: "resultHome" | "resultAway"
   }) => {
     try {
-      if (newValue && newValue >= 0) {
+      if (newValue >= 0) {
         await invoke(updateResultForUser, {
           userMatchId,
           newValue,
@@ -92,7 +92,7 @@ export const MatchesList = () => {
           duration: 5000,
           isClosable: true,
         })
-      } else {
+      } else if (newValue < 0) {
         toast({
           title: t("SCORE_UPDATED_ERROR"),
           description: t("SCORE_NON_NEGATIVE"),
