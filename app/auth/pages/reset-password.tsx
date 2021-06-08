@@ -1,16 +1,27 @@
 import { BlitzPage, useRouterQuery, Link, useMutation } from "blitz"
 import Layout from "app/core/layouts/Layout"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
-import { Form, FORM_ERROR } from "app/core/components/Form"
+import { Form, FormContext, FORM_ERROR } from "app/core/components/Form"
 import { ResetPassword } from "app/auth/validations"
 import resetPassword from "app/auth/mutations/resetPassword"
 import React from "react"
 import { Text } from "@chakra-ui/layout"
-import { Container } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  Container,
+  Flex,
+  FormControl,
+  Stack,
+  useColorModeValue,
+} from "@chakra-ui/react"
 
 const ResetPasswordPage: BlitzPage = () => {
   const query = useRouterQuery()
   const [resetPasswordMutation, { isSuccess }] = useMutation(resetPassword)
+
+  const bgColorMode = useColorModeValue("gray.50", "gray.800")
+  const boxColorMode = useColorModeValue("white", "gray.700")
 
   return (
     <Container centerContent>
@@ -27,11 +38,6 @@ const ResetPasswordPage: BlitzPage = () => {
         </div>
       ) : (
         <Form
-          submitText="Reset Password"
-          schema={ResetPassword.refine((x) => ({
-            password: x.password,
-            passwordConfirmation: x.passwordConfirmation,
-          }))}
           initialValues={{ password: "", passwordConfirmation: "" }}
           onSubmit={async (values) => {
             try {
@@ -49,12 +55,41 @@ const ResetPasswordPage: BlitzPage = () => {
             }
           }}
         >
-          <LabeledTextField name="password" label="New Password" type="password" />
-          <LabeledTextField
-            name="passwordConfirmation"
-            label="Confirm New Password"
-            type="password"
-          />
+          <FormContext.Consumer>
+            {({ submitting, submitError }) => (
+              <Flex align={"center"} justify={"center"} bg={bgColorMode}>
+                <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
+                  <Box rounded={"lg"} bg={boxColorMode} boxShadow={"lg"} p={8}>
+                    <Stack spacing={4}>
+                      <FormControl id="password">
+                        <LabeledTextField
+                          name="password"
+                          label="Password"
+                          placeholder="Password"
+                          type="password"
+                        />
+                      </FormControl>
+                      <FormControl id="passwordConfirmation">
+                        <LabeledTextField
+                          name="passwordConfirmation"
+                          label="Confirm New Password"
+                          type="password"
+                        />
+                      </FormControl>
+                      {submitError ? (
+                        <Box role="alert" style={{ color: "red" }}>
+                          {submitError}
+                        </Box>
+                      ) : null}
+                      <Button type="submit" disabled={submitting}>
+                        Reset password
+                      </Button>
+                    </Stack>
+                  </Box>
+                </Stack>
+              </Flex>
+            )}
+          </FormContext.Consumer>
         </Form>
       )}
     </Container>
