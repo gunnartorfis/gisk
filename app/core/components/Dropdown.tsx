@@ -127,7 +127,6 @@ const Dropdown: React.FunctionComponent<DropdownProps> & {
   useOutsideAlerter(wrapperRef, onClickOutside)
 
   const onClickItem = (key: string) => {
-    console.log("AAAA", key)
     onClickItemWithKey?.(key)
   }
 
