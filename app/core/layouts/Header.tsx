@@ -328,7 +328,7 @@ const DesktopNav: React.FunctionComponent<{
   navItems: Array<NavItem>
 }> = ({ navItems }) => {
   return (
-    <Flex direction="row">
+    <Flex direction="row" alignItems="center">
       {navItems.map((navItem) => (
         <Dropdown key={navItem.label}>
           <Dropdown.Summary href={navItem.href} marginRight="16px">
