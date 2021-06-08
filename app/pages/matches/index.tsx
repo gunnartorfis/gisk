@@ -31,7 +31,9 @@ import getTeams from "app/teams/queries/getTeams"
 import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
 import { BlitzPage, Head, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
-import { Suspense, useRef } from "react"
+import "dayjs/locale/is"
+import "dayjs/locale/en"
+import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 
 export const MatchesList = () => {
@@ -53,6 +55,12 @@ export const MatchesList = () => {
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
   const questionsBg = useColorModeValue("white", "gray.700")
   const { t, i18n } = useTranslation()
+
+  React.useEffect(() => {
+    if (user) {
+      dayjs.locale(user.language ?? "en")
+    }
+  }, [user])
 
   if (user?.userLeague?.length === 0) {
     router.push("/")
