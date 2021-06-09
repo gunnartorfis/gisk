@@ -22,7 +22,7 @@ const resources = {
       BUY_ME_A_COFFEE: "Buy me a coffee",
 
       NEW_LEAGUE: "New league",
-
+      NEW_LEAGUE_JOIN: "Join a league",
       JOIN_LEAGUE_MODAL: "Join a league",
       LEAGUE_NAME: "League name",
       GOT_AN_INVITE: "Got an invite?",
@@ -96,6 +96,7 @@ const resources = {
       SCORE_UPDATED: "Spá uppfærð",
 
       NEW_LEAGUE: "Ný deild",
+      NEW_LEAGUE_JOIN: "Skráning í deild",
       JOIN_LEAGUE_MODAL: "Skráning í deild",
       LEAGUE_NAME: "Nafn deildar",
       GOT_AN_INVITE: "Ertu með boð í deild?",

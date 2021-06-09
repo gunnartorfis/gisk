@@ -20,6 +20,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
+import LeagueInvite, { LeagueInviteModal } from "app/leagues/components/LeagueInvite"
 import getLeagues from "app/leagues/queries/getLeagues"
 import updateUserLanguage from "app/users/mutations/updateUserLanguage"
 import { useMutation, useQuery, useRouter, useSession } from "blitz"
@@ -51,7 +52,13 @@ export const HeaderFallback = () => {
   )
 }
 
-const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () => void }) => {
+const useNavItems = ({
+  onClickCreateNewLeague,
+  onClickJoinNewLeague,
+}: {
+  onClickCreateNewLeague: () => void
+  onClickJoinNewLeague: () => void
+}) => {
   const { userId, isLoading } = useSession()
   const user = useCurrentUser()
   const { t } = useTranslation()
@@ -107,6 +114,13 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
                 label: t("NEW_LEAGUE"),
                 action: () => {
                   onClickCreateNewLeague()
+                },
+                icon: <AddIcon w={3} h={3} />,
+              },
+              {
+                label: t("NEW_LEAGUE_JOIN"),
+                action: () => {
+                  onClickJoinNewLeague()
                 },
                 icon: <AddIcon w={3} h={3} />,
               },
@@ -174,10 +188,18 @@ export default function Header() {
     onOpen: onOpenCreateModal,
     onClose: onCloseCreateModal,
   } = useDisclosure()
+  const {
+    isOpen: isOpenLeagueInvite,
+    onOpen: onOpenLeagueInvite,
+    onClose: onCloseLeagueInvite,
+  } = useDisclosure()
   const { colorMode, toggleColorMode } = useColorMode()
   const navItems = useNavItems({
     onClickCreateNewLeague: () => {
       onOpenCreateModal()
+    },
+    onClickJoinNewLeague: () => {
+      onOpenLeagueInvite()
     },
   })
   const { t, i18n } = useTranslation()
@@ -286,6 +308,7 @@ export default function Header() {
         </Suspense>
       </Collapse>
       <CreateLeagueModal onClose={onCloseCreateModal} isOpen={isOpenCreateModal} />
+      <LeagueInviteModal isOpen={isOpenLeagueInvite} onRequestClose={onCloseLeagueInvite} />
     </Box>
   )
 }
