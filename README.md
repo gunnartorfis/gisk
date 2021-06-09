@@ -2,7 +2,7 @@
 
 This is a [Blitz.js](https://github.com/blitz-js/blitz) app.
 
-# **name**
+# **Gisk**
 
 ## Getting Started
 
@@ -62,7 +62,7 @@ You can read more about it on the [CLI Overview](https://blitzjs.com/docs/cli-ov
 Here is the starting structure of your app.
 
 ```
-euro2020
+gisk
 ├── app/
 │   ├── api/
 │   ├── auth/
