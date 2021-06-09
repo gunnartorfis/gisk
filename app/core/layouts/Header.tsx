@@ -127,7 +127,19 @@ const useNavItems = ({ onClickCreateNewLeague }: { onClickCreateNewLeague: () =>
   if (user?.role === "ADMIN") {
     navItems.push({
       label: t("ADMIN"),
-      href: "/admin",
+      children:
+        leagues.length > 0
+          ? [
+              {
+                label: "Úrslit leikja",
+                href: "/adminMatches",
+              },
+              {
+                label: "Deildir",
+                href: "/adminLeagues",
+              },
+            ]
+          : undefined,
     })
   }
 

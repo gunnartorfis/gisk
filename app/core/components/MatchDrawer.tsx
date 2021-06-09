@@ -21,7 +21,7 @@ import getTeams from "app/teams/queries/getTeams"
 import { useMutation } from "blitz"
 import React, { forwardRef, useRef } from "react"
 import DatePicker from "react-datepicker"
-import { MatchWithTeams } from "../../pages/admin"
+import { MatchWithTeams } from "../../pages/adminMatches"
 
 const MatchDrawer: React.FunctionComponent<{
   isOpen: boolean
