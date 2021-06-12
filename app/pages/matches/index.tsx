@@ -203,13 +203,13 @@ export const MatchesList = () => {
           </Box>
         </details>
       ) : null}
-      <Text width="100%" textAlign="center" marginTop="8px">
+      <Text width="100%" textAlign="center" paddingTop="8px">
         {t("MATCHES_TIMEZONE_INFO")}
       </Text>
       {Object.keys(matchesByDate).map((date) => {
         const matchesForDay = matchesByDate[date]
         return (
-          <Flex direction="column" justifyContent="center" alignItems="center" pt="16px" key={date}>
+          <Flex direction="column" justifyContent="center" alignItems="center" pt="32px" key={date}>
             <Text fontWeight="semibold" textAlign="center">
               {date}
             </Text>
@@ -221,11 +221,13 @@ export const MatchesList = () => {
               margin="0 auto"
               mt={["8px", "20px"]}
               bg={tableBgColorMode}
+              w={["95%", "90%", "60%"]}
+              // w="95%"
             >
               <Table
                 variant="simple"
                 size="sm"
-                maxWidth="600px"
+                // maxWidth="600px"
                 style={{
                   tableLayout: "fixed",
                 }}
@@ -247,7 +249,7 @@ export const MatchesList = () => {
                 <Tbody>
                   {matchesForDay?.map((m) => (
                     <Tr key={m.id}>
-                      <Td w={["70px", "150px"]}>
+                      <Td p="0">
                         <Flex dir="row" alignItems="center">
                           <Image
                             src={`/teams/${m.match.homeTeam.countryCode}.png`}
@@ -265,13 +267,13 @@ export const MatchesList = () => {
                           <Text marginLeft="2px">({m.match.homeTeam.group})</Text>
                         </Flex>
                       </Td>
-                      <Td>
+                      <Td textAlign="right">
                         <Input
                           placeholder="0"
                           textAlign="center"
                           defaultValue={m.resultHome}
-                          w="60px"
                           type="number"
+                          w="50px"
                           disabled={new Date() > m.match.kickOff}
                           onChange={(e) =>
                             onChangeResult({
@@ -282,16 +284,16 @@ export const MatchesList = () => {
                           }
                         />
                       </Td>
-                      <Td textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
+                      <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
                         {dayjs(m.match.kickOff).format("HH:mm")}
                       </Td>
-                      <Td>
+                      <Td p="0" textAlign="left">
                         <Input
                           placeholder="0"
                           textAlign="center"
                           defaultValue={m.resultAway}
-                          w="60px"
                           type="number"
+                          w="50px"
                           disabled={new Date() > m.match.kickOff}
                           onChange={(e) =>
                             onChangeResult({
@@ -302,7 +304,7 @@ export const MatchesList = () => {
                           }
                         />
                       </Td>
-                      <Td w="150px">
+                      <Td p="0">
                         <Flex dir="row" alignItems="center">
                           <Image
                             src={`/teams/${m.match.awayTeam.countryCode}.png`}
@@ -317,7 +319,7 @@ export const MatchesList = () => {
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.match.awayTeam.countryCode}
                           </Text>
-                          <Text marginRight="2px">({m.match.awayTeam.group})</Text>
+                          <Text marginLeft="2px">({m.match.awayTeam.group})</Text>
                         </Flex>
                       </Td>
                     </Tr>
