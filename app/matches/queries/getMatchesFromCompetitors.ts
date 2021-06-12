@@ -3,7 +3,6 @@ import dayjs from "dayjs"
 import db from "db"
 
 export default resolver.pipe(resolver.authorize(), async (input, ctx) => {
-  // console.log("ctx", ctx);
   const userId = (input as any).userId
 
   if (!userId) return []
