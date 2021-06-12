@@ -12,7 +12,7 @@ const smtp = nodemailer.createTransport({
   port: 465,
   auth: {
     user: "gisk@gisk.app",
-    pass: "JPd-qthuD.nY34*RVuZQboLhC@m",
+    pass: process.env.EMAIL_PASSWORD,
   },
 })
 
