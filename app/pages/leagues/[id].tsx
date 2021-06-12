@@ -1,4 +1,5 @@
 import { DeleteIcon } from "@chakra-ui/icons"
+import { Link } from "blitz"
 import { Box, Container, Flex, Text } from "@chakra-ui/layout"
 import { Table, Tbody, Td, Th, Thead, Tr, useToast } from "@chakra-ui/react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -87,9 +88,13 @@ export const League = () => {
         <Tbody>
           {leagueWithScores.UserLeague.map((ul, i) => (
             <Tr key={ul.userId}>
-              <Td>
+              <Td _hover={{ textDecoration: "underline" }}>
                 <Flex direction="row" alignItems="center">
-                  {ul.user.name}
+                  <Link
+                    href={currentUser?.id === ul.user.id ? "/matches" : `/matches/${ul.user.id}`}
+                  >
+                    {ul.user.name}
+                  </Link>
                   {ul.role === "ADMIN" ? (
                     <Box ml="8px">
                       <FiStar />
