@@ -285,8 +285,7 @@ export const MatchesList = () => {
                         />
                       </Td>
                       <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
-                        {![null, undefined].includes(m.match.resultHome) &&
-                        ![null, undefined].includes(m.match.resultAway) ? (
+                        {m.match.resultHome !== null && m.match.resultAway !== null ? (
                           <Box display="flex" flexDirection="column">
                             {t("RESULT")}
                             <Text>
