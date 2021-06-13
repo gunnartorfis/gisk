@@ -285,7 +285,16 @@ export const MatchesList = () => {
                         />
                       </Td>
                       <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
-                        {dayjs(m.match.kickOff).format("HH:mm")}
+                        {m.match.resultHome && m.match.resultAway ? (
+                          <Box display="flex" flexDirection="column">
+                            {t("RESULT")}
+                            <Text>
+                              {m.match.resultHome} - {m.match.resultAway}
+                            </Text>
+                          </Box>
+                        ) : (
+                          dayjs(m.match.kickOff).format("HH:mm")
+                        )}
                       </Td>
                       <Td p="0" textAlign="left">
                         <Input
