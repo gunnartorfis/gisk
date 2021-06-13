@@ -285,7 +285,7 @@ export const MatchesList = () => {
                         />
                       </Td>
                       <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
-                        {m.match.resultHome && m.match.resultAway ? (
+                        {m.match.resultHome !== undefined && m.match.resultAway !== undefined ? (
                           <Box display="flex" flexDirection="column">
                             {t("RESULT")}
                             <Text>
