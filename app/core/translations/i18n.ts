@@ -50,6 +50,7 @@ const resources = {
       SELECT_A_TEAM: "Select a team",
 
       GROUP: "Group",
+      TODAY: "Today",
 
       SCORE_UPDATED_TITLE: "Success!",
       SCORE_UPDATED_ERROR: "Oops.",
@@ -126,6 +127,7 @@ const resources = {
       SELECT_A_TEAM: "Veldu lið",
 
       GROUP: "Riðill",
+      TODAY: "Í dag",
 
       EMAIL: "Netfang",
       PASSWORD: "Lykilorð",
