@@ -35,6 +35,9 @@ import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import { calculateScoreForMatch } from "../leagues/[id]"
 import Colors from "app/core/chakraTheme/colors"
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
+
+const MATCH_FORMAT = "DD. MMMM YYYY"
 
 export const MatchesList = () => {
   const user = useCurrentUser()
@@ -49,6 +52,10 @@ export const MatchesList = () => {
   const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
   const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
 
+  const todaySection = React.useRef<HTMLDivElement>(null)
+  const [openSections, setOpenSections] = React.useState<{
+    [date: number]: boolean
+  } | null>(null)
   const router = useRouter()
   const toast = useToast()
   const tableBgColorMode = useColorModeValue("white", "gray.700")
@@ -61,6 +68,64 @@ export const MatchesList = () => {
       dayjs.locale(user.language ?? "en")
     }
   }, [user])
+
+  React.useEffect(() => {
+    if (!isLoading) {
+      setTimeout(() => {
+        todaySection.current?.scrollIntoView({
+          behavior: "smooth",
+        })
+      }, 500)
+    }
+  }, [isLoading])
+
+  const getDateWithoutTimeFromDate = (date: Date) => {
+    return new Date(dayjs(date).format("MM/DD/YYYY"))
+  }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const matchesByDate: {
+    [key: string]: (UserLeagueMatch & {
+      match: Match & {
+        awayTeam: Team
+        homeTeam: Team
+      }
+      score?: number
+    })[]
+  } = {}
+
+  matches?.forEach((m) => {
+    const currentMatchDate = dayjs(getDateWithoutTimeFromDate(m.match.kickOff)).format(MATCH_FORMAT)
+    const score = calculateScoreForMatch(m.match, m)
+    const mWithScore = {
+      ...m,
+      score,
+    }
+    if (currentMatchDate in matchesByDate) {
+      matchesByDate[currentMatchDate].push(mWithScore)
+    } else {
+      matchesByDate[currentMatchDate] = [mWithScore]
+    }
+  })
+
+  React.useEffect(() => {
+    if (openSections === null && Object.keys(matchesByDate).length > 0) {
+      const allDates = Object.keys(matchesByDate)
+      const currentDate = dayjs()
+
+      const newSections = {}
+      allDates.forEach((date) => {
+        const dayjsDate = dayjs(date, MATCH_FORMAT)
+        const dateIsToday = dayjsDate.isSame(currentDate, "day")
+        const dateIsInFuture = dayjsDate.diff(currentDate)
+
+        if (dateIsInFuture >= 0 || dateIsToday) {
+          newSections[date] = true
+        }
+      })
+      setOpenSections(newSections)
+    }
+  }, [matchesByDate, openSections])
 
   if (user?.userLeague?.length === 0) {
     router.push("/")
@@ -113,35 +178,6 @@ export const MatchesList = () => {
       })
     }
   }
-
-  const getDateWithoutTimeFromDate = (date: Date) => {
-    return new Date(dayjs(date).format("MM/DD/YYYY"))
-  }
-
-  const matchesByDate: {
-    [key: string]: (UserLeagueMatch & {
-      match: Match & {
-        awayTeam: Team
-        homeTeam: Team
-      }
-      score?: number
-    })[]
-  } = {}
-  matches?.forEach((m) => {
-    const currentMatchDate = dayjs(getDateWithoutTimeFromDate(m.match.kickOff)).format(
-      "DD. MMMM YYYY"
-    )
-    const score = calculateScoreForMatch(m.match, m)
-    const mWithScore = {
-      ...m,
-      score,
-    }
-    if (currentMatchDate in matchesByDate) {
-      matchesByDate[currentMatchDate].push(mWithScore)
-    } else {
-      matchesByDate[currentMatchDate] = [mWithScore]
-    }
-  })
 
   return (
     <Box pb="16px" bg={bgColorMode}>
@@ -216,134 +252,162 @@ export const MatchesList = () => {
       </Text>
       {Object.keys(matchesByDate).map((date) => {
         const matchesForDay = matchesByDate[date]
+        const sectionIsOpen = openSections?.[date]
+        const isToday = dayjs(date, MATCH_FORMAT).isSame(dayjs(), "day")
         return (
-          <Flex direction="column" justifyContent="center" alignItems="center" pt="32px" key={date}>
-            <Text fontWeight="semibold" textAlign="center">
-              {date}
-            </Text>
+          <Flex
+            ref={isToday ? todaySection : null}
+            direction="column"
+            justifyContent="center"
+            alignItems="center"
+            pt="32px"
+            key={date}
+          >
             <Box
-              p="16px"
-              borderRadius="md"
-              boxShadow="md"
-              display="inline-block"
-              margin="0 auto"
-              mt={["8px", "20px"]}
-              bg={tableBgColorMode}
-              w={["95%", "90%", "60%"]}
-              // w="95%"
+              display="flex"
+              flexDir="row"
+              cursor="pointer"
+              onClick={() => {
+                setOpenSections({
+                  ...openSections,
+                  [date]: !sectionIsOpen,
+                })
+              }}
             >
-              <Table
-                variant="simple"
-                size="sm"
-                // maxWidth="600px"
-                style={{
-                  tableLayout: "fixed",
-                }}
-                bg={tableBgColorMode}
-              >
-                <Thead>
-                  <Tr>
-                    <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
-                      {t("HOME")}
-                    </Th>
-                    <Th textAlign="center">{t("PREDICTION")}</Th>
-                    <Th textAlign="center">{t("RESULT")}</Th>
-                    <Th textAlign="center">{t("PREDICTION")}</Th>
-                    <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
-                      {t("AWAY")}
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {matchesForDay?.map((m) => (
-                    <Tr key={m.id}>
-                      <Td p="0">
-                        <Flex dir="row" alignItems="center">
-                          <Image
-                            src={`/teams/${m.match.homeTeam.countryCode}.png`}
-                            alt={m.match.homeTeam.countryCode}
-                            w={{ base: "14px", md: "30px" }}
-                            h={{ base: "14px", md: "30px" }}
-                            mr="8px"
-                          />
-                          <Text display={{ md: "inline", base: "none" }}>
-                            {m.match.homeTeam.name}
-                          </Text>
-                          <Text display={{ base: "inline", md: "none" }}>
-                            {m.match.homeTeam.countryCode}
-                          </Text>
-                          <Text marginLeft="2px">({m.match.homeTeam.group})</Text>
-                        </Flex>
-                      </Td>
-                      <Td textAlign="center">
-                        <Input
-                          placeholder="0"
-                          textAlign="center"
-                          defaultValue={m.resultHome}
-                          type="number"
-                          w="50px"
-                          disabled={new Date() > m.match.kickOff}
-                          onChange={(e) =>
-                            onChangeResult({
-                              userMatchId: m.id,
-                              newValue: Number.parseInt(e.target.value),
-                              resultKey: "resultHome",
-                            })
-                          }
-                        />
-                      </Td>
-                      <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
-                        {m.match.resultHome !== null && m.match.resultAway !== null ? (
-                          <Box display="flex" flexDirection="column">
-                            <Text>
-                              {m.match.resultHome} - {m.match.resultAway}{" "}
-                              <Text color={Colors.primarydarker}>(+ {m.score})</Text>
-                            </Text>
-                          </Box>
-                        ) : (
-                          dayjs(m.match.kickOff).format("HH:mm")
-                        )}
-                      </Td>
-                      <Td p="0" textAlign="center">
-                        <Input
-                          placeholder="0"
-                          textAlign="center"
-                          defaultValue={m.resultAway}
-                          type="number"
-                          w="50px"
-                          disabled={new Date() > m.match.kickOff}
-                          onChange={(e) =>
-                            onChangeResult({
-                              userMatchId: m.id,
-                              newValue: Number.parseInt(e.target.value),
-                              resultKey: "resultAway",
-                            })
-                          }
-                        />
-                      </Td>
-                      <Td p="0">
-                        <Flex dir="row" alignItems="center">
-                          <Image
-                            src={`/teams/${m.match.awayTeam.countryCode}.png`}
-                            alt={m.match.awayTeam.countryCode}
-                            mr="8px"
-                            w={{ base: "14px", md: "30px" }}
-                            h={{ base: "14px", md: "30px" }}
-                          />
-                          <Text display={{ md: "inline", base: "none" }}>
-                            {m.match.awayTeam.name}
-                          </Text>
-                          <Text display={{ base: "inline", md: "none" }}>
-                            {m.match.awayTeam.countryCode}
-                          </Text>
-                          <Text marginLeft="2px">({m.match.awayTeam.group})</Text>
-                        </Flex>
-                      </Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </Table>
+              <Text fontWeight="semibold" textAlign="center">
+                {date} {isToday ? `(${t("TODAY").toLowerCase()})` : ""}
+              </Text>
+              {sectionIsOpen ? (
+                <ChevronUpIcon fontSize="24px" />
+              ) : (
+                <ChevronDownIcon fontSize="24px" />
+              )}
             </Box>
+            {sectionIsOpen ? (
+              <Box
+                p="16px"
+                borderRadius="md"
+                boxShadow="md"
+                display="inline-block"
+                margin="0 auto"
+                mt={["8px", "20px"]}
+                bg={tableBgColorMode}
+                w={["95%", "90%", "60%"]}
+                // w="95%"
+              >
+                <Table
+                  variant="simple"
+                  size="sm"
+                  // maxWidth="600px"
+                  style={{
+                    tableLayout: "fixed",
+                  }}
+                  bg={tableBgColorMode}
+                >
+                  <Thead>
+                    <Tr>
+                      <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
+                        {t("HOME")}
+                      </Th>
+                      <Th textAlign="center">{t("PREDICTION")}</Th>
+                      <Th textAlign="center">{t("RESULT")}</Th>
+                      <Th textAlign="center">{t("PREDICTION")}</Th>
+                      <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
+                        {t("AWAY")}
+                      </Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {matchesForDay?.map((m) => (
+                      <Tr key={m.id}>
+                        <Td p="0">
+                          <Flex dir="row" alignItems="center">
+                            <Image
+                              src={`/teams/${m.match.homeTeam.countryCode}.png`}
+                              alt={m.match.homeTeam.countryCode}
+                              w={{ base: "14px", md: "30px" }}
+                              h={{ base: "14px", md: "30px" }}
+                              mr="8px"
+                            />
+                            <Text display={{ md: "inline", base: "none" }}>
+                              {m.match.homeTeam.name}
+                            </Text>
+                            <Text display={{ base: "inline", md: "none" }}>
+                              {m.match.homeTeam.countryCode}
+                            </Text>
+                            <Text marginLeft="2px">({m.match.homeTeam.group})</Text>
+                          </Flex>
+                        </Td>
+                        <Td textAlign="center">
+                          <Input
+                            placeholder="0"
+                            textAlign="center"
+                            defaultValue={m.resultHome}
+                            type="number"
+                            w="50px"
+                            disabled={new Date() > m.match.kickOff}
+                            onChange={(e) =>
+                              onChangeResult({
+                                userMatchId: m.id,
+                                newValue: Number.parseInt(e.target.value),
+                                resultKey: "resultHome",
+                              })
+                            }
+                          />
+                        </Td>
+                        <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
+                          {m.match.resultHome !== null && m.match.resultAway !== null ? (
+                            <Box display="flex" flexDirection="column">
+                              <Text>
+                                {m.match.resultHome} - {m.match.resultAway}{" "}
+                              </Text>
+                              <Text color={Colors.primarydarker}>(+ {m.score})</Text>
+                            </Box>
+                          ) : (
+                            dayjs(m.match.kickOff).format("HH:mm")
+                          )}
+                        </Td>
+                        <Td p="0" textAlign="center">
+                          <Input
+                            placeholder="0"
+                            textAlign="center"
+                            defaultValue={m.resultAway}
+                            type="number"
+                            w="50px"
+                            disabled={new Date() > m.match.kickOff}
+                            onChange={(e) =>
+                              onChangeResult({
+                                userMatchId: m.id,
+                                newValue: Number.parseInt(e.target.value),
+                                resultKey: "resultAway",
+                              })
+                            }
+                          />
+                        </Td>
+                        <Td p="0">
+                          <Flex dir="row" alignItems="center">
+                            <Image
+                              src={`/teams/${m.match.awayTeam.countryCode}.png`}
+                              alt={m.match.awayTeam.countryCode}
+                              mr="8px"
+                              w={{ base: "14px", md: "30px" }}
+                              h={{ base: "14px", md: "30px" }}
+                            />
+                            <Text display={{ md: "inline", base: "none" }}>
+                              {m.match.awayTeam.name}
+                            </Text>
+                            <Text display={{ base: "inline", md: "none" }}>
+                              {m.match.awayTeam.countryCode}
+                            </Text>
+                            <Text marginLeft="2px">({m.match.awayTeam.group})</Text>
+                          </Flex>
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
+            ) : null}
           </Flex>
         )
       })}
