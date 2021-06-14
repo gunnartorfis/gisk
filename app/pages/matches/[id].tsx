@@ -33,6 +33,7 @@ import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import getMatchesFromCompetitors from "app/matches/queries/getMatchesFromCompetitors"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import useUserLocale from "app/core/hooks/useUserLocale"
 
 export const MatchList = () => {
   const router = useRouter()
@@ -49,11 +50,7 @@ export const MatchList = () => {
   const questionsBg = useColorModeValue("white", "gray.700")
   const { t, i18n } = useTranslation()
 
-  React.useEffect(() => {
-    if (user) {
-      dayjs.locale(user.language ?? "en")
-    }
-  }, [user])
+  useUserLocale(user)
 
   if (user?.userLeague?.length === 0) {
     router.push("/")

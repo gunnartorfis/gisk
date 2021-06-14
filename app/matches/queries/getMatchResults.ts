@@ -2,7 +2,7 @@ import { resolver } from "blitz"
 import dayjs from "dayjs"
 import db from "db"
 
-export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
+const getMatchResults = resolver.pipe(resolver.authorize(), async (_, ctx) => {
   const matches = await db.match.findMany({
     include: {
       homeTeam: true,
@@ -16,3 +16,5 @@ export default resolver.pipe(resolver.authorize(), async (_, ctx) => {
 
   return matches
 })
+
+export default getMatchResults
