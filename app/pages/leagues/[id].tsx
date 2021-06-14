@@ -11,6 +11,35 @@ import { BlitzPage, Head, useMutation, useQuery, useRouter } from "blitz"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import { FiStar } from "react-icons/fi"
+import { Match, Team, UserLeagueMatch } from "@prisma/client"
+
+export const calculateScoreForMatch = (
+  match: Match & {
+    homeTeam: Team
+    awayTeam: Team
+  },
+  prediction: UserLeagueMatch
+): number => {
+  let score = 0
+  const { resultHome, resultAway } = match
+  if (resultHome !== null && resultAway !== null) {
+    if (resultHome === prediction.resultHome && resultAway === prediction.resultAway) {
+      score += 1
+    }
+
+    if (resultHome === resultAway && prediction.resultHome === prediction.resultAway) {
+      score += 1
+    } else {
+      const resultMatch = Math.sign(resultHome - resultAway)
+      const resultUser = Math.sign(prediction.resultHome - prediction.resultAway)
+      if (resultMatch === resultUser) {
+        score += 1
+      }
+    }
+  }
+
+  return score
+}
 
 export const League = () => {
   const router = useRouter()
@@ -35,22 +64,7 @@ export const League = () => {
     ul.predictions.forEach((prediction) => {
       const match = matches.find((m) => m.id === prediction.matchId)
       if (match) {
-        const { resultHome, resultAway } = match
-        if (resultHome !== null && resultAway !== null) {
-          if (resultHome === prediction.resultHome && resultAway === prediction.resultAway) {
-            score += 1
-          }
-
-          if (resultHome === resultAway && prediction.resultHome === prediction.resultAway) {
-            score += 1
-          } else {
-            const resultMatch = Math.sign(resultHome - resultAway)
-            const resultUser = Math.sign(prediction.resultHome - prediction.resultAway)
-            if (resultMatch === resultUser) {
-              score += 1
-            }
-          }
-        }
+        score += calculateScoreForMatch(match, prediction)
       }
     })
 
