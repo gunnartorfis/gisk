@@ -33,6 +33,8 @@ import "dayjs/locale/is"
 import "dayjs/locale/en"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
+import { calculateScoreForMatch } from "../leagues/[id]"
+import Colors from "app/core/chakraTheme/colors"
 
 export const MatchesList = () => {
   const user = useCurrentUser()
@@ -122,16 +124,22 @@ export const MatchesList = () => {
         awayTeam: Team
         homeTeam: Team
       }
+      score?: number
     })[]
   } = {}
   matches?.forEach((m) => {
     const currentMatchDate = dayjs(getDateWithoutTimeFromDate(m.match.kickOff)).format(
       "DD. MMMM YYYY"
     )
+    const score = calculateScoreForMatch(m.match, m)
+    const mWithScore = {
+      ...m,
+      score,
+    }
     if (currentMatchDate in matchesByDate) {
-      matchesByDate[currentMatchDate].push(m)
+      matchesByDate[currentMatchDate].push(mWithScore)
     } else {
-      matchesByDate[currentMatchDate] = [m]
+      matchesByDate[currentMatchDate] = [mWithScore]
     }
   })
 
@@ -238,9 +246,9 @@ export const MatchesList = () => {
                     <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
                       {t("HOME")}
                     </Th>
-                    <Th colSpan={3} textAlign="center">
-                      {t("PREDICTION")}
-                    </Th>
+                    <Th textAlign="center">{t("PREDICTION")}</Th>
+                    <Th textAlign="center">{t("RESULT")}</Th>
+                    <Th textAlign="center">{t("PREDICTION")}</Th>
                     <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
                       {t("AWAY")}
                     </Th>
@@ -267,7 +275,7 @@ export const MatchesList = () => {
                           <Text marginLeft="2px">({m.match.homeTeam.group})</Text>
                         </Flex>
                       </Td>
-                      <Td textAlign="right">
+                      <Td textAlign="center">
                         <Input
                           placeholder="0"
                           textAlign="center"
@@ -287,16 +295,16 @@ export const MatchesList = () => {
                       <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
                         {m.match.resultHome !== null && m.match.resultAway !== null ? (
                           <Box display="flex" flexDirection="column">
-                            {t("RESULT")}
                             <Text>
-                              {m.match.resultHome} - {m.match.resultAway}
+                              {m.match.resultHome} - {m.match.resultAway}{" "}
+                              <Text color={Colors.primarydarker}>(+ {m.score})</Text>
                             </Text>
                           </Box>
                         ) : (
                           dayjs(m.match.kickOff).format("HH:mm")
                         )}
                       </Td>
-                      <Td p="0" textAlign="left">
+                      <Td p="0" textAlign="center">
                         <Input
                           placeholder="0"
                           textAlign="center"
