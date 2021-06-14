@@ -1,12 +1,12 @@
 import { Button } from "@chakra-ui/button"
 import { AddIcon } from "@chakra-ui/icons"
-import { Box, Center, Container, Text } from "@chakra-ui/layout"
+import { Box, Center, Text } from "@chakra-ui/layout"
 import { ListItem, UnorderedList, useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
 import CreateLeagueModal from "app/core/components/CreateLeagueModal"
 import Welcome from "app/core/components/Welcome"
-import useUserLocale from "app/core/hooks/useUserLocale"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import useUserLocale from "app/core/hooks/useUserLocale"
 import Layout from "app/core/layouts/Layout"
 import LeagueInvite from "app/leagues/components/LeagueInvite"
 import getMatches from "app/matches/queries/getMatches"
@@ -68,7 +68,7 @@ const Dashboard = () => {
 
   return (
     <Box>
-      <MatchesForDay matches={matchesForToday} date={dayjs().format(MATCH_FORMAT)} />
+      <MatchesForDay matches={matchesForToday} date={dayjs().toString()} />
       <Center mt="16px">
         <Text fontSize="xl" fontWeight="bold" textAlign="center" marginRight="16px">
           {t("SCORING")}
