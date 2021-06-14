@@ -5,15 +5,21 @@ import { ListItem, UnorderedList, useColorModeValue, useDisclosure } from "@chak
 import logout from "app/auth/mutations/logout"
 import CreateLeagueModal from "app/core/components/CreateLeagueModal"
 import Welcome from "app/core/components/Welcome"
+import useUserLocale from "app/core/hooks/useUserLocale"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import LeagueInvite from "app/leagues/components/LeagueInvite"
-import { BlitzPage, useMutation } from "blitz"
+import getMatches from "app/matches/queries/getMatches"
+import { BlitzPage, useMutation, useQuery } from "blitz"
+import dayjs from "dayjs"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
+import { MatchesForDay, MATCH_FORMAT } from "./matches"
 
 export const CORRECT_RESULT = "correct_result"
 export const CORRECT_SCORE = "correct_score"
+
+const date = new Date()
 
 const Dashboard = () => {
   const currentUser = useCurrentUser()
@@ -21,7 +27,13 @@ const Dashboard = () => {
   const notInLeagueBg = useColorModeValue("white", "gray.700")
   const { t } = useTranslation()
 
-  if (!currentUser) {
+  const [matchesForToday, { isLoading }] = useQuery(getMatches, {
+    date,
+  })
+
+  useUserLocale(currentUser)
+
+  if (!currentUser || isLoading) {
     return <UserInfo />
   }
 
@@ -55,32 +67,39 @@ const Dashboard = () => {
   }
 
   return (
-    <Container>
-      <Text fontSize="3xl" fontWeight="bold">
-        {t("SCORING")}
-      </Text>
-      <UnorderedList>
-        {[
-          {
-            rule: t("SCORING_RULE_1"),
-            key: CORRECT_RESULT,
-            score: 1,
-          },
-          {
-            rule: t("SCORING_RULE_2"),
-            key: CORRECT_SCORE,
-            score: 2,
-          },
-        ].map(({ score, rule }) => (
-          <ListItem key={`${score}.${rule}`}>
-            <Text display="inline">{rule}: </Text>
-            <Text display="inline" fontWeight="semibold">
-              {score} {t("POINT")}
-            </Text>
-          </ListItem>
-        ))}
-      </UnorderedList>
-    </Container>
+    <Box>
+      <MatchesForDay matches={matchesForToday} date={dayjs().format(MATCH_FORMAT)} />
+      <Center mt="16px">
+        <Text fontSize="xl" fontWeight="bold" textAlign="center" marginRight="16px">
+          {t("SCORING")}
+        </Text>
+        <UnorderedList>
+          {[
+            {
+              rule: t("SCORING_RULE_1"),
+              key: CORRECT_RESULT,
+              score: 1,
+            },
+            {
+              rule: t("SCORING_RULE_2"),
+              key: CORRECT_SCORE,
+              score: 2,
+            },
+            {
+              rule: t("SCORING_TOTAL"),
+              score: 2,
+            },
+          ].map(({ score, rule }) => (
+            <ListItem key={`${score}.${rule}`}>
+              <Text display="inline">{rule}: </Text>
+              <Text display="inline" fontWeight="semibold">
+                {score} {t("POINT")}
+              </Text>
+            </ListItem>
+          ))}
+        </UnorderedList>
+      </Center>
+    </Box>
   )
 }
 
@@ -146,19 +165,6 @@ const Home: BlitzPage = () => {
           flex-direction: column;
           justify-content: center;
           align-items: center;
-        }
-
-        main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-        }
-
-        main p {
-          font-size: 1.2rem;
         }
 
         footer {

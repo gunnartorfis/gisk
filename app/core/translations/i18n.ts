@@ -29,6 +29,7 @@ const resources = {
       SCORING: "Scoring",
       SCORING_RULE_1: "Correct result (1X2)",
       SCORING_RULE_2: "Correct score",
+      SCORING_TOTAL: "Maximum",
       POINT: "point",
 
       INVITE_CODE_TO_LEAGUE: "Invite code to league",
@@ -105,6 +106,7 @@ const resources = {
       SCORING: "Stigagjöf",
       SCORING_RULE_1: "Rétt sigurlið (1X2)",
       SCORING_RULE_2: "Rétt úrslit",
+      SCORING_TOTAL: "Hámark",
       POINT: "stig",
 
       INVITE_CODE_TO_LEAGUE: "Boðskóði í deild",

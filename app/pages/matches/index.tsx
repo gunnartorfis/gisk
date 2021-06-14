@@ -1,3 +1,4 @@
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 import {
   Alert,
   AlertIcon,
@@ -19,33 +20,23 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react"
-import { Match, Team, UserLeagueMatch } from "@prisma/client"
+import Colors from "app/core/chakraTheme/colors"
+import useUserLocale from "app/core/hooks/useUserLocale"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import updateResultForUser from "app/matches/mutations/updateResultForUser"
-import getMatches from "app/matches/queries/getMatches"
+import getMatches, { MatchWithScore } from "app/matches/queries/getMatches"
 import getQuizQuestions from "app/matches/queries/getQuizQuestions"
 import getTeams from "app/teams/queries/getTeams"
 import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
 import { BlitzPage, Head, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
-import "dayjs/locale/is"
 import "dayjs/locale/en"
+import "dayjs/locale/is"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
-import { calculateScoreForMatch } from "../leagues/[id]"
-import Colors from "app/core/chakraTheme/colors"
-import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 
-const MATCH_FORMAT = "DD. MMMM YYYY"
-
-type MatchWithScore = UserLeagueMatch & {
-  match: Match & {
-    awayTeam: Team
-    homeTeam: Team
-  }
-  score?: number
-}
+export const MATCH_FORMAT = "dddd DD. MMMM YYYY"
 
 type MatchesByDayType = {
   [key: string]: MatchWithScore[]
@@ -71,11 +62,7 @@ export const MatchesList = () => {
   const questionsBg = useColorModeValue("white", "gray.700")
   const { t, i18n } = useTranslation()
 
-  React.useEffect(() => {
-    if (user) {
-      dayjs.locale(user.language ?? "en")
-    }
-  }, [user])
+  useUserLocale(user)
 
   // React.useEffect(() => {
   //   if (!isLoading) {
@@ -95,16 +82,12 @@ export const MatchesList = () => {
   const matchesByDate: MatchesByDayType = {}
 
   matches?.forEach((m) => {
-    const currentMatchDate = dayjs(getDateWithoutTimeFromDate(m.match.kickOff)).format(MATCH_FORMAT)
-    const score = calculateScoreForMatch(m.match, m)
-    const mWithScore = {
-      ...m,
-      score,
-    }
+    const currentMatchDate = dayjs(getDateWithoutTimeFromDate(m.match.kickOff)).toString()
+
     if (currentMatchDate in matchesByDate) {
-      matchesByDate[currentMatchDate].push(mWithScore)
+      matchesByDate[currentMatchDate].push(m)
     } else {
-      matchesByDate[currentMatchDate] = [mWithScore]
+      matchesByDate[currentMatchDate] = [m]
     }
   })
 
@@ -189,14 +172,14 @@ export const MatchesList = () => {
         {t("MATCHES_TIMEZONE_INFO")}
       </Text>
       {Object.keys(matchesByDate).map((date) => {
-        return <MatchesForDay matches={matchesByDate[date]} date={date} />
+        return <MatchesForDay key={date} matches={matchesByDate[date]} date={date} />
       })}
     </Box>
   )
 }
 
-const MatchesForDay = ({ matches, date }: { matches: MatchWithScore[]; date: string }) => {
-  const dayjsDate = dayjs(date, MATCH_FORMAT)
+export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; date: string }) => {
+  const dayjsDate = dayjs(date)
   const currentDate = dayjs()
   const dateIsToday = dayjsDate.isSame(currentDate, "day")
   const dateIsInFuture = dayjsDate.diff(currentDate)
@@ -206,7 +189,7 @@ const MatchesForDay = ({ matches, date }: { matches: MatchWithScore[]; date: str
     isExpandedInitial = true
   }
 
-  const isToday = dayjs(date, MATCH_FORMAT).isSame(dayjs(), "day")
+  const isToday = dayjs(date).isSame(dayjs(), "day")
   const [isExpanded, setIsExpanded] = React.useState(isExpandedInitial)
 
   const { t } = useTranslation()
@@ -267,7 +250,7 @@ const MatchesForDay = ({ matches, date }: { matches: MatchWithScore[]; date: str
         }}
       >
         <Text fontWeight="semibold" textAlign="center">
-          {date} {isToday ? `(${t("TODAY").toLowerCase()})` : ""}
+          {dayjs(date).format(MATCH_FORMAT)} {isToday ? `(${t("TODAY").toLowerCase()})` : ""}
         </Text>
         {isExpanded ? <ChevronUpIcon fontSize="24px" /> : <ChevronDownIcon fontSize="24px" />}
       </Box>
