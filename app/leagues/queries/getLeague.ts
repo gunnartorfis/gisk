@@ -61,6 +61,6 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
 
           return prev
         }, 0),
-    })),
+    })).sort((a, b) => b.score - a.score),
   }
 })
