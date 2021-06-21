@@ -130,6 +130,7 @@ model Match {
   round             String
   arena             String
   userLeagueMatches UserLeagueMatch[]
+  scoreMultiplier   Float?
 
   @@unique([homeTeamId, awayTeamId, kickOff])
 }

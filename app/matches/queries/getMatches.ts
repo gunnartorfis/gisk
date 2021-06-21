@@ -122,6 +122,8 @@ export const calculateScoreForMatch = (
         score += 1
       }
     }
+
+    score *= match.scoreMultiplier ?? 1
   }
 
   return score
