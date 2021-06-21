@@ -8,6 +8,7 @@ const CreateMatch = z.object({
   kickOff: z.date(),
   resultHome: z.nullable(z.number()),
   resultAway: z.nullable(z.number()),
+  scoreMultiplier: z.optional(z.number()),
 })
 
 const createMatch = resolver.pipe(
@@ -18,7 +19,7 @@ const createMatch = resolver.pipe(
       throw new Error()
     }
 
-    const { homeTeamId, awayTeamId, kickOff, resultHome, resultAway } = input
+    const { homeTeamId, awayTeamId, kickOff, resultHome, resultAway, scoreMultiplier } = input
 
     const newMatch = await db.match.create({
       data: {
@@ -37,6 +38,7 @@ const createMatch = resolver.pipe(
         },
         resultAway,
         resultHome,
+        scoreMultiplier: scoreMultiplier ?? 1,
       },
     })
 

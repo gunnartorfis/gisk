@@ -46,6 +46,7 @@ const MatchDrawer: React.FunctionComponent<{
   const awayTeamRef = useRef<any>()
   const homeResultRef = useRef<any>()
   const awayResultRef = useRef<any>()
+  const scoreMultiplierRef = useRef<any>()
 
   if (isLoading || !teams) {
     return null
@@ -107,6 +108,14 @@ const MatchDrawer: React.FunctionComponent<{
                     ref={awayResultRef}
                     type="numeric"
                     defaultValue={match?.resultAway ?? ""}
+                  />
+                </Box>
+                <Box>
+                  <FormLabel htmlFor="scoreMultiplier">Score multiplier</FormLabel>
+                  <Input
+                    ref={scoreMultiplierRef}
+                    type="numeric"
+                    defaultValue={`${match?.scoreMultiplier ?? 1}`}
                   />
                 </Box>
                 <Box>
@@ -174,6 +183,7 @@ const MatchDrawer: React.FunctionComponent<{
                     resultHome: homeResult ? Number.parseInt(homeResult) : null,
                     resultAway: awayResult ? Number.parseInt(awayResult) : null,
                     kickOff: kickOff ?? match?.kickOff ?? new Date(),
+                    scoreMultiplier: Number.parseFloat(scoreMultiplierRef.current?.value) ?? 1,
                   }
                   if (match) {
                     await updateMutation({
