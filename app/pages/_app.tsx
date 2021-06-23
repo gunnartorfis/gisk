@@ -8,14 +8,13 @@ import {
   AuthenticationError,
   AuthorizationError,
   ErrorFallbackProps,
+  ErrorBoundary,
   useRouter,
   useSession,
+  useQueryErrorResetBoundary,
 } from "blitz"
 import React, { Suspense, useEffect } from "react"
-import { ErrorBoundary } from "react-error-boundary"
-import { queryCache } from "react-query"
 import "./_app.css"
-import "react-datepicker/dist/react-datepicker.css"
 import InputTheme from "app/core/chakraTheme/Input"
 import "app/core/translations/i18n"
 import ErrorComponent from "app/core/components/ErrorComponent"
@@ -66,17 +65,12 @@ export default function App({ Component, pageProps }: AppProps) {
       </Suspense>
       <ErrorBoundary
         FallbackComponent={RootErrorFallback}
-        resetKeys={[router.asPath]}
         onError={(error, componentStack) => {
           if (process.env.NODE_ENV === "production") {
             Sentry.captureException(error, { contexts: { react: { componentStack } } })
           }
         }}
-        onReset={() => {
-          // This ensures the Blitz useQuery hooks will automatically refetch
-          // data any time you reset the error boundary
-          queryCache.resetErrorBoundaries()
-        }}
+        onReset={useQueryErrorResetBoundary().reset}
       >
         {getLayout(<Component {...pageProps} />)}
       </ErrorBoundary>

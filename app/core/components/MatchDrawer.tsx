@@ -22,6 +22,7 @@ import { useMutation } from "blitz"
 import React, { forwardRef, useRef } from "react"
 import DatePicker from "react-datepicker"
 import { MatchWithTeams } from "../../pages/adminMatches"
+import "react-datepicker/dist/react-datepicker.css"
 
 const MatchDrawer: React.FunctionComponent<{
   isOpen: boolean

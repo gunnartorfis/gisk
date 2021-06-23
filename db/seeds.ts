@@ -78,7 +78,7 @@ const seed = async () => {
   }
 
   const usersCount = await db.user.count()
-  if (usersCount === 1) {
+  if (usersCount <= 1) {
     // example@example gets generated from tests.
     const hashedPassword = await SecurePassword.hash("gisk")
     await db.user.create({
