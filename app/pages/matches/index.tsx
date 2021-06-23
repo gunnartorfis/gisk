@@ -330,10 +330,20 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
                         <Text>
                           {m.match.resultHome} - {m.match.resultAway}{" "}
                         </Text>
-                        <Text color={Colors.primarydarker}>(+ {m.score})</Text>
+                        <Text color="darkgreen">
+                          (+ {m.score}){" "}
+                          {(m.match.scoreMultiplier ?? 1) > 1
+                            ? `${m.match.scoreMultiplier}x points`
+                            : ""}
+                        </Text>
                       </Box>
                     ) : (
-                      dayjs(m.match.kickOff).format("HH:mm")
+                      <Box display="flex" flexDirection="column">
+                        <Text>{dayjs(m.match.kickOff).format("HH:mm")}</Text>
+                        {(m.match.scoreMultiplier ?? 1) > 1 ? (
+                          <Text color="darkgreen">{m.match.scoreMultiplier}x points</Text>
+                        ) : null}
+                      </Box>
                     )}
                   </Td>
                   <Td p="0" textAlign="center">
