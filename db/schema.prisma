@@ -19,6 +19,7 @@ model User {
   hashedPassword    String?
   role              String             @default("USER")
   language          String?
+  facebookId        String?
   tokens            Token[]
   sessions          Session[]
   userLeagueMatches UserLeagueMatch[]

@@ -1,4 +1,14 @@
-import { Box, Button, Flex, FormControl, Link, Stack, useColorModeValue } from "@chakra-ui/react"
+import {
+  Box,
+  Button,
+  chakra,
+  Flex,
+  FormControl,
+  Link,
+  Stack,
+  useColorModeValue,
+  useTheme,
+} from "@chakra-ui/react"
 import Form, { FormContext, FORM_ERROR } from "app/core/components/Form"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import Layout from "app/core/layouts/Layout"
@@ -11,9 +21,10 @@ export const LoginPage: BlitzPage = () => {
   const [loginMutation] = useMutation(login)
   const router = useRouter()
   const { t } = useTranslation()
-
+  const oauthLoginError = router.params.authError
   const bgColorMode = useColorModeValue("gray.50", "gray.800")
   const boxColorMode = useColorModeValue("white", "gray.700")
+  const theme = useTheme()
 
   return (
     <Form
@@ -49,6 +60,7 @@ export const LoginPage: BlitzPage = () => {
                       label={t("EMAIL")}
                       placeholder={t("EMAIL")}
                       type="email"
+                      autoComplete="email"
                     />
                   </FormControl>
                   <FormControl id="password">
@@ -57,11 +69,17 @@ export const LoginPage: BlitzPage = () => {
                       label={t("PASSWORD")}
                       placeholder={t("PASSWORD")}
                       type="password"
+                      autoComplete="current-password"
                     />
                   </FormControl>
                   {submitError ? (
                     <Box role="alert" style={{ color: "red" }}>
                       {submitError}
+                    </Box>
+                  ) : null}
+                  {oauthLoginError ? (
+                    <Box role="alert" style={{ color: "red" }}>
+                      {oauthLoginError}
                     </Box>
                   ) : null}
                   <Stack spacing={4}>
@@ -83,6 +101,25 @@ export const LoginPage: BlitzPage = () => {
                         {t("LOGIN_FORM_SIGNUP")}
                       </Button>
                     </Link>
+
+                    <div
+                      style={{
+                        width: "100%",
+                        backgroundColor: theme.colors.gray[200],
+                        height: 1,
+                      }}
+                    />
+
+                    <Button
+                      onClick={() => {
+                        router.push("/api/auth/facebook")
+                      }}
+                      style={{
+                        background: theme.colors.facebook[600],
+                      }}
+                    >
+                      Facebook
+                    </Button>
                   </Stack>
                 </Stack>
               </Box>
