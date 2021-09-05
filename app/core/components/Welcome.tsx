@@ -32,6 +32,7 @@ export default function Welcome() {
           flexDir="column"
           alignItems="center"
           spacing={{ base: 8, md: 14 }}
+          marginTop={16}
         >
           <GradientTitle>{t("WELCOME_TITLE")}</GradientTitle>
           <Text color={"gray.500"}>{t("WELCOME_DESCRIPTION")}</Text>
