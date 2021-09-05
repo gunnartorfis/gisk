@@ -27,9 +27,15 @@ const Dashboard = () => {
   const notInLeagueBg = useColorModeValue("white", "gray.700")
   const { t } = useTranslation()
 
-  const [matchesForToday, { isLoading }] = useQuery(getMatches, {
-    date,
-  })
+  const [matchesForToday, { isLoading }] = useQuery(
+    getMatches,
+    {
+      date,
+    },
+    {
+      enabled: !!currentUser,
+    }
+  )
 
   useUserLocale(currentUser)
 
