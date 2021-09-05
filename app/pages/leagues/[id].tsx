@@ -5,8 +5,7 @@ import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
 import removeUserFromLeagueIfExists from "app/leagues/mutations/removeUserFromLeagueIfExists"
 import getLeague from "app/leagues/queries/getLeague"
-import getMatchResults from "app/matches/queries/getMatchResults"
-import { BlitzPage, Head, useMutation, useQuery, useRouter } from "blitz"
+import { BlitzPage, Head, Link, useMutation, useQuery, useRouter } from "blitz"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import { FiStar } from "react-icons/fi"
@@ -20,51 +19,15 @@ export const League = () => {
     id: leagueId,
   })
   const toast = useToast()
-  const [matches, { isLoading: isLoadingMatches }] = useQuery(getMatchResults, {})
   const { t } = useTranslation()
 
-  if (isLoading || isLoadingMatches) {
+  if (isLoading) {
     return <Text>Loading</Text>
   }
   const userIsLeagueAdmin =
     currentUser?.userLeague.find((l) => l.leagueId === leagueId)?.role === "ADMIN"
 
-  const usersWithScore = league.UserLeague.map((ul) => {
-    let score = 0
-    ul.predictions.forEach((prediction) => {
-      const match = matches.find((m) => m.id === prediction.matchId)
-      if (match) {
-        const { resultHome, resultAway } = match
-        if (resultHome !== null && resultAway !== null) {
-          if (resultHome === prediction.resultHome && resultAway === prediction.resultAway) {
-            score += 1
-          }
-
-          if (resultHome === resultAway && prediction.resultHome === prediction.resultAway) {
-            score += 1
-          } else {
-            const resultMatch = Math.sign(resultHome - resultAway)
-            const resultUser = Math.sign(prediction.resultHome - prediction.resultAway)
-            if (resultMatch === resultUser) {
-              score += 1
-            }
-          }
-        }
-      }
-    })
-
-    return {
-      ...ul,
-      score,
-    }
-  })
-
-  usersWithScore.sort((a, b) => b.score - a.score)
-
-  const leagueWithScores = {
-    ...league,
-    UserLeague: usersWithScore,
-  }
+  const leagueWithScores = league
 
   return (
     <Flex direction="column">
@@ -87,9 +50,13 @@ export const League = () => {
         <Tbody>
           {leagueWithScores.UserLeague.map((ul, i) => (
             <Tr key={ul.userId}>
-              <Td>
+              <Td _hover={{ textDecoration: "underline" }}>
                 <Flex direction="row" alignItems="center">
-                  {ul.user.name}
+                  <Link
+                    href={currentUser?.id === ul.user.id ? "/matches" : `/matches/${ul.user.id}`}
+                  >
+                    {ul.user.name}
+                  </Link>
                   {ul.role === "ADMIN" ? (
                     <Box ml="8px">
                       <FiStar />

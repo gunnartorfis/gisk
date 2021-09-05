@@ -1,5 +1,6 @@
 import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
+import { resolver, SecurePassword } from "blitz"
 import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
 import db from "./index"
@@ -74,6 +75,21 @@ const seed = async () => {
         },
       })
     }
+  }
+
+  const usersCount = await db.user.count()
+  if (usersCount <= 1) {
+    // example@example gets generated from tests.
+    const hashedPassword = await SecurePassword.hash("gisk")
+    await db.user.create({
+      data: {
+        email: "gisk@gisk.app",
+        hashedPassword,
+        name: "Gisk Admin",
+        role: "ADMIN",
+        language: "en",
+      },
+    })
   }
 }
 

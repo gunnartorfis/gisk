@@ -9,6 +9,7 @@ const UpdateMatch = z.object({
   kickOff: z.date(),
   resultHome: z.nullable(z.number()),
   resultAway: z.nullable(z.number()),
+  scoreMultiplier: z.optional(z.number()),
 })
 
 const updateMatch = resolver.pipe(
@@ -19,7 +20,7 @@ const updateMatch = resolver.pipe(
       throw new Error()
     }
 
-    const { id, homeTeamId, awayTeamId, kickOff, resultHome, resultAway } = input
+    const { id, homeTeamId, awayTeamId, kickOff, resultHome, resultAway, scoreMultiplier } = input
 
     const newMatch = await db.match.update({
       where: {
@@ -39,6 +40,7 @@ const updateMatch = resolver.pipe(
         },
         resultAway,
         resultHome,
+        scoreMultiplier: scoreMultiplier ?? 1,
       },
     })
 
