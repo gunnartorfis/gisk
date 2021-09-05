@@ -7,7 +7,6 @@ import {
   Flex,
   FormLabel,
   Grid,
-  Image,
   Input,
   Select,
   Table,
@@ -29,7 +28,7 @@ import getMatches, { MatchWithScore } from "app/matches/queries/getMatches"
 import getQuizQuestions from "app/matches/queries/getQuizQuestions"
 import getTeams from "app/teams/queries/getTeams"
 import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
-import { BlitzPage, Head, invoke, useMutation, useQuery, useRouter } from "blitz"
+import { BlitzPage, Head, invoke, useMutation, useQuery, useRouter, Image } from "blitz"
 import dayjs from "dayjs"
 import "dayjs/locale/en"
 import "dayjs/locale/is"
@@ -293,13 +292,18 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
                 <Tr key={m.id}>
                   <Td p="0">
                     <Flex dir="row" alignItems="center">
-                      <Image
-                        src={`/teams/${m.match.homeTeam.countryCode}.png`}
-                        alt={m.match.homeTeam.countryCode}
-                        w={{ base: "14px", md: "30px" }}
-                        h={{ base: "14px", md: "30px" }}
+                      <Box
+                        maxWidth={{ base: "14px", md: "30px" }}
+                        maxHeight={{ base: "14px", md: "30px" }}
                         mr="8px"
-                      />
+                      >
+                        <Image
+                          src={`/teams/${m.match.homeTeam.countryCode}.png`}
+                          alt={m.match.homeTeam.countryCode}
+                          width="30px"
+                          height="30px"
+                        />
+                      </Box>
                       <Text display={{ md: "inline", base: "none" }}>{m.match.homeTeam.name}</Text>
                       <Text display={{ base: "inline", md: "none" }}>
                         {m.match.homeTeam.countryCode}
@@ -365,13 +369,19 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
                   </Td>
                   <Td p="0">
                     <Flex dir="row" alignItems="center">
-                      <Image
-                        src={`/teams/${m.match.awayTeam.countryCode}.png`}
-                        alt={m.match.awayTeam.countryCode}
+                      <Box
+                        maxWidth={{ base: "14px", md: "30px" }}
+                        maxHeight={{ base: "14px", md: "30px" }}
                         mr="8px"
-                        w={{ base: "14px", md: "30px" }}
-                        h={{ base: "14px", md: "30px" }}
-                      />
+                      >
+                        <Image
+                          src={`/teams/${m.match.awayTeam.countryCode}.png`}
+                          alt={m.match.awayTeam.countryCode}
+                          width="30px"
+                          height="30px"
+                          // layout="fill"
+                        />
+                      </Box>
                       <Text display={{ md: "inline", base: "none" }}>{m.match.awayTeam.name}</Text>
                       <Text display={{ base: "inline", md: "none" }}>
                         {m.match.awayTeam.countryCode}
