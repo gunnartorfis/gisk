@@ -324,7 +324,7 @@ export const MatchList = () => {
   )
 }
 
-const MatchesPage: BlitzPage = () => {
+const MatchesLeaguePage: BlitzPage = () => {
   return (
     <>
       <Head>
@@ -338,7 +338,7 @@ const MatchesPage: BlitzPage = () => {
   )
 }
 
-MatchesPage.authenticate = true
-MatchesPage.getLayout = (page) => <Layout>{page}</Layout>
+MatchesLeaguePage.authenticate = true
+MatchesLeaguePage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default MatchesPage
+export default MatchesLeaguePage
