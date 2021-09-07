@@ -20,6 +20,7 @@ model User {
   role              String             @default("USER")
   language          String?
   facebookId        String?
+  googleId          String?
   tokens            Token[]
   sessions          Session[]
   userLeagueMatches UserLeagueMatch[]

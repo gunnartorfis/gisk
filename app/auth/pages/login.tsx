@@ -120,6 +120,14 @@ export const LoginPage: BlitzPage = () => {
                     >
                       Facebook
                     </Button>
+                    <Button
+                      variant="text"
+                      onClick={() => {
+                        router.push("/api/auth/google")
+                      }}
+                    >
+                      Google
+                    </Button>
                   </Stack>
                 </Stack>
               </Box>
