@@ -36,6 +36,10 @@ const resources = {
       INVITE_CODE: "Invite code",
       SCORE: "points",
 
+      REMOVE_USER_FROM_LEAGUE_MODAL_TITLE: "Remove user from league",
+      REMOVE_USER_FROM_LEAGUE_MODAL_DESCRIPTION:
+        "Are you sure? You can't undo this action afterwards.",
+
       DELETE_LEAGUE_MODAL_TITLE: "Delete league",
       DELETE_LEAGUE_MODAL_DESCRIPTION: "Are you sure? You can't undo this action afterwards.",
 
@@ -117,7 +121,8 @@ const resources = {
       INVITE_CODE_TO_LEAGUE: "Boðskóði í deild",
       INVITE_CODE: "Boðskóði",
       SCORE: "stig",
-
+      REMOVE_USER_FROM_LEAGUE_MODAL_TITLE: "Fjarlægja notanda úr deild",
+      REMOVE_USER_FROM_LEAGUE_MODAL_DESCRIPTION: "Ertu viss? Þú getur ekki tekið þetta til baka.",
       DELETE_LEAGUE_MODAL_TITLE: "Eyða deild",
       DELETE_LEAGUE_MODAL_DESCRIPTION: "Ertu viss? Þú getur ekki tekið þetta til baka.",
 

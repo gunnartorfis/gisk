@@ -14,6 +14,7 @@ import {
   Th,
   Thead,
   Tr,
+  useBreakpointValue,
   useToast,
 } from "@chakra-ui/react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -26,6 +27,7 @@ import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import { IconButton } from "@chakra-ui/react"
 import { FiStar } from "react-icons/fi"
+import { User, UserLeague } from "@prisma/client"
 
 export const League = () => {
   const router = useRouter()
@@ -35,7 +37,7 @@ export const League = () => {
     deleteLeagueMutation
   )
   const leagueId = router.params.id
-  const [league, { isLoading }] = useQuery(getLeague, {
+  const [league, { isLoading, refetch: refetchLeague }] = useQuery(getLeague, {
     id: leagueId,
   })
   const toast = useToast()
@@ -44,6 +46,11 @@ export const League = () => {
   const [deleteModalIsOpen, setDeleteModalIsOpen] = React.useState(false)
   const onCloseDeleteModal = () => setDeleteModalIsOpen(false)
   const deleteLeagueCancelButtonRef = React.useRef<HTMLButtonElement>(null)
+
+  const [removeUserModalIsOpen, setRemoveUserModalIsOpen] = React.useState(false)
+  const onCloseRemoveUserModal = () => setRemoveUserModalIsOpen(false)
+  const userLeagueBeingRemoved = React.useRef<UserLeague | null>(null)
+  const removeUserModalCancelButtonRef = React.useRef<HTMLButtonElement>(null)
 
   React.useEffect(() => {
     if (errorDeletingLeague) {
@@ -54,7 +61,7 @@ export const League = () => {
         description: (errorDeletingLeague as any).message,
         position: "bottom-right",
       })
-      setDeleteModalIsOpen(false)
+      onCloseRemoveUserModal()
     }
   }, [errorDeletingLeague, toast])
 
@@ -115,26 +122,12 @@ export const League = () => {
                   <Td
                     color="red.400"
                     cursor="pointer"
-                    onClick={async () => {
-                      if (!isRemovingUser) {
-                        if (ul.role === "ADMIN") {
-                          return toast({
-                            status: "error",
-                            isClosable: true,
-                            title: "Oops.",
-                            description: "It is not possible to remove an admin.",
-                            position: "bottom-right",
-                          })
-                        }
-
-                        removeUser({
-                          leagueId: ul.leagueId,
-                          userId: ul.userId,
-                        })
-                      }
+                    onClick={() => {
+                      userLeagueBeingRemoved.current = ul
+                      setRemoveUserModalIsOpen(true)
                     }}
                   >
-                    <IconButton aria-label="Search database" icon={<DeleteIcon />} />
+                    <IconButton aria-label="Remove user" icon={<DeleteIcon />} />
                   </Td>
                 ) : null}
               </Tr>
@@ -167,6 +160,56 @@ export const League = () => {
                   })
                   setDeleteModalIsOpen(false)
                   router.push("/")
+                }}
+                colorScheme="red"
+                ml={3}
+              >
+                {t("DELETE")}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <AlertDialog
+        isOpen={removeUserModalIsOpen}
+        leastDestructiveRef={removeUserModalCancelButtonRef}
+        onClose={onCloseRemoveUserModal}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {t("REMOVE_USER_FROM_LEAGUE_MODAL_TITLE")}
+            </AlertDialogHeader>
+
+            <AlertDialogBody>{t("REMOVE_USER_FROM_LEAGUE_MODAL_DESCRIPTION")}</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={deleteLeagueCancelButtonRef} onClick={onCloseDeleteModal}>
+                {t("CANCEL")}
+              </Button>
+              <Button
+                isLoading={isDeletingLeague}
+                onClick={async () => {
+                  const ul = userLeagueBeingRemoved.current
+                  if (!isRemovingUser && ul) {
+                    if (ul.role === "ADMIN") {
+                      return toast({
+                        status: "error",
+                        isClosable: true,
+                        title: "Oops.",
+                        description: "It is not possible to remove an admin.",
+                        position: "bottom-right",
+                      })
+                    }
+
+                    await removeUser({
+                      leagueId: ul.leagueId,
+                      userId: ul.userId,
+                    })
+
+                    onCloseRemoveUserModal()
+                    refetchLeague()
+                  }
                 }}
                 colorScheme="red"
                 ml={3}
