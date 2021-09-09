@@ -1,7 +1,9 @@
 import { ChakraProvider } from "@chakra-ui/react"
 import LoginPage from "app/auth/pages/login"
 import ErrorComponent from "app/core/components/ErrorComponent"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import "app/core/translations/i18n"
+import i18n from "app/core/translations/i18n"
 import {
   AppProps,
   AuthenticationError,
@@ -18,20 +20,17 @@ import "./_app.css"
 
 ReactGA.initialize("G-1291FQHLBL")
 
-// export const theme = extendTheme({
-//   components: {
-//     Button: ButtonTheme,
-//     Input: InputTheme,
-//   },
-//   useSystemColorMode: true,
-//   colors: Colors,
-// })
-
-function SentrySession() {
+function UserSession() {
   const session = useSession()
+  const currentUser = useCurrentUser()
+
   useEffect(() => {
     if (session.userId) Sentry.setUser({ id: session.userId.toString() })
   }, [session])
+
+  React.useEffect(() => {
+    i18n.changeLanguage(currentUser?.language ?? "en")
+  }, [currentUser])
 
   return null
 }
@@ -55,7 +54,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider>
       <Suspense fallback="">
-        <SentrySession />
+        <UserSession />
       </Suspense>
       <ErrorBoundary
         FallbackComponent={RootErrorFallback}
