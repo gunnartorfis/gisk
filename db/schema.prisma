@@ -102,6 +102,7 @@ model League {
   id         String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt  DateTime     @default(now())
   updatedAt  DateTime     @updatedAt
+  deletedAt  DateTime?
   name       String?
   inviteCode String       @unique
   UserLeague UserLeague[]

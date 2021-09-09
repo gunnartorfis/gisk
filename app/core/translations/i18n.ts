@@ -36,7 +36,12 @@ const resources = {
       INVITE_CODE: "Invite code",
       SCORE: "points",
 
+      DELETE_LEAGUE_MODAL_TITLE: "Delete league",
+      DELETE_LEAGUE_MODAL_DESCRIPTION: "Are you sure? You can't undo this action afterwards.",
+
       MATCHES_TIMEZONE_INFO: "Displayed kickoffs are in Greenwich Mean Time (GMT)",
+      SHOW_PREDICTED_MATCHES: "Show predicted matches",
+      SHOW_PAST_MATCHES: "Show past matches",
 
       QUIZ_ALERT: "Answer questions before the league starts for a chance to earn bonus points!",
       QUIZ_QUESTION_1: "Which country will win Euro 2020?",
@@ -113,7 +118,12 @@ const resources = {
       INVITE_CODE: "Boðskóði",
       SCORE: "stig",
 
+      DELETE_LEAGUE_MODAL_TITLE: "Eyða deild",
+      DELETE_LEAGUE_MODAL_DESCRIPTION: "Ertu viss? Þú getur ekki tekið þetta til baka.",
+
       MATCHES_TIMEZONE_INFO: "Birtar tímasetningar eru í Greenwich Mean Time (GMT)",
+      SHOW_PREDICTED_MATCHES: "Sýna leiki sem þú hefur spáð",
+      SHOW_PAST_MATCHES: "Sýna fortíðar leiki",
 
       QUIZ_ALERT:
         "Svaraðu spurningum áður en mótið byrjar til að eiga möguleika á að fá bónus stig!",
