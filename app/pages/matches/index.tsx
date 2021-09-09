@@ -1,6 +1,12 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 import {
   Alert,
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   AlertIcon,
   Box,
   Button,
@@ -29,6 +35,7 @@ import getMatches, { MatchWithScore } from "app/matches/queries/getMatches"
 import getQuizQuestions from "app/matches/queries/getQuizQuestions"
 import getTeams from "app/teams/queries/getTeams"
 import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
+import randomGeneratePredictionsMutation from "app/users/mutations/randomGeneratePredictions"
 import { BlitzPage, Head, Image, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
 import "dayjs/locale/en"
@@ -56,6 +63,9 @@ export const MatchesList = () => {
       enabled: (user?.userLeague?.length ?? 0) > 0,
     }
   )
+  const [randomGeneratePredictions, { isLoading: isRandomGeneratingPredictions }] = useMutation(
+    randomGeneratePredictionsMutation
+  )
   const [quizQuestions, { isLoading: isLoadingQuiz }] = useQuery(getQuizQuestions, {})
   const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
   const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
@@ -66,6 +76,10 @@ export const MatchesList = () => {
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
   const questionsBg = useColorModeValue("white", "gray.700")
   const { t, i18n } = useTranslation()
+
+  const [randomGenerateModalIsOpen, setRandomGenerateModalIsOpen] = React.useState(false)
+  const onCloseRandomGenerateModal = () => setRandomGenerateModalIsOpen(false)
+  const randomGenerateModalCancelButtonRef = React.useRef<HTMLButtonElement>(null)
 
   useUserLocale(user)
 
@@ -108,116 +122,165 @@ export const MatchesList = () => {
   }
 
   return (
-    <Box pb="16px" bg={bgColorMode}>
-      {quizQuestions.length > 0 ? (
-        <details>
-          <summary>
-            <Alert bg={questionsBg} status="info">
-              <AlertIcon />
-              {t("QUIZ_ALERT")}
-            </Alert>
-          </summary>
+    <>
+      <Box pb="16px" bg={bgColorMode}>
+        {quizQuestions.length > 0 ? (
+          <details>
+            <summary>
+              <Alert bg={questionsBg} status="info">
+                <AlertIcon />
+                {t("QUIZ_ALERT")}
+              </Alert>
+            </summary>
 
-          <Box
-            padding="32px"
-            borderTop="1px"
-            borderBottom="1px"
-            borderColor="gray.200"
-            boxShadow="md"
-            margin="0 auto"
-            bg={questionsBg}
-          >
-            <Grid templateColumns={{ base: "auto", md: "auto auto" }} gap={5} justifyItems="start">
-              {quizQuestions.map((question) => {
-                return (
-                  <Box key={question.id}>
-                    <FormLabel>
-                      {question.translations.find((t) => t.language === i18n.language)?.question}
-                    </FormLabel>
-                    <Box>
-                      <Select
-                        id={question.id}
-                        defaultValue={
-                          question.UserQuizQuestion.find((uq) => uq.quizQuestionId === question.id)
-                            ?.answer ?? "-1"
-                        }
-                      >
-                        <option disabled value="-1">
-                          {t("SELECT_A_TEAM")}
-                        </option>
-                        {teams?.map((team) => (
-                          <option key={team.id} value={team.id}>
-                            {team.name}
+            <Box
+              padding="32px"
+              borderTop="1px"
+              borderBottom="1px"
+              borderColor="gray.200"
+              boxShadow="md"
+              margin="0 auto"
+              bg={questionsBg}
+            >
+              <Grid
+                templateColumns={{ base: "auto", md: "auto auto" }}
+                gap={5}
+                justifyItems="start"
+              >
+                {quizQuestions.map((question) => {
+                  return (
+                    <Box key={question.id}>
+                      <FormLabel>
+                        {question.translations.find((t) => t.language === i18n.language)?.question}
+                      </FormLabel>
+                      <Box>
+                        <Select
+                          id={question.id}
+                          defaultValue={
+                            question.UserQuizQuestion.find(
+                              (uq) => uq.quizQuestionId === question.id
+                            )?.answer ?? "-1"
+                          }
+                        >
+                          <option disabled value="-1">
+                            {t("SELECT_A_TEAM")}
                           </option>
-                        ))}
-                      </Select>
-                      <Button
-                        disabled={isSubmittingQuiz}
-                        variant="text"
-                        onClick={async () => {
-                          const quizQuestionId = question.id
-                          const answer = (document.getElementById(question.id) as HTMLInputElement)
-                            ?.value
+                          {teams?.map((team) => (
+                            <option key={team.id} value={team.id}>
+                              {team.name}
+                            </option>
+                          ))}
+                        </Select>
+                        <Button
+                          disabled={isSubmittingQuiz}
+                          variant="text"
+                          onClick={async () => {
+                            const quizQuestionId = question.id
+                            const answer = (document.getElementById(
+                              question.id
+                            ) as HTMLInputElement)?.value
 
-                          updateQuizAnswerMutation({
-                            quizQuestionId,
-                            answer,
-                          })
-                        }}
-                      >
-                        {t("UPDATE")}
-                      </Button>
+                            updateQuizAnswerMutation({
+                              quizQuestionId,
+                              answer,
+                            })
+                          }}
+                        >
+                          {t("UPDATE")}
+                        </Button>
+                      </Box>
                     </Box>
-                  </Box>
-                )
-              })}
-            </Grid>
-          </Box>
-        </details>
-      ) : null}
-      <Text width="100%" textAlign="center" paddingTop="8px">
-        {t("MATCHES_TIMEZONE_INFO")}
-      </Text>
-      <Box
-        borderRadius="md"
-        boxShadow="md"
-        display="flex"
-        direction="row"
-        padding="8px 16px"
-        backgroundColor={filterBoxBgMode}
-        rounded="16px"
-        alignItems="center"
-        justifyContent="center"
-        width="max-content"
-        margin="16px auto 0 auto"
-      >
-        <FormControl
-          w="auto"
-          onChange={(e) => {
-            onChangeShowPredictedMatches((e.target as any).checked)
-          }}
+                  )
+                })}
+              </Grid>
+            </Box>
+          </details>
+        ) : null}
+        <Text width="100%" textAlign="center" paddingTop="8px">
+          {t("MATCHES_TIMEZONE_INFO")}
+        </Text>
+        <Box
+          borderRadius="md"
+          boxShadow="md"
+          display="flex"
+          direction="row"
+          padding="8px 16px"
+          backgroundColor={filterBoxBgMode}
+          rounded="16px"
+          alignItems="center"
+          justifyContent="center"
+          width="max-content"
+          margin="16px auto 0 auto"
         >
-          <FormLabel htmlFor="show-predicted-matches" mb="0">
-            {t("SHOW_PREDICTED_MATCHES")}
-          </FormLabel>
-          <Switch defaultChecked id="show-predicted-matches" />
-        </FormControl>
-        <FormControl
-          w="auto"
-          onChange={(e) => {
-            onChangeShowPastMatches((e.target as any).checked)
-          }}
+          <FormControl
+            w="auto"
+            onChange={(e) => {
+              onChangeShowPredictedMatches((e.target as any).checked)
+            }}
+          >
+            <FormLabel htmlFor="show-predicted-matches" mb="0">
+              {t("SHOW_PREDICTED_MATCHES")}
+            </FormLabel>
+            <Switch defaultChecked id="show-predicted-matches" />
+          </FormControl>
+          <FormControl
+            w="auto"
+            onChange={(e) => {
+              onChangeShowPastMatches((e.target as any).checked)
+            }}
+          >
+            <FormLabel htmlFor="show-past-matches" mb="0">
+              {t("SHOW_PAST_MATCHES")}
+            </FormLabel>
+            <Switch defaultChecked id="show-past-matches" />
+          </FormControl>
+        </Box>
+        <Button
+          onClick={() => setRandomGenerateModalIsOpen(true)}
+          m="0 auto"
+          display="block"
+          mt="16px"
         >
-          <FormLabel htmlFor="show-past-matches" mb="0">
-            {t("SHOW_PAST_MATCHES")}
-          </FormLabel>
-          <Switch defaultChecked id="show-past-matches" />
-        </FormControl>
+          {t("RANDOM_GENERATE_PREDICTIONS")}
+        </Button>
+        {Object.keys(matchesByDate).map((date) => {
+          return <MatchesForDay key={date} matches={matchesByDate[date]} date={date} />
+        })}
       </Box>
-      {Object.keys(matchesByDate).map((date) => {
-        return <MatchesForDay key={date} matches={matchesByDate[date]} date={date} />
-      })}
-    </Box>
+      <AlertDialog
+        isOpen={randomGenerateModalIsOpen}
+        leastDestructiveRef={randomGenerateModalCancelButtonRef}
+        onClose={onCloseRandomGenerateModal}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              {t("REMOVE_USER_FROM_LEAGUE_MODAL_TITLE")}
+            </AlertDialogHeader>
+
+            <AlertDialogBody>{t("REMOVE_USER_FROM_LEAGUE_MODAL_DESCRIPTION")}</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={randomGenerateModalCancelButtonRef} onClick={onCloseRandomGenerateModal}>
+                {t("CANCEL")}
+              </Button>
+              <Button
+                isLoading={isRandomGeneratingPredictions}
+                onClick={async () => {
+                  await randomGeneratePredictions()
+                  onCloseRandomGenerateModal()
+                  refetch()
+                }}
+                colorScheme="blue"
+                ml={3}
+              >
+                {t("CONFIRM")}
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </>
   )
 }
 

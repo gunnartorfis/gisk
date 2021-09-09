@@ -46,6 +46,9 @@ const resources = {
       MATCHES_TIMEZONE_INFO: "Displayed kickoffs are in Greenwich Mean Time (GMT)",
       SHOW_PREDICTED_MATCHES: "Predicted matches",
       SHOW_PAST_MATCHES: "Past matches",
+      RANDOM_GENERATE_PREDICTIONS: "Randomise unpredicted matches",
+      RANDOM_GENERATE_MODAL_TITLE: "Random prediction",
+      RANDOM_GENERATE_MODAL_DESCRIPTION: "Gisk will predict your unpredicted matches, one time.",
 
       QUIZ_ALERT: "Answer questions before the league starts for a chance to earn bonus points!",
       QUIZ_QUESTION_1: "Which country will win Euro 2020?",
@@ -80,6 +83,7 @@ const resources = {
       CANCEL: "Cancel",
       UPDATE: "Update",
       DELETE: "Delete",
+      CONFIRM: "Confirm",
       REQUEST_SUBMITTED: "Request Submitted",
       RESET_PASSWORD_INSTRUCTIONS:
         "If your email is in our system, you will receive instructions to reset your password shortly.",
@@ -129,7 +133,10 @@ const resources = {
       MATCHES_TIMEZONE_INFO: "Birtar tímasetningar eru í Greenwich Mean Time (GMT)",
       SHOW_PREDICTED_MATCHES: "Spáðir leikir",
       SHOW_PAST_MATCHES: "Fortíðar leikir",
-
+      RANDOM_GENERATE_PREDICTIONS: "Setja inn sjálfvirka spá fyrir óspáða leiki",
+      RANDOM_GENERATE_MODAL_TITLE: "Sjálfvirk spá",
+      RANDOM_GENERATE_MODAL_DESCRIPTION:
+        "Gisk mun búa til spá fyrir óspáða leiki hjá þér, í eitt skipti.",
       QUIZ_ALERT:
         "Svaraðu spurningum áður en mótið byrjar til að eiga möguleika á að fá bónus stig!",
       QUIZ_QUESTION_1: "Hvaða þjóð vinnur EM?",
@@ -160,6 +167,7 @@ const resources = {
       CANCEL: "Hætta við",
       UPDATE: "Vista",
       DELETE: "Eyða",
+      CONFIRM: "Staðfesta",
       REQUEST_SUBMITTED: "Beiðni send",
       RESET_PASSWORD_INSTRUCTIONS:
         "Ef að netfangið þitt er skráð í kerfið, færð þú sendar leiðbeiningar til að endurstilla lykilorðið þitt von bráðar.",

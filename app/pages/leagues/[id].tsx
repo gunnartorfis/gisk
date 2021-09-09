@@ -8,26 +8,25 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  IconButton,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
-  useBreakpointValue,
   useToast,
 } from "@chakra-ui/react"
+import { UserLeague } from "@prisma/client"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
-import removeUserFromLeagueIfExists from "app/leagues/mutations/removeUserFromLeagueIfExists"
 import deleteLeagueMutation from "app/leagues/mutations/deleteLeague"
+import removeUserFromLeagueIfExists from "app/leagues/mutations/removeUserFromLeagueIfExists"
 import getLeague from "app/leagues/queries/getLeague"
 import { BlitzPage, Head, Link, useMutation, useQuery, useRouter } from "blitz"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
-import { IconButton } from "@chakra-ui/react"
 import { FiStar } from "react-icons/fi"
-import { User, UserLeague } from "@prisma/client"
 
 export const League = () => {
   const router = useRouter()
