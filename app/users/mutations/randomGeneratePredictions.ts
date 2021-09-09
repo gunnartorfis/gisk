@@ -17,7 +17,9 @@ const randomGeneratePredictions = resolver.pipe(resolver.authorize(), async (_, 
   })
 
   const unpredictedMatches = allMatches.filter((match) => {
-    return !(match.userLeagueMatches?.resultHome || match.userLeagueMatches?.resultAway)
+    return !(
+      match.userLeagueMatches?.resultHome !== null || match.userLeagueMatches?.resultAway !== null
+    )
   })
 
   for (let i = 0; i < unpredictedMatches.length; i++) {
