@@ -15,12 +15,17 @@ export type MatchWithScore = (Match & {
 
 const GetMatchesInput = z.object({
   date: z.optional(z.date()),
+  showPredictedMatches: z.optional(z.boolean()),
+  showPastMatches: z.optional(z.boolean()),
 })
 
 export default resolver.pipe(
   resolver.zod(GetMatchesInput),
   resolver.authorize(),
-  async ({ date }, ctx): Promise<Array<MatchWithScore>> => {
+  async (
+    { date, showPastMatches = true, showPredictedMatches = true },
+    ctx
+  ): Promise<Array<MatchWithScore>> => {
     const userId = ctx.session.userId
 
     let matchesForUser = await db.userLeagueMatch.findMany({
@@ -37,7 +42,13 @@ export default resolver.pipe(
               lt: dayjs(date).add(1, "day").toDate(),
             },
           }
-        : undefined,
+        : !showPastMatches
+        ? {
+            kickOff: {
+              gte: dayjs().set("hour", 0).set("minutes", 0).toDate(),
+            },
+          }
+        : {},
       include: {
         homeTeam: true,
         awayTeam: true,
@@ -52,12 +63,14 @@ export default resolver.pipe(
       const userLeagueMatch = matchesForUser.find((um) => um.matchId === match.id)
 
       if (userLeagueMatch) {
-        matchesToReturn.push({
-          ...match,
-          userPredictionHome: userLeagueMatch.resultHome,
-          userPredictionAway: userLeagueMatch.resultAway,
-          score: calculateScoreForMatch(match, userLeagueMatch),
-        })
+        if (showPredictedMatches) {
+          matchesToReturn.push({
+            ...match,
+            userPredictionHome: userLeagueMatch.resultHome,
+            userPredictionAway: userLeagueMatch.resultAway,
+            score: calculateScoreForMatch(match, userLeagueMatch),
+          })
+        }
       } else {
         matchesToReturn.push({
           ...match,

@@ -5,10 +5,12 @@ import {
   Box,
   Button,
   Flex,
+  FormControl,
   FormLabel,
   Grid,
   Input,
   Select,
+  Switch,
   Table,
   Tbody,
   Td,
@@ -19,16 +21,15 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react"
-import Colors from "app/core/chakraTheme/colors"
-import useUserLocale from "app/core/hooks/useUserLocale"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import useUserLocale from "app/core/hooks/useUserLocale"
 import Layout from "app/core/layouts/Layout"
 import updateResultForUser from "app/matches/mutations/updateResultForUser"
 import getMatches, { MatchWithScore } from "app/matches/queries/getMatches"
 import getQuizQuestions from "app/matches/queries/getQuizQuestions"
 import getTeams from "app/teams/queries/getTeams"
 import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
-import { BlitzPage, Head, invoke, useMutation, useQuery, useRouter, Image } from "blitz"
+import { BlitzPage, Head, Image, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
 import "dayjs/locale/en"
 import "dayjs/locale/is"
@@ -43,9 +44,14 @@ type MatchesByDayType = {
 
 export const MatchesList = () => {
   const user = useCurrentUser()
-  const [matches, { isLoading }] = useQuery(
+  const showPredictedMatches = React.useRef(true)
+  const showPastMatches = React.useRef(true)
+  const [matches, { isLoading, refetch }] = useQuery(
     getMatches,
-    {},
+    {
+      showPredictedMatches: showPredictedMatches.current,
+      showPastMatches: showPastMatches.current,
+    },
     {
       enabled: (user?.userLeague?.length ?? 0) > 0,
     }
@@ -63,8 +69,20 @@ export const MatchesList = () => {
 
   useUserLocale(user)
 
+  const filterBoxBgMode = useColorModeValue("white", "gray.700")
+
   const getDateWithoutTimeFromDate = (date: Date) => {
     return new Date(dayjs(date).format("MM/DD/YYYY"))
+  }
+
+  const onChangeShowPredictedMatches = (checked: boolean) => {
+    showPredictedMatches.current = checked
+    refetch()
+  }
+
+  const onChangeShowPastMatches = (checked: boolean) => {
+    showPastMatches.current = checked
+    refetch()
   }
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -160,6 +178,42 @@ export const MatchesList = () => {
       <Text width="100%" textAlign="center" paddingTop="8px">
         {t("MATCHES_TIMEZONE_INFO")}
       </Text>
+      <Box
+        borderRadius="md"
+        boxShadow="md"
+        display="flex"
+        direction="row"
+        padding="8px 16px"
+        backgroundColor={filterBoxBgMode}
+        rounded="16px"
+        alignItems="center"
+        justifyContent="center"
+        width="max-content"
+        margin="16px auto 0 auto"
+      >
+        <FormControl
+          w="auto"
+          onChange={(e) => {
+            onChangeShowPredictedMatches((e.target as any).checked)
+          }}
+        >
+          <FormLabel htmlFor="show-predicted-matches" mb="0">
+            {t("SHOW_PREDICTED_MATCHES")}
+          </FormLabel>
+          <Switch defaultChecked id="show-predicted-matches" />
+        </FormControl>
+        <FormControl
+          w="auto"
+          onChange={(e) => {
+            onChangeShowPastMatches((e.target as any).checked)
+          }}
+        >
+          <FormLabel htmlFor="show-past-matches" mb="0">
+            {t("SHOW_PAST_MATCHES")}
+          </FormLabel>
+          <Switch defaultChecked id="show-past-matches" />
+        </FormControl>
+      </Box>
       {Object.keys(matchesByDate).map((date) => {
         return <MatchesForDay key={date} matches={matchesByDate[date]} date={date} />
       })}
