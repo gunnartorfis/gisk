@@ -1,6 +1,6 @@
 import { Document, Html, DocumentHead, Main, BlitzScript /*DocumentContext*/ } from "blitz"
-import { ColorModeScript } from "@chakra-ui/react"
-import { theme } from "./_app"
+import { ColorModeScript, theme } from "@chakra-ui/react"
+
 class MyDocument extends Document {
   // Only uncomment if you need to customize this behaviour
   // static async getInitialProps(ctx: DocumentContext) {
@@ -13,7 +13,7 @@ class MyDocument extends Document {
       <Html lang="en">
         <DocumentHead />
         <body>
-          <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+          <ColorModeScript initialColorMode={theme.config?.initialColorMode} />
           <Main />
           <BlitzScript />
           <div id="portal" />

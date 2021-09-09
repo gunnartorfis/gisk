@@ -26,15 +26,6 @@ const updateResultForUser = resolver.pipe(
       throw new NotFoundError()
     }
 
-    const userMatch = await db.userLeagueMatch.findFirst({
-      where: {
-        matchId,
-      },
-      include: {
-        match: true,
-      },
-    })
-
     if (new Date() > match.kickOff) {
       throw new Error("Match already started")
     }
