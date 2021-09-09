@@ -278,103 +278,109 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
               </Tr>
             </Thead>
             <Tbody>
-              {matches?.map((m) => (
-                <Tr key={m.id}>
-                  <Td p="0">
-                    <Flex dir="row" alignItems="center">
-                      <Box
-                        maxWidth={{ base: "14px", md: "30px" }}
-                        maxHeight={{ base: "14px", md: "30px" }}
-                        mr="8px"
-                      >
-                        <Image
-                          src={`/teams/${m.homeTeam.countryCode}.png`}
-                          alt={m.homeTeam.countryCode}
-                          width="30px"
-                          height="30px"
-                        />
-                      </Box>
-                      <Text display={{ md: "inline", base: "none" }}>{m.homeTeam.name}</Text>
-                      <Text display={{ base: "inline", md: "none" }}>{m.homeTeam.countryCode}</Text>
-                      <Text marginLeft="2px">({m.homeTeam.group})</Text>
-                    </Flex>
-                  </Td>
-                  <Td textAlign="center">
-                    <Input
-                      placeholder="0"
-                      textAlign="center"
-                      defaultValue={m.userPredictionHome}
-                      type="number"
-                      w="50px"
-                      disabled={new Date() > m.kickOff}
-                      onChange={(e) =>
-                        onChangeResult({
-                          matchId: m.id,
-                          newValue: Number.parseInt(e.target.value),
-                          resultKey: "resultHome",
-                        })
-                      }
-                    />
-                  </Td>
-                  <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
-                    {m.resultHome !== null && m.resultAway !== null ? (
-                      <Box display="flex" flexDirection="column">
-                        <Text>
-                          {m.resultHome} - {m.resultAway}{" "}
+              {matches?.map((m) => {
+                return (
+                  <Tr key={m.id}>
+                    <Td p="0">
+                      <Flex dir="row" alignItems="center">
+                        <Box
+                          maxWidth={{ base: "14px", md: "30px" }}
+                          maxHeight={{ base: "14px", md: "30px" }}
+                          mr="8px"
+                        >
+                          <Image
+                            src={`/teams/${m.homeTeam.countryCode}.png`}
+                            alt={m.homeTeam.countryCode}
+                            width="30px"
+                            height="30px"
+                          />
+                        </Box>
+                        <Text display={{ md: "inline", base: "none" }}>{m.homeTeam.name}</Text>
+                        <Text display={{ base: "inline", md: "none" }}>
+                          {m.homeTeam.countryCode}
                         </Text>
-                        <Text color="darkgreen">
-                          (+ {m.score}){" "}
-                          {(m.scoreMultiplier ?? 1) > 1 ? `${m.scoreMultiplier}x points` : ""}
+                        <Text marginLeft="2px">({m.homeTeam.group})</Text>
+                      </Flex>
+                    </Td>
+                    <Td textAlign="center">
+                      <Input
+                        placeholder="-"
+                        textAlign="center"
+                        defaultValue={m.userPredictionHome ?? undefined}
+                        type="number"
+                        w="50px"
+                        disabled={new Date() > m.kickOff}
+                        onChange={(e) =>
+                          onChangeResult({
+                            matchId: m.id,
+                            newValue: Number.parseInt(e.target.value),
+                            resultKey: "resultHome",
+                          })
+                        }
+                      />
+                    </Td>
+                    <Td p="0" textAlign="center" fontSize={{ base: "12px", md: "14px" }}>
+                      {m.resultHome !== null && m.resultAway !== null ? (
+                        <Box display="flex" flexDirection="column">
+                          <Text>
+                            {m.resultHome} - {m.resultAway}{" "}
+                          </Text>
+                          <Text color="darkgreen">
+                            (+ {m.score}){" "}
+                            {(m.scoreMultiplier ?? 1) > 1 ? `${m.scoreMultiplier}x points` : ""}
+                          </Text>
+                        </Box>
+                      ) : (
+                        <Box display="flex" flexDirection="column">
+                          <Text>{dayjs(m.kickOff).format("HH:mm")}</Text>
+                          {(m.scoreMultiplier ?? 1) > 1 ? (
+                            <Text color="darkgreen">{m.scoreMultiplier}x points</Text>
+                          ) : null}
+                        </Box>
+                      )}
+                    </Td>
+                    <Td p="0" textAlign="center">
+                      <Input
+                        placeholder="-"
+                        textAlign="center"
+                        defaultValue={m.userPredictionAway ?? undefined}
+                        type="number"
+                        w="50px"
+                        disabled={new Date() > m.kickOff}
+                        onChange={(e) =>
+                          onChangeResult({
+                            matchId: m.id,
+                            newValue: Number.parseInt(e.target.value),
+                            resultKey: "resultAway",
+                          })
+                        }
+                      />
+                    </Td>
+                    <Td p="0">
+                      <Flex dir="row" alignItems="center">
+                        <Box
+                          maxWidth={{ base: "14px", md: "30px" }}
+                          maxHeight={{ base: "14px", md: "30px" }}
+                          mr="8px"
+                        >
+                          <Image
+                            src={`/teams/${m.awayTeam.countryCode}.png`}
+                            alt={m.awayTeam.countryCode}
+                            width="30px"
+                            height="30px"
+                            // layout="fill"
+                          />
+                        </Box>
+                        <Text display={{ md: "inline", base: "none" }}>{m.awayTeam.name}</Text>
+                        <Text display={{ base: "inline", md: "none" }}>
+                          {m.awayTeam.countryCode}
                         </Text>
-                      </Box>
-                    ) : (
-                      <Box display="flex" flexDirection="column">
-                        <Text>{dayjs(m.kickOff).format("HH:mm")}</Text>
-                        {(m.scoreMultiplier ?? 1) > 1 ? (
-                          <Text color="darkgreen">{m.scoreMultiplier}x points</Text>
-                        ) : null}
-                      </Box>
-                    )}
-                  </Td>
-                  <Td p="0" textAlign="center">
-                    <Input
-                      placeholder="0"
-                      textAlign="center"
-                      defaultValue={m.userPredictionAway}
-                      type="number"
-                      w="50px"
-                      disabled={new Date() > m.kickOff}
-                      onChange={(e) =>
-                        onChangeResult({
-                          matchId: m.id,
-                          newValue: Number.parseInt(e.target.value),
-                          resultKey: "resultAway",
-                        })
-                      }
-                    />
-                  </Td>
-                  <Td p="0">
-                    <Flex dir="row" alignItems="center">
-                      <Box
-                        maxWidth={{ base: "14px", md: "30px" }}
-                        maxHeight={{ base: "14px", md: "30px" }}
-                        mr="8px"
-                      >
-                        <Image
-                          src={`/teams/${m.awayTeam.countryCode}.png`}
-                          alt={m.awayTeam.countryCode}
-                          width="30px"
-                          height="30px"
-                          // layout="fill"
-                        />
-                      </Box>
-                      <Text display={{ md: "inline", base: "none" }}>{m.awayTeam.name}</Text>
-                      <Text display={{ base: "inline", md: "none" }}>{m.awayTeam.countryCode}</Text>
-                      <Text marginLeft="2px">({m.awayTeam.group})</Text>
-                    </Flex>
-                  </Td>
-                </Tr>
-              ))}
+                        <Text marginLeft="2px">({m.awayTeam.group})</Text>
+                      </Flex>
+                    </Td>
+                  </Tr>
+                )
+              })}
             </Tbody>
           </Table>
         </Box>

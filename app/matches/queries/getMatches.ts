@@ -8,8 +8,8 @@ export type MatchWithScore = (Match & {
   homeTeam: Team
   awayTeam: Team
 }) & {
-  userPredictionHome: number | null
-  userPredictionAway: number | null
+  userPredictionHome?: number | null
+  userPredictionAway?: number | null
   score?: number
 }
 
@@ -61,8 +61,6 @@ export default resolver.pipe(
       } else {
         matchesToReturn.push({
           ...match,
-          userPredictionHome: 0,
-          userPredictionAway: 0,
           score: 0,
         })
       }
@@ -91,7 +89,7 @@ export const calculateScoreForMatch = (
       score += 1
     } else {
       const resultMatch = Math.sign(resultHome - resultAway)
-      const resultUser = Math.sign(prediction.resultHome - prediction.resultAway)
+      const resultUser = Math.sign((prediction.resultHome ?? 0) - (prediction.resultAway ?? 0))
       if (resultMatch === resultUser) {
         score += 1
       }
