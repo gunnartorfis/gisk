@@ -83,6 +83,7 @@ export const MatchList = () => {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "bottom-right",
         })
       } else if (newValue < 0) {
         toast({
@@ -91,6 +92,7 @@ export const MatchList = () => {
           status: "warning",
           duration: 5000,
           isClosable: true,
+          position: "bottom-right",
         })
       }
     } catch (error) {
@@ -100,6 +102,7 @@ export const MatchList = () => {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "bottom-right",
       })
     }
   }

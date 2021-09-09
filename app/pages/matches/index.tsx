@@ -207,6 +207,7 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "bottom-right",
         })
       } else if (newValue < 0) {
         toast({
@@ -215,6 +216,7 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
           status: "warning",
           duration: 5000,
           isClosable: true,
+          position: "bottom-right",
         })
       }
     } catch (error) {
@@ -224,6 +226,7 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "bottom-right",
       })
     }
   }

@@ -77,6 +77,7 @@ export const League = () => {
                           isClosable: true,
                           title: "Oops.",
                           description: "It is not possible to remove an admin.",
+                          position: "bottom-right",
                         })
                       }
 
