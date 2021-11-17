@@ -36,6 +36,14 @@ const seed = async () => {
       const awayTeam = teamsDB.find((team) => team.name === match.awayTeamName)
 
       if (homeTeam && awayTeam) {
+        const randomDaysToAdd = Math.floor(Math.random() * 30)
+        const kickOff = dayjs
+          .tz(match.kickOff, "DD/MM/YYYY HH:mm [CET]", "CET")
+          .set("month", dayjs().month())
+          .set("day", dayjs().day())
+          .add(randomDaysToAdd, "days")
+          .tz("GMT")
+          .toDate()
         try {
           await db.match.create({
             data: {
@@ -51,8 +59,7 @@ const seed = async () => {
               },
               arena: match.arena,
               round: `${match.round}`,
-              kickOff: dayjs.tz(match.kickOff, "DD/MM/YYYY HH:mm [CET]", "CET").tz("GMT").toDate(),
-              // kickOff: dayjs(match.kickOff, "DD/MM/YYYY HH:mm").toDate(),
+              kickOff: kickOff,
             },
           })
         } catch (error) {}

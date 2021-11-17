@@ -180,7 +180,7 @@ export const AdminList = () => {
   )
 }
 
-const AdminPage: BlitzPage = () => {
+const AdminMatchesPage: BlitzPage = () => {
   return (
     <>
       <Head>
@@ -211,7 +211,7 @@ export const getServerSideProps = async ({ req, res }) => {
   return { props: {} }
 }
 
-AdminPage.authenticate = true
-AdminPage.getLayout = (page) => <Layout>{page}</Layout>
+AdminMatchesPage.authenticate = true
+AdminMatchesPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default AdminPage
+export default AdminMatchesPage

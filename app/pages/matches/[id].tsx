@@ -83,6 +83,7 @@ export const MatchList = () => {
           status: "success",
           duration: 5000,
           isClosable: true,
+          position: "bottom-right",
         })
       } else if (newValue < 0) {
         toast({
@@ -91,6 +92,7 @@ export const MatchList = () => {
           status: "warning",
           duration: 5000,
           isClosable: true,
+          position: "bottom-right",
         })
       }
     } catch (error) {
@@ -100,6 +102,7 @@ export const MatchList = () => {
         status: "error",
         duration: 5000,
         isClosable: true,
+        position: "bottom-right",
       })
     }
   }
@@ -324,7 +327,7 @@ export const MatchList = () => {
   )
 }
 
-const MatchesPage: BlitzPage = () => {
+const MatchesLeaguePage: BlitzPage = () => {
   return (
     <>
       <Head>
@@ -338,7 +341,7 @@ const MatchesPage: BlitzPage = () => {
   )
 }
 
-MatchesPage.authenticate = true
-MatchesPage.getLayout = (page) => <Layout>{page}</Layout>
+MatchesLeaguePage.authenticate = true
+MatchesLeaguePage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default MatchesPage
+export default MatchesLeaguePage

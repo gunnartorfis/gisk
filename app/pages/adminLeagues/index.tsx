@@ -92,7 +92,7 @@ export const AdminList = () => {
   )
 }
 
-const AdminPage: BlitzPage = () => {
+const AdminLeaguesPage: BlitzPage = () => {
   return (
     <>
       <Head>
@@ -123,7 +123,7 @@ export const getServerSideProps = async ({ req, res }) => {
   return { props: {} }
 }
 
-AdminPage.authenticate = true
-AdminPage.getLayout = (page) => <Layout>{page}</Layout>
+AdminLeaguesPage.authenticate = true
+AdminLeaguesPage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default AdminPage
+export default AdminLeaguesPage

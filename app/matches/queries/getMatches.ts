@@ -4,97 +4,82 @@ import db, { Match, Team, UserLeagueMatch } from "db"
 import { m } from "framer-motion"
 import * as z from "zod"
 
-export type MatchWithScore = UserLeagueMatch & {
-  match: Match & {
-    awayTeam: Team
-    homeTeam: Team
-  }
+export type MatchWithScore = (Match & {
+  homeTeam: Team
+  awayTeam: Team
+}) & {
+  userPredictionHome?: number | null
+  userPredictionAway?: number | null
   score?: number
 }
 
 const GetMatchesInput = z.object({
   date: z.optional(z.date()),
+  showPredictedMatches: z.optional(z.boolean()),
+  showPastMatches: z.optional(z.boolean()),
 })
 
 export default resolver.pipe(
   resolver.zod(GetMatchesInput),
   resolver.authorize(),
-  async ({ date }, ctx): Promise<Array<MatchWithScore>> => {
+  async (
+    { date, showPastMatches = true, showPredictedMatches = true },
+    ctx
+  ): Promise<Array<MatchWithScore>> => {
     const userId = ctx.session.userId
-
-    const userLeagueMatchInclude = {
-      match: {
-        include: {
-          awayTeam: true,
-          homeTeam: true,
-        },
-      },
-    }
 
     let matchesForUser = await db.userLeagueMatch.findMany({
       where: {
         user: { id: userId },
       },
-      include: userLeagueMatchInclude,
     })
 
-    let userMatches = matchesForUser.map((um) => ({
-      ...um,
-      score: calculateScoreForMatch(um.match, um),
-    }))
+    const allMatches = await db.match.findMany({
+      where: date
+        ? {
+            kickOff: {
+              gte: date,
+              lt: dayjs(date).add(1, "day").toDate(),
+            },
+          }
+        : !showPastMatches
+        ? {
+            kickOff: {
+              gte: dayjs().set("hour", 0).set("minutes", 0).toDate(),
+            },
+          }
+        : {},
+      include: {
+        homeTeam: true,
+        awayTeam: true,
+      },
+      orderBy: {
+        kickOff: "asc",
+      },
+    })
 
-    const allMatches = await db.match.findMany()
-    const missingMatches = allMatches.filter((m) => {
-      const includesMatch = userMatches
-        .map((um) => {
-          return um.match.id
+    const matchesToReturn: Array<MatchWithScore> = []
+    allMatches.map((match) => {
+      const userLeagueMatch = matchesForUser.find((um) => um.matchId === match.id)
+
+      if (userLeagueMatch) {
+        if (showPredictedMatches) {
+          matchesToReturn.push({
+            ...match,
+            userPredictionHome: userLeagueMatch.resultHome,
+            userPredictionAway: userLeagueMatch.resultAway,
+            score: calculateScoreForMatch(match, userLeagueMatch),
+          })
+        }
+      } else {
+        matchesToReturn.push({
+          ...match,
+          score: 0,
         })
-        ?.includes(m.id)
-      return !includesMatch
+      }
     })
 
-    for (let i = 0; i < missingMatches.length; i++) {
-      const missingMatch = missingMatches[i]
-      const newMatch = await db.userLeagueMatch.create({
-        data: {
-          resultAway: 0,
-          resultHome: 0,
-          match: {
-            connect: {
-              id: missingMatch.id,
-            },
-          },
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
-        },
-        include: userLeagueMatchInclude,
-      })
-
-      userMatches.push({
-        ...newMatch,
-        score: 0,
-      })
-    }
-
-    userMatches = userMatches.map((match) => ({
-      ...match,
-      score: calculateScoreForMatch(match.match, match),
-    }))
-
-    userMatches.sort((a, b) => {
-      return dayjs(a.match.kickOff).unix() - dayjs(b.match.kickOff).unix()
-    })
-
-    if (date) {
-      userMatches = userMatches.filter((m) => {
-        return dayjs(m.match.kickOff).isSame(dayjs(date), "day")
-      })
-    }
-
-    return userMatches
+    return matchesToReturn
   }
 )
 
@@ -117,7 +102,7 @@ export const calculateScoreForMatch = (
       score += 1
     } else {
       const resultMatch = Math.sign(resultHome - resultAway)
-      const resultUser = Math.sign(prediction.resultHome - prediction.resultAway)
+      const resultUser = Math.sign((prediction.resultHome ?? 0) - (prediction.resultAway ?? 0))
       if (resultMatch === resultUser) {
         score += 1
       }

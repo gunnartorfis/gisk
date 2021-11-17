@@ -11,6 +11,7 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
   const league = await db.league.findFirst({
     where: {
       id,
+      deletedAt: null,
       UserLeague: {
         some: {
           userId: ctx.session.userId,

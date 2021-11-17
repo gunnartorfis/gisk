@@ -3,7 +3,7 @@ import db from "db"
 import * as z from "zod"
 
 const AddUserToLeague = z.object({
-  userMatchId: z.string(),
+  matchId: z.string(),
   newValue: z.number(),
   resultKey: z.enum(["resultHome", "resultAway"]),
 })
@@ -11,32 +11,46 @@ const AddUserToLeague = z.object({
 const updateResultForUser = resolver.pipe(
   resolver.zod(AddUserToLeague),
   resolver.authorize(),
-  async (input) => {
-    const { newValue, resultKey, userMatchId } = input
+  async (input, ctx) => {
+    const { newValue, resultKey, matchId } = input
 
-    const userMatch = await db.userLeagueMatch.findFirst({
+    const userId = ctx.session.userId
+
+    const match = await db.match.findUnique({
       where: {
-        id: userMatchId,
-      },
-      include: {
-        match: true,
+        id: matchId,
       },
     })
 
-    if (!userMatch) {
+    if (!match) {
       throw new NotFoundError()
     }
-    // 2021-06-11 21:00:00
 
-    if (new Date() > userMatch.match.kickOff) {
+    if (new Date() > match.kickOff) {
       throw new Error("Match already started")
     }
 
-    await db.userLeagueMatch.update({
+    await db.userLeagueMatch.upsert({
       where: {
-        id: userMatchId,
+        userId_matchId: {
+          matchId,
+          userId,
+        },
       },
-      data: {
+      create: {
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        match: {
+          connect: {
+            id: matchId,
+          },
+        },
+        [resultKey]: newValue,
+      },
+      update: {
         [resultKey]: newValue,
       },
     })

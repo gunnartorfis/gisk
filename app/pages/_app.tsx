@@ -1,41 +1,36 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react"
+import { ChakraProvider } from "@chakra-ui/react"
 import LoginPage from "app/auth/pages/login"
-import ButtonTheme from "app/core/chakraTheme/Button"
-import Colors from "app/core/chakraTheme/colors"
-import Sentry from "integrations/sentry"
+import ErrorComponent from "app/core/components/ErrorComponent"
+import { useCurrentUser } from "app/core/hooks/useCurrentUser"
+import "app/core/translations/i18n"
+import i18n from "app/core/translations/i18n"
 import {
   AppProps,
   AuthenticationError,
   AuthorizationError,
-  ErrorFallbackProps,
   ErrorBoundary,
-  useRouter,
-  useSession,
+  ErrorFallbackProps,
   useQueryErrorResetBoundary,
+  useSession,
 } from "blitz"
+import Sentry from "integrations/sentry"
 import React, { Suspense, useEffect } from "react"
-import "./_app.css"
-import InputTheme from "app/core/chakraTheme/Input"
-import "app/core/translations/i18n"
-import ErrorComponent from "app/core/components/ErrorComponent"
 import ReactGA from "react-ga"
+import "./_app.css"
 
 ReactGA.initialize("G-1291FQHLBL")
 
-export const theme = extendTheme({
-  components: {
-    Button: ButtonTheme,
-    Input: InputTheme,
-  },
-  useSystemColorMode: true,
-  colors: Colors,
-})
-
-function SentrySession() {
+function UserSession() {
   const session = useSession()
+  const currentUser = useCurrentUser()
+
   useEffect(() => {
     if (session.userId) Sentry.setUser({ id: session.userId.toString() })
   }, [session])
+
+  React.useEffect(() => {
+    i18n.changeLanguage(currentUser?.language ?? "en")
+  }, [currentUser])
 
   return null
 }
@@ -54,14 +49,12 @@ export function reportWebVitals({ id, name, label, value }) {
 }
 
 export default function App({ Component, pageProps }: AppProps) {
-  // const session = useSession()
   const getLayout = Component.getLayout || ((page) => page)
-  const router = useRouter()
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider>
       <Suspense fallback="">
-        <SentrySession />
+        <UserSession />
       </Suspense>
       <ErrorBoundary
         FallbackComponent={RootErrorFallback}
@@ -78,7 +71,7 @@ export default function App({ Component, pageProps }: AppProps) {
   )
 }
 
-function RootErrorFallback({ error, resetErrorBoundary }: ErrorFallbackProps) {
+function RootErrorFallback({ error }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
     return <LoginPage />
   } else if (error instanceof AuthorizationError) {

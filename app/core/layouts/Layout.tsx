@@ -14,7 +14,7 @@ const Layout = ({ title, children, isAuth }: LayoutProps) => {
   return (
     <>
       <Head>
-        <title>{title || "euro2020"}</title>
+        <title>{title || "Gisk"}</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       {!isAuth ? (
