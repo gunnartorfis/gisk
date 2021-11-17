@@ -1,4 +1,4 @@
-import { useQuery } from "@blitzjs/core"
+import { useQuery } from "blitz"
 import {
   Box,
   Button,

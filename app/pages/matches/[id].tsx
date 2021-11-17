@@ -264,7 +264,7 @@ export const MatchList = () => {
                         <Input
                           placeholder="0"
                           textAlign="center"
-                          defaultValue={m.resultHome}
+                          defaultValue={`${m.resultHome ?? 0}`}
                           w="60px"
                           type="number"
                           disabled={new Date() > m.match.kickOff}
@@ -284,7 +284,7 @@ export const MatchList = () => {
                         <Input
                           placeholder="0"
                           textAlign="center"
-                          defaultValue={m.resultAway}
+                          defaultValue={`${m.resultAway ?? 0}`}
                           w="60px"
                           type="number"
                           disabled={new Date() > m.match.kickOff}

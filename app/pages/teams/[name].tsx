@@ -9,7 +9,7 @@ export const TeamDetails = () => {
   const router = useRouter()
 
   const [team] = useQuery(getTeam, {
-    name: router.params.name,
+    name: router.params.name as string,
   })
 
   // const matches = [
