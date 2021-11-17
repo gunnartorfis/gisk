@@ -12,6 +12,7 @@ export const SettingsPage: BlitzPage = () => {
   const [updateUserMutation] = useMutation(updateUser)
   const router = useRouter()
   const currentUser = useCurrentUser()
+
   const { t } = useTranslation()
 
   return (
