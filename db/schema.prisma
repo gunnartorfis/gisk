@@ -149,5 +149,5 @@ model UserLeagueMatch {
   match      Match    @relation(fields: [matchId], references: [id])
   matchId    String   @unique @db.Uuid
 
-  // @@unique([userId, matchId])
+  @@unique([userId, matchId])
 }

@@ -33,10 +33,10 @@ const updateResultForUser = resolver.pipe(
     await db.userLeagueMatch.upsert({
       where: {
         matchId,
-        // userId_matchId: {
-        //   matchId,
-        //   userId,
-        // },
+        userId_matchId: {
+          matchId,
+          userId,
+        },
       },
       create: {
         user: {
