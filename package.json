@@ -77,5 +77,8 @@
     "pretty-quick": "3.1.0",
     "preview-email": "3.0.4"
   },
-  "private": true
+  "private": true,
+  "engines": {
+    "node": ">=0.10.3 <15"
+  }
 }
