@@ -14,7 +14,7 @@ services:
         value: production
       - key: DATABASE_URL
         fromDatabase:
-          name: euro2020-db
+          name: Gisk
           property: connectionString
       - key: SESSION_SECRET_KEY
         generateValue: true
@@ -22,5 +22,5 @@ services:
         value: https://euro2020.onrender.com
 
 databases:
-  - name: euro2020-db
+  - name: Gisk
     plan: starter
