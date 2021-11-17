@@ -53,6 +53,7 @@
     "passport": "0.4.1",
     "passport-facebook": "3.0.0",
     "passport-google-oauth20": "2.0.0",
+    "prisma": "3.5.0",
     "react": "0.0.0-experimental-6a589ad71",
     "react-datepicker": "3.7.0",
     "react-dom": "0.0.0-experimental-6a589ad71",
@@ -74,8 +75,7 @@
     "prettier": "2.2.1",
     "prettier-plugin-prisma": "0.7.0",
     "pretty-quick": "3.1.0",
-    "preview-email": "3.0.4",
-    "prisma": "2.19.0"
+    "preview-email": "3.0.4"
   },
   "private": true
 }
