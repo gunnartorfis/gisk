@@ -12,7 +12,7 @@ import {
 import Form, { FormContext, FORM_ERROR } from "app/core/components/Form"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import Layout from "app/core/layouts/Layout"
-import { BlitzPage, useMutation, useRouter } from "blitz"
+import { BlitzPage, useMutation, useRouter, Link as BlitzLink } from "blitz"
 import { useTranslation } from "react-i18next"
 import login from "../mutations/login"
 import { Login } from "../validations"
@@ -82,7 +82,7 @@ export const LoginPage: BlitzPage = () => {
                       {oauthLoginError}
                     </Box>
                   ) : null}
-                  <Stack spacing={4}>
+                  <Stack spacing={4} alignItems="center">
                     <Stack
                       direction={{ base: "column", sm: "row" }}
                       align={"start"}
@@ -110,25 +110,19 @@ export const LoginPage: BlitzPage = () => {
                       }}
                     />
 
-                    <Button
-                      onClick={() => {
-                        router.push("/api/auth/facebook")
-                      }}
-                      style={{
-                        background: theme.colors.facebook[600],
-                        color: theme.colors.white,
-                      }}
-                    >
-                      Facebook
-                    </Button>
-                    <Button
-                      variant="text"
-                      onClick={() => {
-                        router.push("/api/auth/google")
-                      }}
-                    >
-                      Google
-                    </Button>
+                    <a href="/api/auth/facebook">
+                      <Button
+                        style={{
+                          background: theme.colors.facebook[600],
+                          color: theme.colors.white,
+                        }}
+                      >
+                        Facebook
+                      </Button>
+                    </a>
+                    <a href="/api/auth/google">
+                      <Button variant="text">Google</Button>
+                    </a>
                   </Stack>
                 </Stack>
               </Box>
