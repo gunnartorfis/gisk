@@ -30,7 +30,7 @@ module.exports = withSourceMaps({
   middleware: [
     sessionMiddleware({
       isAuthorized: simpleRolesIsAuthorized,
-      cookiePrefix: "euro2020",
+      cookiePrefix: "gisk",
     }),
   ],
 

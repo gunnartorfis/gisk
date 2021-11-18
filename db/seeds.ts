@@ -13,9 +13,8 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const seed = async () => {
-  console.log("000000")
   const teamsDB = await db.team.findMany()
-  console.log("111111", teamsDB.length)
+
   if (teamsDB.length === 0) {
     for (let i = 0; i < teams.length; i++) {
       const team = teams[i]
