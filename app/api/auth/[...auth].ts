@@ -71,7 +71,7 @@ export default passportAuth({
               : process.env.FACEBOOK_CLIENT_SECRET_TEST,
           callbackURL:
             process.env.NODE_ENV === "production"
-              ? "https://example.com/api/auth/facebook/callback"
+              ? "https://gisk.app/api/auth/facebook/callback"
               : "http://localhost:3000/api/auth/facebook/callback",
         },
         async (_token, _tokenSecret, profile, done) => {
@@ -98,7 +98,7 @@ export default passportAuth({
               : process.env.GOOGLE_CLIENT_SECRET_TEST,
           callbackURL:
             process.env.NODE_ENV === "production"
-              ? "https://example.com/api/auth/google/callback"
+              ? "https://gisk.app/api/auth/google/callback"
               : "http://localhost:3000/api/auth/google/callback",
         },
         async (_token, _tokenSecret, profile, done) => {
