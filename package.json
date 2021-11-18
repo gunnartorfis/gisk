@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "blitz dev",
     "build-without-db": "blitz build",
-    "build": "yarn cache clean && yarn --frozen-lockfile --prod=false --verbose && blitz prisma generate && blitz build && blitz prisma migrate deploy",
+    "build": "yarn cache clean && yarn --frozen-lockfile --prod=false --verbose && blitz prisma generate && blitz build && blitz db seed && blitz prisma migrate deploy",
     "start": "blitz start",
     "studio": "blitz prisma studio",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",

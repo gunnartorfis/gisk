@@ -87,7 +87,7 @@ const seed = async () => {
   const usersCount = await db.user.count()
   if (usersCount <= 1) {
     // example@example gets generated from tests.
-    const hashedPassword = await SecurePassword.hash("gisk")
+    const hashedPassword = await SecurePassword.hash(process.env.GISK_ADMIN_PASSWORD)
     await db.user.create({
       data: {
         email: "gisk@gisk.app",
