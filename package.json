@@ -9,7 +9,8 @@
     "studio": "blitz prisma studio",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "prepare": "husky install"
   },
   "prisma": {
     "schema": "db/schema.prisma"
@@ -29,22 +30,19 @@
       "eslint --fix"
     ]
   },
-  "resolutions": {
-    "zod": "3.0.0-alpha.33"
-  },
   "dependencies": {
     "@chakra-ui/icons": "1.0.10",
     "@chakra-ui/react": "1.1.2",
     "@emotion/react": "11.1.4",
     "@emotion/styled": "11.0.0",
     "@popperjs/core": "2.9.2",
-    "@prisma/client": "2.21.1",
+    "@prisma/client": "3.5.0",
     "@sentry/browser": "6.2.5",
     "@sentry/integrations": "6.2.5",
     "@sentry/node": "6.2.5",
     "@sentry/webpack-plugin": "1.15.0",
     "@zeit/next-source-maps": "0.0.3",
-    "blitz": "^0.43.0",
+    "blitz": "0.43.0",
     "dayjs": "1.10.4",
     "eventemitter3": "4.0.7",
     "final-form": "4.20.2",
@@ -54,29 +52,29 @@
     "passport": "0.4.1",
     "passport-facebook": "3.0.0",
     "passport-google-oauth20": "2.0.0",
-    "prisma": "3.5.0",
-    "react": "0.0.0-experimental-6a589ad71",
+    "react": "18.0.0-alpha-5ca4b0433-20211020",
     "react-datepicker": "3.7.0",
-    "react-dom": "0.0.0-experimental-6a589ad71",
+    "react-dom": "18.0.0-alpha-5ca4b0433-20211020",
     "react-final-form": "6.5.3",
     "react-ga": "3.3.0",
     "react-i18next": "11.8.13",
     "react-icons": "4.2.0",
     "react-modal": "3.13.1",
     "react-popper": "2.2.5",
-    "typescript": "4.5.2",
-    "zod": "3.0.0-alpha.33"
+    "zod": "3.11.6"
   },
   "devDependencies": {
-    "@types/preview-email": "2.0.0",
-    "@types/react": "17.0.3",
-    "eslint": "7.24.0",
-    "husky": "4.3.8",
-    "lint-staged": "10.5.4",
-    "prettier": "2.2.1",
-    "prettier-plugin-prisma": "0.7.0",
-    "pretty-quick": "3.1.0",
-    "preview-email": "3.0.4"
+    "@types/preview-email": "2.0.1",
+    "@types/react": "17.0.35",
+    "eslint": "7.32.0",
+    "husky": "7.0.4",
+    "lint-staged": "11.3.0-beta.2",
+    "prettier": "2.4.1",
+    "prettier-plugin-prisma": "3.5.0",
+    "pretty-quick": "3.1.2",
+    "preview-email": "3.0.5",
+    "prisma": "3.5.0",
+    "typescript": "~4.4"
   },
   "private": true,
   "engines": {

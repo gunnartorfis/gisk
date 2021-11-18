@@ -21,7 +21,7 @@ export const LoginPage: BlitzPage = () => {
   const [loginMutation] = useMutation(login)
   const router = useRouter()
   const { t } = useTranslation()
-  const oauthLoginError = router.params.authError
+  const oauthLoginError = router.params?.authError
   const bgColorMode = useColorModeValue("gray.50", "gray.800")
   const boxColorMode = useColorModeValue("white", "gray.700")
   const theme = useTheme()
@@ -116,6 +116,7 @@ export const LoginPage: BlitzPage = () => {
                       }}
                       style={{
                         background: theme.colors.facebook[600],
+                        color: theme.colors.white,
                       }}
                     >
                       Facebook

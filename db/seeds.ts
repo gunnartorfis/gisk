@@ -1,19 +1,21 @@
+import { SecurePassword } from "blitz"
 import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
-import { resolver, SecurePassword } from "blitz"
-import utc from "dayjs/plugin/utc"
 import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
 import db from "./index"
 import matches from "./matches"
-import teams from "./teams"
 import quizQuestions from "./quizQuestions"
+import teams from "./teams"
 
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 
 const seed = async () => {
+  console.log("000000")
   const teamsDB = await db.team.findMany()
+  console.log("111111", teamsDB.length)
   if (teamsDB.length === 0) {
     for (let i = 0; i < teams.length; i++) {
       const team = teams[i]
