@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "blitz dev",
-    "build": "blitz build",
+    "build-without-db": "blitz build",
+    "build": "yarn --frozen-lockfile --prod=false && blitz prisma generate && blitz build && blitz prisma migrate deploy",
     "start": "blitz start",
     "studio": "blitz prisma studio",
     "lint": "eslint --ignore-path .gitignore --ext .js,.ts,.tsx .",
