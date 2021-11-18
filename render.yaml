@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: euro2020
+    name: gisk
     env: node
     plan: starter
     buildCommand:
@@ -14,13 +14,13 @@ services:
         value: production
       - key: DATABASE_URL
         fromDatabase:
-          name: Gisk
+          name: gisk-db
           property: connectionString
       - key: SESSION_SECRET_KEY
         generateValue: true
       - key: APP_ORIGIN
-        value: https://euro2020.onrender.com
+        value: https://gisk.onrender.com
 
 databases:
-  - name: Gisk
+  - name: gisk-db
     plan: starter
