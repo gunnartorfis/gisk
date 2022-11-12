@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-         run: yarn --frozen-lockfile
+        run: yarn --frozen-lockfile
 
       - name: Update scores
         run: DATABASE_URL=${{env.DATABASE_URL}} npx ts-node ./db/updateScores.ts
