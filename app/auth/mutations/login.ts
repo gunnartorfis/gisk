@@ -7,7 +7,6 @@ export const authenticateUser = async (rawEmail: string, rawPassword: string) =>
   const email = rawEmail.toLowerCase().trim()
   const password = rawPassword.trim()
   const user = await db.user.findFirst({ where: { email } })
-  console.log("Hello");
   if (!user) throw new AuthenticationError()
 
   const result = await SecurePassword.verify(user.hashedPassword, password)

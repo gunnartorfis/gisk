@@ -35,7 +35,6 @@ export const League = () => {
   const [deleteLeague, { isLoading: isDeletingLeague, error: errorDeletingLeague }] = useMutation(
     deleteLeagueMutation
   )
-  console.log("router.params", router.params)
   const leagueId = router.query.id as string
   const [league, { isLoading, refetch: refetchLeague }] = useQuery(getLeague, {
     id: leagueId,
