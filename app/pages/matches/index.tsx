@@ -413,6 +413,7 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
                             alt={m.homeTeam.countryCode}
                             width="30px"
                             height="30px"
+                            loading="lazy"
                           />
                         </Box>
                         <Text display={{ md: "inline", base: "none" }}>{m.homeTeam.name}</Text>
@@ -488,7 +489,7 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
                             alt={m.awayTeam.countryCode}
                             width="30px"
                             height="30px"
-                            // layout="fill"
+                            loading="lazy"
                           />
                         </Box>
                         <Text display={{ md: "inline", base: "none" }}>{m.awayTeam.name}</Text>

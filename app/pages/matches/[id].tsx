@@ -37,7 +37,7 @@ import useUserLocale from "app/core/hooks/useUserLocale"
 
 export const MatchList = () => {
   const router = useRouter()
-  const userId = router.params.id
+  const userId = router.query.id
   const user = useCurrentUser()
   const [matches, { isLoading }] = useQuery(getMatchesFromCompetitors, { userId })
   const [quizQuestions, { isLoading: isLoadingQuiz }] = useQuery(getQuizQuestions, {})
@@ -250,6 +250,7 @@ export const MatchList = () => {
                             w={{ base: "14px", md: "30px" }}
                             h={{ base: "14px", md: "30px" }}
                             mr="8px"
+                            loading="lazy"
                           />
                           <Text display={{ md: "inline", base: "none" }}>
                             {m.match.homeTeam.name}
@@ -305,6 +306,7 @@ export const MatchList = () => {
                             mr="8px"
                             w={{ base: "14px", md: "30px" }}
                             h={{ base: "14px", md: "30px" }}
+                            loading="lazy"
                           />
                           <Text display={{ md: "inline", base: "none" }}>
                             {m.match.awayTeam.name}

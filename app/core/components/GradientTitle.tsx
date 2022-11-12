@@ -14,6 +14,7 @@ const GradientTitle: React.FunctionComponent<{
       bgClip="text"
       fontSize={smaller ? "xl" : ["60px", "100px"]}
       color={useColorModeValue("gray.800", "white")}
+      style={{"textAlign": "center"}}
     >
       {children}
     </Text>

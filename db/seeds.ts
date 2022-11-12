@@ -1,13 +1,13 @@
+
 import { SecurePassword } from "blitz"
 import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
 import timezone from "dayjs/plugin/timezone"
 import utc from "dayjs/plugin/utc"
 import db from "./index"
-import matches from "./matches"
+import newMatches from "./newMatches";
+import groups from "./groups";
 import quizQuestions from "./quizQuestions"
-import teams from "./teams"
-
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -16,8 +16,16 @@ const seed = async () => {
   const teamsDB = await db.team.findMany()
 
   if (teamsDB.length === 0) {
-    for (let i = 0; i < teams.length; i++) {
-      const team = teams[i]
+   const teams = groups.groups.reduce((teams,group) => [
+      ...teams,
+      ...group.teams.map(team => ({
+        group: group.letter,
+        countryCode: team.country,
+        name: team.name
+      })),
+    ], []);
+
+    teams.forEach(async team => {
       try {
         const teamDB = await db.team.create({
           data: { name: team.name, countryCode: team.countryCode, group: team.group },
@@ -25,48 +33,38 @@ const seed = async () => {
 
         teamsDB.push(teamDB)
       } catch (error) {}
-    }
+    })
   }
 
   const matchCount = await db.match.count()
   if (matchCount === 0) {
-    for (let i = 0; i < matches.length; i++) {
-      const match = matches[i]
 
-      const homeTeam = teamsDB.find((team) => team.name === match.homeTeamName)
-      const awayTeam = teamsDB.find((team) => team.name === match.awayTeamName)
+        newMatches.forEach(async match => {
+          try {
+            await db.match.create({
+              data: {
+                homeTeam: {
+                  connect: {
+                    name: match.home_team.name,
+                  },
+                },
+                awayTeam: {
+                  connect: {
+                    name: match.away_team.name,
+                  },
+                },
+                arena: match.venue,
+                // Not sure how important this is
+                round: `1`,
+                kickOff: match.datetime,
+              },
+            })
+          } catch (error) {}
+      })
 
-      if (homeTeam && awayTeam) {
-        const randomDaysToAdd = Math.floor(Math.random() * 30)
-        const kickOff = dayjs
-          .tz(match.kickOff, "DD/MM/YYYY HH:mm [CET]", "CET")
-          .set("month", dayjs().month())
-          .set("day", dayjs().day())
-          .add(randomDaysToAdd, "days")
-          .tz("GMT")
-          .toDate()
-        try {
-          await db.match.create({
-            data: {
-              homeTeam: {
-                connect: {
-                  name: homeTeam.name,
-                },
-              },
-              awayTeam: {
-                connect: {
-                  name: match.awayTeamName,
-                },
-              },
-              arena: match.arena,
-              round: `${match.round}`,
-              kickOff: kickOff,
-            },
-          })
-        } catch (error) {}
-      }
+
     }
-  }
+  
 
   const quizQuestionsCount = await db.quizQuestion.count()
   if (quizQuestionsCount === 0) {
