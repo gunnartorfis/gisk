@@ -44,6 +44,7 @@ export const TeamsList = () => {
                       alt={team.countryCode}
                       width={40}
                       height={40}
+                      loading="lazy"
                     />
                   </Td>
                   <Td isTruncated w="160px" cursor="pointer">

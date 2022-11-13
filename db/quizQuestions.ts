@@ -2,11 +2,11 @@ const quizQuestions = [
   [
     {
       language: "en",
-      question: "Which country will win Euro 2020?",
+      question: "Which country will win the World cup 2022?",
     },
     {
       language: "is",
-      question: "Hvaða þjóð vinnur EM?",
+      question: "Hvaða þjóð vinnur HM?",
     },
   ],
   [

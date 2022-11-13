@@ -6,9 +6,9 @@ import { initReactI18next } from "react-i18next"
 const resources = {
   en: {
     translation: {
-      NAV_BAR_MOBILE_TITLE: "EURO 2020",
+      NAV_BAR_MOBILE_TITLE: "World cup 2022",
 
-      WELCOME_TITLE: "UEFA EURO 2020",
+      WELCOME_TITLE: "FIFA World Cup Qatar 2022",
       WELCOME_DESCRIPTION: "Compete with your friends! Who's the football genius in your group?",
       WELCOME_LOGIN: "Already have an account?",
       WELCOME_SIGNUP: "Create an account",
@@ -51,7 +51,7 @@ const resources = {
       RANDOM_GENERATE_MODAL_DESCRIPTION: "Gisk will predict your unpredicted matches, one time.",
 
       QUIZ_ALERT: "Answer questions before the league starts for a chance to earn bonus points!",
-      QUIZ_QUESTION_1: "Which country will win Euro 2020?",
+      QUIZ_QUESTION_1: "Which country will win the World cup 2022?",
       QUIZ_QUESTION_2: "Which country will be runner up?",
       QUIZ_QUESTION_3: "Which country will score the most goals?",
       QUIZ_QUESTION_4: "Which country will concede the most goals?",
@@ -92,9 +92,9 @@ const resources = {
   },
   is: {
     translation: {
-      NAV_BAR_MOBILE_TITLE: "EM 2020",
+      NAV_BAR_MOBILE_TITLE: "HM 2022",
 
-      WELCOME_TITLE: "EM 2020",
+      WELCOME_TITLE: "HM 2022",
       WELCOME_DESCRIPTION: "Kepptu við vini þína! Hver er fótboltasnillingurinn í hópnum þínum?",
       WELCOME_LOGIN: "Nú þegar með aðgang?",
       WELCOME_SIGNUP: "Stofna aðgang",
@@ -139,7 +139,7 @@ const resources = {
         "Gisk mun búa til spá fyrir óspáða leiki hjá þér, í eitt skipti.",
       QUIZ_ALERT:
         "Svaraðu spurningum áður en mótið byrjar til að eiga möguleika á að fá bónus stig!",
-      QUIZ_QUESTION_1: "Hvaða þjóð vinnur EM?",
+      QUIZ_QUESTION_1: "Hvaða þjóð vinnur HM?",
       QUIZ_QUESTION_2: "Hvaða þjóð lendir í öðru sæti?",
       QUIZ_QUESTION_3: "Hvaða þjóð skorar flest mörk?",
       QUIZ_QUESTION_4: "Hvaða þjóð fær á sig flest mörk?",
