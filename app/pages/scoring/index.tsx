@@ -4,7 +4,7 @@ import { BlitzPage } from "blitz"
 import { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 
-export const SettingsPage: BlitzPage = () => {
+export const ScoringPage: BlitzPage = () => {
   const { t } = useTranslation()
 
   return (
@@ -40,10 +40,10 @@ export const SettingsPage: BlitzPage = () => {
   )
 }
 
-SettingsPage.getLayout = (page) => (
+ScoringPage.getLayout = (page) => (
   <Layout title="Scoring">
     <Suspense fallback="">{page}</Suspense>
   </Layout>
 )
 
-export default SettingsPage
+export default ScoringPage
