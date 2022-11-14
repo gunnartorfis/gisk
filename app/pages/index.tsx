@@ -10,7 +10,7 @@ import useUserLocale from "app/core/hooks/useUserLocale"
 import Layout from "app/core/layouts/Layout"
 import LeagueInvite from "app/leagues/components/LeagueInvite"
 import getMatches from "app/matches/queries/getMatches"
-import { BlitzPage, useMutation, useQuery } from "blitz"
+import { BlitzPage, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
 import { Suspense } from "react"
 import { useTranslation } from "react-i18next"
@@ -26,6 +26,7 @@ const Dashboard = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const notInLeagueBg = useColorModeValue("white", "gray.700")
   const { t } = useTranslation()
+  const router = useRouter()
 
   const [matchesForToday, { isLoading }] = useQuery(
     getMatches,
@@ -70,6 +71,11 @@ const Dashboard = () => {
         <CreateLeagueModal isOpen={isOpen} onClose={onClose} />
       </Center>
     )
+  }
+
+  if (matchesForToday?.length === 0) {
+    router.replace("/matches")
+    return null
   }
 
   return (

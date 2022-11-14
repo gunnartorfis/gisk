@@ -64,7 +64,6 @@ export const MatchesList = () => {
   const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
   const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
 
-  // const todaySection = React.useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
@@ -81,7 +80,6 @@ export const MatchesList = () => {
     return new Date(dayjs(date).format("MM/DD/YYYY"))
   }
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const matchesByDate: MatchesByDayType = {}
 
   matches?.forEach((m) => {
@@ -93,6 +91,12 @@ export const MatchesList = () => {
       matchesByDate[currentMatchDate] = [m]
     }
   })
+
+  const userHasUnpredictedMatches = React.useMemo(() => {
+    return matches?.some((m) => {
+      return m.userPredictionHome === undefined && m.userPredictionAway === undefined
+    })
+  }, [matches])
 
   if (user?.userLeague?.length === 0) {
     router.push("/")
@@ -178,23 +182,26 @@ export const MatchesList = () => {
             </Box>
           </details>
         ) : null}
-        <Box
-          display={"flex"}
-          flexDirection={["column", "row"]}
-          alignItems={["center"]}
-          justifyContent="space-between"
-          mt="20px"
-        >
-          <Button
-            onClick={() => setRandomGenerateModalIsOpen(true)}
-            m="0 auto"
-            display=""
-            variant="solid"
+        {userHasUnpredictedMatches ? (
+          <Box
+            display={"flex"}
+            flexDirection={["column", "row"]}
+            alignItems={["center"]}
+            justifyContent="space-between"
+            mt="20px"
           >
-            {t("RANDOM_GENERATE_PREDICTIONS")}
-            <ArrowPath style={{ marginLeft: 8 }} />
-          </Button>
-        </Box>
+            <Button
+              onClick={() => setRandomGenerateModalIsOpen(true)}
+              m="0 auto"
+              display=""
+              variant="solid"
+            >
+              {t("RANDOM_GENERATE_PREDICTIONS")}
+              <ArrowPath style={{ marginLeft: 8 }} />
+            </Button>
+          </Box>
+        ) : null}
+
         {Object.keys(matchesByDate).map((date) => {
           return <MatchesForDay key={date} matches={matchesByDate[date]} date={date} />
         })}
