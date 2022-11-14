@@ -1,0 +1,21 @@
+.facebookButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #5890ff;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.facebookButton:hover {
+  background-color: #3b6ec2;
+}
+
+.facebookLogo {
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+}

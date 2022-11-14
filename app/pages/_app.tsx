@@ -1,6 +1,6 @@
 import { ChakraProvider } from "@chakra-ui/react"
-import LoginPage from "app/auth/pages/login"
 import ErrorComponent from "app/core/components/ErrorComponent"
+import Welcome from "app/core/components/Welcome"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import "app/core/translations/i18n"
 import i18n from "app/core/translations/i18n"
@@ -73,7 +73,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
 function RootErrorFallback({ error }: ErrorFallbackProps) {
   if (error instanceof AuthenticationError) {
-    return <LoginPage />
+    return <Welcome />
   } else if (error instanceof AuthorizationError) {
     return (
       <ErrorComponent

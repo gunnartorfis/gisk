@@ -53,7 +53,7 @@ const oauthHandler = async ({
 
 export default passportAuth({
   successRedirectUrl: "/",
-  errorRedirectUrl: "/login",
+  errorRedirectUrl: "/",
   // secureProxy: true,
   strategies: [
     {
@@ -61,14 +61,8 @@ export default passportAuth({
         {
           profileFields: ["id", "displayName", "emails"],
           scope: ["email"],
-          clientID:
-            process.env.NODE_ENV === "production"
-              ? process.env.FACEBOOK_CLIENT_ID
-              : process.env.FACEBOOK_CLIENT_ID_TEST,
-          clientSecret:
-            process.env.NODE_ENV === "production"
-              ? process.env.FACEBOOK_CLIENT_SECRET
-              : process.env.FACEBOOK_CLIENT_SECRET_TEST,
+          clientID: process.env.FACEBOOK_CLIENT_ID,
+          clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
           callbackURL:
             process.env.NODE_ENV === "production"
               ? "https://gisk.app/api/auth/facebook/callback"
@@ -78,33 +72,6 @@ export default passportAuth({
           oauthHandler({
             profile,
             source: "facebook",
-            done,
-          })
-        }
-      ),
-    },
-    {
-      strategy: new GoogleStrategy(
-        {
-          profileFields: ["id", "displayName", "name", "emails"],
-          scope: ["email", "https://www.googleapis.com/auth/userinfo.profile"],
-          clientID:
-            process.env.NODE_ENV === "production"
-              ? process.env.GOOGLE_CLIENT_ID
-              : process.env.GOOGLE_CLIENT_ID_TEST,
-          clientSecret:
-            process.env.NODE_ENV === "production"
-              ? process.env.GOOGLE_CLIENT_SECRET
-              : process.env.GOOGLE_CLIENT_SECRET_TEST,
-          callbackURL:
-            process.env.NODE_ENV === "production"
-              ? "https://gisk.app/api/auth/google/callback"
-              : "http://localhost:3000/api/auth/google/callback",
-        },
-        async (_token, _tokenSecret, profile, done) => {
-          oauthHandler({
-            profile,
-            source: "google",
             done,
           })
         }

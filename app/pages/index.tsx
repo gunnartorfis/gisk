@@ -61,7 +61,7 @@ const Dashboard = () => {
           padding="40px 80px"
           margin={["0px", 0]}
         >
-          <Button onClick={onOpen} mb={["32px", 0]}>
+          <Button onClick={onOpen} mb={["32px", "12px"]}>
             {t("NEW_LEAGUE")}
             <AddIcon w={3} h={3} ml="8px" />
           </Button>
