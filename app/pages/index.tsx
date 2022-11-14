@@ -1,7 +1,7 @@
 import { Button } from "@chakra-ui/button"
 import { AddIcon } from "@chakra-ui/icons"
 import { Box, Center, Text } from "@chakra-ui/layout"
-import { ListItem, UnorderedList, useColorModeValue, useDisclosure } from "@chakra-ui/react"
+import { useColorModeValue, useDisclosure } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
 import CreateLeagueModal from "app/core/components/CreateLeagueModal"
 import Welcome from "app/core/components/Welcome"
@@ -12,9 +12,9 @@ import LeagueInvite from "app/leagues/components/LeagueInvite"
 import getMatches from "app/matches/queries/getMatches"
 import { BlitzPage, useMutation, useQuery } from "blitz"
 import dayjs from "dayjs"
-import React, { Suspense } from "react"
+import { Suspense } from "react"
 import { useTranslation } from "react-i18next"
-import { MatchesForDay, MATCH_FORMAT } from "./matches"
+import { MatchesForDay } from "./matches"
 
 export const CORRECT_RESULT = "correct_result"
 export const CORRECT_SCORE = "correct_score"
@@ -75,36 +75,6 @@ const Dashboard = () => {
   return (
     <Box>
       <MatchesForDay matches={matchesForToday} date={dayjs().toString()} />
-      <Center mt="16px">
-        <Text fontSize="xl" fontWeight="bold" textAlign="center" marginRight="16px">
-          {t("SCORING")}
-        </Text>
-        <UnorderedList>
-          {[
-            {
-              rule: t("SCORING_RULE_1"),
-              key: CORRECT_RESULT,
-              score: 1,
-            },
-            {
-              rule: t("SCORING_RULE_2"),
-              key: CORRECT_SCORE,
-              score: 2,
-            },
-            {
-              rule: t("SCORING_TOTAL"),
-              score: 2,
-            },
-          ].map(({ score, rule }) => (
-            <ListItem key={`${score}.${rule}`}>
-              <Text display="inline">{rule}: </Text>
-              <Text display="inline" fontWeight="semibold">
-                {score} {t("POINT")}
-              </Text>
-            </ListItem>
-          ))}
-        </UnorderedList>
-      </Center>
     </Box>
   )
 }
