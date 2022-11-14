@@ -186,7 +186,7 @@ export const League = () => {
             <AlertDialogBody>{t("REMOVE_USER_FROM_LEAGUE_MODAL_DESCRIPTION")}</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={deleteLeagueCancelButtonRef} onClick={onCloseDeleteModal}>
+              <Button ref={deleteLeagueCancelButtonRef} onClick={onCloseRemoveUserModal}>
                 {t("CANCEL")}
               </Button>
               <Button
