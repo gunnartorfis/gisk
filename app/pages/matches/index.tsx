@@ -207,13 +207,17 @@ export const MatchesList = () => {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              {t("REMOVE_USER_FROM_LEAGUE_MODAL_TITLE")}
+              {t("RANDOM_GENERATE_MODAL_TITLE")}
             </AlertDialogHeader>
 
-            <AlertDialogBody>{t("REMOVE_USER_FROM_LEAGUE_MODAL_DESCRIPTION")}</AlertDialogBody>
+            <AlertDialogBody>{t("RANDOM_GENERATE_MODAL_DESCRIPTION")}</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={randomGenerateModalCancelButtonRef} onClick={onCloseRandomGenerateModal}>
+              <Button
+                variant="outline"
+                ref={randomGenerateModalCancelButtonRef}
+                onClick={onCloseRandomGenerateModal}
+              >
                 {t("CANCEL")}
               </Button>
               <Button
@@ -223,7 +227,7 @@ export const MatchesList = () => {
                   onCloseRandomGenerateModal()
                   refetch()
                 }}
-                colorScheme="blue"
+                variant="solid"
                 ml={3}
               >
                 {t("CONFIRM")}
