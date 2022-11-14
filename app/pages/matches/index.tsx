@@ -41,6 +41,11 @@ import "dayjs/locale/en"
 import "dayjs/locale/is"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
+import utc from "dayjs/plugin/utc"
+import timezone from "dayjs/plugin/timezone"
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.tz.guess()
 
 export const MATCH_FORMAT = "dddd DD. MMMM YYYY"
 
