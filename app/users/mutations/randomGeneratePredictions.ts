@@ -1,9 +1,13 @@
-import { resolver } from "blitz"
+import { Ctx, resolver } from "blitz"
 import dayjs from "dayjs"
 import db from "db"
 
-const randomGeneratePredictions = resolver.pipe(resolver.authorize(), async (_, ctx) => {
+const randomGeneratePredictions = async (_, ctx: Ctx) => {
   const userId = ctx.session.userId
+  ctx.session.$authorize()
+  if (!userId) {
+    throw new Error("Not authenticated")
+  }
 
   const allMatches = await db.match.findMany({
     where: {
@@ -17,8 +21,11 @@ const randomGeneratePredictions = resolver.pipe(resolver.authorize(), async (_, 
   })
 
   const unpredictedMatches = allMatches.filter((match) => {
-    return !(
-      match.userLeagueMatches?.resultHome !== null || match.userLeagueMatches?.resultAway !== null
+    return (
+      match.userLeagueMatches === null ||
+      !(
+        match.userLeagueMatches?.resultHome !== null || match.userLeagueMatches?.resultAway !== null
+      )
     )
   })
 
@@ -43,6 +50,6 @@ const randomGeneratePredictions = resolver.pipe(resolver.authorize(), async (_, 
       },
     })
   }
-})
+}
 
 export default randomGeneratePredictions

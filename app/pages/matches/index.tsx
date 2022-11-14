@@ -63,14 +63,13 @@ export const MatchesList = () => {
       enabled: (user?.userLeague?.length ?? 0) > 0,
     }
   )
-  const [randomGeneratePredictions, { isLoading: isRandomGeneratingPredictions }] = useMutation(
-    randomGeneratePredictionsMutation
-  )
+  const [randomGeneratePredictions, { isLoading: isRandomGeneratingPredictions, error }] =
+    useMutation(randomGeneratePredictionsMutation)
+  console.log("222222", error)
   const [quizQuestions, { isLoading: isLoadingQuiz }] = useQuery(getQuizQuestions, {})
   const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
   const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
 
-  // const todaySection = React.useRef<HTMLDivElement>(null)
   const router = useRouter()
 
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
@@ -176,9 +175,9 @@ export const MatchesList = () => {
                           variant="text"
                           onClick={async () => {
                             const quizQuestionId = question.id
-                            const answer = (document.getElementById(
-                              question.id
-                            ) as HTMLInputElement)?.value
+                            const answer = (
+                              document.getElementById(question.id) as HTMLInputElement
+                            )?.value
 
                             updateQuizAnswerMutation({
                               quizQuestionId,
@@ -267,6 +266,7 @@ export const MatchesList = () => {
               <Button
                 isLoading={isRandomGeneratingPredictions}
                 onClick={async () => {
+                  console.log("random generate")
                   await randomGeneratePredictions()
                   onCloseRandomGenerateModal()
                   refetch()
