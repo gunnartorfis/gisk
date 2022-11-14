@@ -1,4 +1,4 @@
-import { Center, Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react"
+import { Box, Center, Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react"
 import Layout from "app/core/layouts/Layout"
 import { BlitzPage } from "blitz"
 import { Suspense } from "react"
@@ -35,6 +35,11 @@ export const ScoringPage: BlitzPage = () => {
             </Tr>
           </Tbody>
         </Table>
+        <Box mt={"20px"}>
+          <Text fontSize="lg" fontWeight="bold" textAlign="center">
+            {t("YOU_CAN_GUESS_UNTIL_KICKOFF")}
+          </Text>
+        </Box>
       </Flex>
     </Center>
   )

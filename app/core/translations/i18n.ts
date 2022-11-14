@@ -49,7 +49,8 @@ const resources = {
       RANDOM_GENERATE_PREDICTIONS: "Randomize unpredicted matches",
       RANDOM_GENERATE_MODAL_TITLE: "Random prediction",
       RANDOM_GENERATE_MODAL_DESCRIPTION: "Gisk will predict your unpredicted matches, one time.",
-      NO_MATCHES_TODAY: "No matches today",
+      YOU_CAN_GUESS_UNTIL_KICKOFF:
+        "You can submit your predictions up until the kickoff of each match",
 
       QUIZ_ALERT: "Answer questions before the league starts for a chance to earn bonus points!",
       QUIZ_QUESTION_1: "Which country will win the World cup 2022?",
@@ -138,7 +139,8 @@ const resources = {
       RANDOM_GENERATE_MODAL_TITLE: "Sjálfvirk spá",
       RANDOM_GENERATE_MODAL_DESCRIPTION:
         "Gisk mun búa til spá fyrir óspáða leiki hjá þér, í eitt skipti.",
-      NO_MATCHES_TODAY: "Það eru engir leikir í dag",
+      YOU_CAN_GUESS_UNTIL_KICKOFF:
+        "Þú getur sent inn gisk fyrir hvern leik alveg þangað til hann byrjar",
       QUIZ_ALERT:
         "Svaraðu spurningum áður en mótið byrjar til að eiga möguleika á að fá bónus stig!",
       QUIZ_QUESTION_1: "Hvaða þjóð vinnur HM?",
