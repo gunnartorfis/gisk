@@ -12,6 +12,7 @@ import Head from "next/head"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
 import GradientTitle from "./GradientTitle"
+import styles from "./Welcome.module.css"
 
 export default function Welcome() {
   const { t } = useTranslation()
@@ -44,12 +45,10 @@ export default function Welcome() {
             alignSelf={"center"}
             position={"relative"}
           >
-            <Link href="/login">
-              <Button variant="text">{t("WELCOME_LOGIN")}</Button>
-            </Link>
-            <Link href="/signup">
-              <Button>{t("WELCOME_SIGNUP")}</Button>
-            </Link>
+            <a href="/api/auth/facebook" className={styles.facebookButton}>
+              <img src={"/fblogo.png"} className={styles.facebookLogo} />
+              <span>Continue with Facebook</span>
+            </a>
             <Box>
               <Icon
                 as={Arrow}
@@ -58,7 +57,7 @@ export default function Welcome() {
                 position={"absolute"}
                 right={[0, -71]}
                 left={[71, "unset"]}
-                top={["120px", "10px"]}
+                top={["90px", "20px"]}
                 transform={["rotate(90deg)", "unset"]}
               />
               <Text
@@ -67,7 +66,7 @@ export default function Welcome() {
                 position={"absolute"}
                 right={[0, "-125px"]}
                 left={["40px", "unset"]}
-                top={["140px", "-15px"]}
+                top={["120px", "-15px"]}
                 transform={["rotate(-20deg)", "rotate(10deg)"]}
               >
                 {t("WELCOME_FREE")}
