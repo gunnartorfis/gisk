@@ -70,6 +70,7 @@ export const MatchesList = () => {
   const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
 
   const router = useRouter()
+  const toast = useToast()
 
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
   const questionsBg = useColorModeValue("white", "gray.700")
@@ -104,6 +105,14 @@ export const MatchesList = () => {
   }, [matches])
 
   if (user?.userLeague?.length === 0) {
+    toast({
+      title: t("NO_LEAGUE_WARNING_TITLE"),
+      description: t("NO_LEAGUE_WARNING_DESCRIPTION"),
+      status: "info",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom-right",
+    })
     router.push("/")
     return null
   }

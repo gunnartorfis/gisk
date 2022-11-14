@@ -90,6 +90,9 @@ const resources = {
       RESET_PASSWORD_INSTRUCTIONS:
         "If your email is in our system, you will receive instructions to reset your password shortly.",
       SEND_RESET_PASSWORD_INSTRUCTIONS: "Send Reset Password Instructions",
+
+      NO_LEAGUE_WARNING_TITLE: "You are not part of any league yet",
+      NO_LEAGUE_WARNING_DESCRIPTION: "Create a league or join one to start playing",
     },
   },
   is: {
@@ -176,6 +179,9 @@ const resources = {
       RESET_PASSWORD_INSTRUCTIONS:
         "Ef að netfangið þitt er skráð í kerfið, færð þú sendar leiðbeiningar til að endurstilla lykilorðið þitt von bráðar.",
       SEND_RESET_PASSWORD_INSTRUCTIONS: "Senda endurstillingar leiðbeiningar",
+
+      NO_LEAGUE_WARNING_TITLE: "Þú ert ekki í neinni deild",
+      NO_LEAGUE_WARNING_DESCRIPTION: "Búðu til eða skrá þig í deild til að taka þátt",
     },
   },
 }
