@@ -9,13 +9,9 @@ const ButtonTheme = {
   sizes: {
     sm: {
       fontSize: "sm",
-      px: 4, // <-- px is short for paddingLeft and paddingRight
-      py: 3, // <-- py is short for paddingTop and paddingBottom
     },
     md: {
       fontSize: "md",
-      px: 6, // <-- these values are tokens from the design system
-      py: 4, // <-- these values are tokens from the design system
     },
   },
   // Two variants: outline and solid
@@ -25,7 +21,7 @@ const ButtonTheme = {
       color: "white",
       borderRadius: "400px",
       ":hover": {
-        bg: "secondary",
+        bg: "primarydarker",
       },
     },
     outline: {
@@ -38,6 +34,14 @@ const ButtonTheme = {
       padding: "16px",
       ":hover": {
         color: "secondary",
+      },
+    },
+    danger: {
+      bg: "danger",
+      color: "white",
+      borderRadius: "400px",
+      ":hover": {
+        bg: "dangerdarker",
       },
     },
   },

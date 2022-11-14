@@ -1,5 +1,5 @@
-import { Container, Flex, Text } from "@chakra-ui/layout"
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { Box, Container, Flex, Text } from "@chakra-ui/layout"
+import { Table, Tbody, Td, Th, Thead, Tr, useTheme } from "@chakra-ui/react"
 import Layout from "app/core/layouts/Layout"
 import getTeams from "app/teams/queries/getTeams"
 import { BlitzPage, Head, Image, Link, useQuery } from "blitz"
@@ -9,11 +9,56 @@ import { useTranslation } from "react-i18next"
 export const TeamsList = () => {
   const [teams] = useQuery(getTeams, {})
   const { t } = useTranslation()
+  const theme = useTheme()
   const groups = Array.from(new Set(teams.map((t) => t.group)))
   const teamsByGroups = groups.map((group) => ({
     group,
     teams: teams.filter((t) => t.group === group),
   }))
+
+  return (
+    <Flex direction="row" flexWrap="wrap" maxW={"700px"} mx="auto">
+      {teamsByGroups.map((group) => (
+        <Box
+          width="200px"
+          key={group.group}
+          p={4}
+          mr={5}
+          mt={5}
+          border={`2px solid ${theme.colors.primary}`}
+          borderRadius={"20px"}
+        >
+          <Text
+            fontSize="2xl"
+            fontWeight="bold"
+            mb={4}
+            textAlign="center"
+            borderBottom={`1px solid ${theme.colors.primary}`}
+          >
+            {`${t("GROUP")} ${group.group}`}
+          </Text>
+          {group.teams.map((team) => (
+            <Flex direction="row" key={team.id} alignItems="center" mb={2}>
+              <Image
+                src={`/teams/${team.countryCode}.png`}
+                alt={team.countryCode}
+                width={30}
+                height={30}
+                loading="lazy"
+              />
+              <Box ml={2}>
+                <Link href={`/teams/${team.name}`}>
+                  <Text>
+                    {team.name} ({team.countryCode})
+                  </Text>
+                </Link>
+              </Box>
+            </Flex>
+          ))}
+        </Box>
+      ))}
+    </Flex>
+  )
 
   return (
     <Container>

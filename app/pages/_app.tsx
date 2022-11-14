@@ -1,4 +1,5 @@
 import { ChakraProvider } from "@chakra-ui/react"
+import theme from "app/core/chakraTheme/theme"
 import ErrorComponent from "app/core/components/ErrorComponent"
 import Welcome from "app/core/components/Welcome"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -52,7 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const getLayout = Component.getLayout || ((page) => page)
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Suspense fallback="">
         <UserSession />
       </Suspense>

@@ -246,8 +246,8 @@ export default function Header() {
           <Box
             display={{ base: "inherit", md: "none" }}
             position="absolute"
-            left="120px"
-            right="120px"
+            left={["90px", "120px"]}
+            right={["90px", "120px"]}
             top={0}
             h="60px"
           >
@@ -281,7 +281,7 @@ export default function Header() {
           </Suspense>
           <Dropdown
             containerProps={{
-              marginLeft: "8px",
+              marginLeft: "16px",
             }}
             onClickItemWithKey={(language) => {
               i18n.changeLanguage(language)

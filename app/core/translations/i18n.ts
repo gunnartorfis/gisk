@@ -46,7 +46,7 @@ const resources = {
       MATCHES_TIMEZONE_INFO: "Displayed kickoffs are in Greenwich Mean Time (GMT)",
       SHOW_PREDICTED_MATCHES: "Predicted matches",
       SHOW_PAST_MATCHES: "Past matches",
-      RANDOM_GENERATE_PREDICTIONS: "Randomise unpredicted matches",
+      RANDOM_GENERATE_PREDICTIONS: "Randomize unpredicted matches",
       RANDOM_GENERATE_MODAL_TITLE: "Random prediction",
       RANDOM_GENERATE_MODAL_DESCRIPTION: "Gisk will predict your unpredicted matches, one time.",
 
@@ -133,7 +133,7 @@ const resources = {
       MATCHES_TIMEZONE_INFO: "Birtar tímasetningar eru í Greenwich Mean Time (GMT)",
       SHOW_PREDICTED_MATCHES: "Spáðir leikir",
       SHOW_PAST_MATCHES: "Fortíðar leikir",
-      RANDOM_GENERATE_PREDICTIONS: "Setja inn sjálfvirka spá fyrir óspáða leiki",
+      RANDOM_GENERATE_PREDICTIONS: "Sjálfvirk spá fyrir óspáða leiki",
       RANDOM_GENERATE_MODAL_TITLE: "Sjálfvirk spá",
       RANDOM_GENERATE_MODAL_DESCRIPTION:
         "Gisk mun búa til spá fyrir óspáða leiki hjá þér, í eitt skipti.",

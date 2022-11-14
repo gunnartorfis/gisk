@@ -32,9 +32,8 @@ export const League = () => {
   const router = useRouter()
   const currentUser = useCurrentUser()
   const [removeUser, { isLoading: isRemovingUser }] = useMutation(removeUserFromLeagueIfExists)
-  const [deleteLeague, { isLoading: isDeletingLeague, error: errorDeletingLeague }] = useMutation(
-    deleteLeagueMutation
-  )
+  const [deleteLeague, { isLoading: isDeletingLeague, error: errorDeletingLeague }] =
+    useMutation(deleteLeagueMutation)
   const leagueId = router.query.id as string
   const [league, { isLoading, refetch: refetchLeague }] = useQuery(getLeague, {
     id: leagueId,
@@ -76,20 +75,23 @@ export const League = () => {
       <Flex direction="column">
         <Box>
           <Flex direction="row" justifyContent="space-between" alignItems="center">
-            <Text fontSize="6xl" fontWeight="extrabold">
-              {league.name}
-            </Text>
+            <Box>
+              <Text fontSize="4xl" fontWeight="extrabold">
+                {league.name}
+              </Text>
+              <Text fontSize="xl">
+                {t("INVITE_CODE_TO_LEAGUE")}: <strong>{league.inviteCode}</strong>
+              </Text>
+            </Box>
             {userIsLeagueAdmin ? (
               <IconButton
+                variant="danger"
                 onClick={() => setDeleteModalIsOpen(true)}
                 aria-label="Search database"
                 icon={<DeleteIcon />}
               />
             ) : null}
           </Flex>
-          <Text fontSize="1xl">
-            {t("INVITE_CODE_TO_LEAGUE")}: <strong>{league.inviteCode}</strong>
-          </Text>
         </Box>
         <Table variant="simple" mt="32px">
           <Thead>
@@ -126,7 +128,7 @@ export const League = () => {
                       setRemoveUserModalIsOpen(true)
                     }}
                   >
-                    <IconButton aria-label="Remove user" icon={<DeleteIcon />} />
+                    <IconButton variant="danger" aria-label="Remove user" icon={<DeleteIcon />} />
                   </Td>
                 ) : null}
               </Tr>
@@ -152,6 +154,7 @@ export const League = () => {
                 {t("CANCEL")}
               </Button>
               <Button
+                variant="danger"
                 isLoading={isDeletingLeague}
                 onClick={async () => {
                   await deleteLeague({
@@ -187,6 +190,7 @@ export const League = () => {
                 {t("CANCEL")}
               </Button>
               <Button
+                variant="danger"
                 isLoading={isDeletingLeague}
                 onClick={async () => {
                   const ul = userLeagueBeingRemoved.current

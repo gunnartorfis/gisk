@@ -10,11 +10,10 @@ const GradientTitle: React.FunctionComponent<{
       fontFamily={"heading"}
       fontWeight="extrabold"
       bgGradient={`linear(to-l, ${Colors.secondary},${Colors.primary})"`}
-      // bgGradient="linear(to-l, #7928CA,#FF0080)"
       bgClip="text"
       fontSize={smaller ? "xl" : ["60px", "100px"]}
       color={useColorModeValue("gray.800", "white")}
-      style={{"textAlign": "center"}}
+      style={{ textAlign: "center" }}
     >
       {children}
     </Text>
