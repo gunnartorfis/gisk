@@ -98,6 +98,7 @@ const resources = {
 
       NO_LEAGUE_WARNING_TITLE: "You are not part of any league yet",
       NO_LEAGUE_WARNING_DESCRIPTION: "Create a league or join one to start playing",
+      NO_MATCHES_DISPLAY: "You can view predicitons from others after game has started",
     },
   },
   is: {
@@ -151,7 +152,7 @@ const resources = {
         "Gisk mun búa til spá fyrir óspáða leiki hjá þér, í eitt skipti.",
       YOU_CAN_GUESS_UNTIL_KICKOFF:
         "Þú getur sent inn gisk fyrir hvern leik alveg þangað til hann byrjar",
-      
+
       QUESTIONS: "Spurningar",
       QUIZ_ALERT:
         "Svaraðu spurningum áður en mótið byrjar til að eiga möguleika á að fá bónus stig!",
@@ -167,6 +168,7 @@ const resources = {
       SELECT_A_TEAM: "Veldu lið",
       SELECT_PLAYER: "Veldu leikmann",
       UNANSWERED: "Ósvarað",
+      NO_MATCHES_DISPLAY: "Þú getur séð gisk annarra eftir að leikur er byrjaður",
 
       GROUP: "Riðill",
       TODAY: "Í dag",
