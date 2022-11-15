@@ -11,24 +11,27 @@ const randomGeneratePredictions = async (_, ctx: Ctx) => {
     throw new Error("Not authenticated")
   }
 
-  const allMatches = await db.match.findMany({
+  const userMatches = await db.userLeagueMatch.findMany({
+    where: {
+      userId,
+      match: {
+        kickOff: {
+          gte: dayjs().toDate(),
+        },
+      },
+    },
+  })
+
+  const matches = await db.match.findMany({
     where: {
       kickOff: {
         gte: dayjs().toDate(),
       },
     },
-    include: {
-      userLeagueMatches: true,
-    },
   })
 
-  const unpredictedMatches = allMatches.filter((match) => {
-    return (
-      match.userLeagueMatches === null ||
-      !(
-        match.userLeagueMatches?.resultHome !== null || match.userLeagueMatches?.resultAway !== null
-      )
-    )
+  const unpredictedMatches = matches.filter((match) => {
+    return userMatches.every((m) => m.matchId !== match.id)
   })
 
   for (let i = 0; i < unpredictedMatches.length; i++) {
