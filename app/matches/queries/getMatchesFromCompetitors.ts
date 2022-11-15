@@ -56,9 +56,7 @@ export default resolver.pipe(resolver.authorize(), async (input, ctx) => {
     userMatches.push(newMatch)
   }
 
-  const kickOffOnlyMatches = userMatches.filter(
-    (m) => dayjs(m.match.kickOff).unix() < dayjs().unix()
-  )
+  const kickOffOnlyMatches = userMatches.filter((m) => dayjs(new Date()).isAfter(m.match.kickOff))
 
   kickOffOnlyMatches.sort((a, b) => {
     return dayjs(a.match.kickOff).unix() - dayjs(b.match.kickOff).unix()

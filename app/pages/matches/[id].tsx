@@ -122,6 +122,11 @@ export const MatchList = () => {
       <Text width="100%" textAlign="center" marginTop="8px">
         {t("MATCHES_TIMEZONE_INFO")}
       </Text>
+      {matches.length === 0 && (
+        <Text width="100%" textAlign="center" marginTop="8px">
+          {t("NO_MATCHES_DISPLAY")}
+        </Text>
+      )}
       {Object.keys(matchesByDate).map((date) => {
         const matchesForDay = matchesByDate[date]
         return (
