@@ -20,7 +20,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react"
 import logout from "app/auth/mutations/logout"
-import LeagueInvite, { LeagueInviteModal } from "app/leagues/components/LeagueInvite"
+import { LeagueInviteModal } from "app/leagues/components/LeagueInvite"
 import getLeagues from "app/leagues/queries/getLeagues"
 import updateUserLanguage from "app/users/mutations/updateUserLanguage"
 import { useMutation, useQuery, useRouter, useSession } from "blitz"
@@ -137,9 +137,14 @@ const useNavItems = ({
       href: "/teams",
     },
     {
+      label: t("QUESTIONS"),
+      href: "/questions",
+    },
+    {
       label: t("SCORING"),
       href: "/scoring",
     },
+
   ]
 
   if (user?.role === "ADMIN") {

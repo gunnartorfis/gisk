@@ -39,6 +39,30 @@ const quizQuestions = [
       question: "Hvaða þjóð fær á sig flest mörk?",
     },
   ],
+  [
+    {
+      language: "en",
+      question: "Which player will be the top scorer?",
+      usePlayers: true
+    },
+    {
+      language: "is",
+      question: "Hvaða leikmaður skorar flest mörk?",
+      usePlayers: true
+    },
+  ],
+  [
+    {
+      language: "en",
+      question: "Which goalkeeper will win the golden glove?",
+      useGoalies: true
+    },
+    {
+      language: "is",
+      question: "Hvaða markmaður fær gullna hanskann?",
+      useGoalies: true
+    },
+  ],
 ]
 
 export default quizQuestions

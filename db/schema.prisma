@@ -84,6 +84,8 @@ model QuizQuestionTranslation {
   language       String
   question       String
   answer         String?
+  usePlayers     Boolean  @default(false)
+  useGoalies     Boolean  @default(false)
   quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id])
   quizQuestionId String       @db.Uuid
 }
@@ -109,14 +111,14 @@ model League {
 }
 
 model Team {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String   @unique
-  countryCode String   @unique
-  group       String
-  homeMatches Match[]  @relation("homeMatches")
-  awayMatches Match[]  @relation("awayMatches")
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  name                  String   @unique
+  countryCode           String   @unique
+  group                 String
+  homeMatches           Match[]  @relation("homeMatches")
+  awayMatches           Match[]  @relation("awayMatches")
 }
 
 model Match {
@@ -150,4 +152,12 @@ model UserLeagueMatch {
   matchId    String   @unique @db.Uuid
 
   @@unique([userId, matchId])
+}
+
+model Player {
+  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String
+  isGoalie            Boolean  @default(false)
+  isTopScorer         Boolean  @default(false)
+  isGoldenGloveWinner Boolean  @default(false)
 }

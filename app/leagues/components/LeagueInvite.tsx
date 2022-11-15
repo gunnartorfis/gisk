@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   FormControl,
   FormLabel,
@@ -18,6 +17,7 @@ import { invoke, useRouter } from "blitz"
 import React from "react"
 import { useTranslation } from "react-i18next"
 import addUserToLeagueIfExists from "../mutations/addUserToLeagueIfExists"
+import { Button } from "@chakra-ui/button"
 
 const LeagueInvite = () => {
   const { t } = useTranslation()

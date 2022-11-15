@@ -1,20 +1,14 @@
 import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons"
 import {
-  Alert,
   AlertDialog,
   AlertDialogBody,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  AlertIcon,
   Box,
-  Button,
   Flex,
-  FormLabel,
-  Grid,
   Input,
-  Select,
   Table,
   Tbody,
   Td,
@@ -25,6 +19,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react"
+import { Button } from "@chakra-ui/button"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useUserLocale from "app/core/hooks/useUserLocale"
 import Layout from "app/core/layouts/Layout"
@@ -32,9 +27,7 @@ import ArrowPath from "app/icons/ArrowPath"
 import updateResultForUser from "app/matches/mutations/updateResultForUser"
 import getMatches, { MatchWithScore } from "app/matches/queries/getMatches"
 import getQuizQuestions from "app/matches/queries/getQuizQuestions"
-import getTeams from "app/teams/queries/getTeams"
 import randomGeneratePredictionsMutation from "app/users/mutations/randomGeneratePredictions"
-import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
 import { BlitzPage, Head, Image, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
 import "dayjs/locale/en"
@@ -65,16 +58,12 @@ export const MatchesList = () => {
   const [randomGeneratePredictions, { isLoading: isRandomGeneratingPredictions }] = useMutation(
     randomGeneratePredictionsMutation
   )
-  const [quizQuestions, { isLoading: isLoadingQuiz }] = useQuery(getQuizQuestions, {})
-  const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
-  const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
 
   const router = useRouter()
   const toast = useToast()
 
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
-  const questionsBg = useColorModeValue("white", "gray.700")
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const [randomGenerateModalIsOpen, setRandomGenerateModalIsOpen] = React.useState(false)
   const onCloseRandomGenerateModal = () => setRandomGenerateModalIsOpen(false)
@@ -117,85 +106,13 @@ export const MatchesList = () => {
     return null
   }
 
-  if (isLoading || isLoadingQuiz) {
+  if (isLoading) {
     return null
   }
 
   return (
     <>
       <Box pb="16px" bg={bgColorMode}>
-        {quizQuestions.length > 0 ? (
-          <details>
-            <summary>
-              <Alert bg={questionsBg} status="info">
-                <AlertIcon />
-                {t("QUIZ_ALERT")}
-              </Alert>
-            </summary>
-
-            <Box
-              padding="32px"
-              borderTop="1px"
-              borderBottom="1px"
-              borderColor="gray.200"
-              boxShadow="md"
-              margin="0 auto"
-              bg={questionsBg}
-            >
-              <Grid
-                templateColumns={{ base: "auto", md: "auto auto" }}
-                gap={5}
-                justifyItems="start"
-              >
-                {quizQuestions.map((question) => {
-                  return (
-                    <Box key={question.id}>
-                      <FormLabel>
-                        {question.translations.find((t) => t.language === i18n.language)?.question}
-                      </FormLabel>
-                      <Box>
-                        <Select
-                          id={question.id}
-                          defaultValue={
-                            question.UserQuizQuestion.find(
-                              (uq) => uq.quizQuestionId === question.id
-                            )?.answer ?? "-1"
-                          }
-                        >
-                          <option disabled value="-1">
-                            {t("SELECT_A_TEAM")}
-                          </option>
-                          {teams?.map((team) => (
-                            <option key={team.id} value={team.id}>
-                              {team.name}
-                            </option>
-                          ))}
-                        </Select>
-                        <Button
-                          disabled={isSubmittingQuiz}
-                          variant="text"
-                          onClick={async () => {
-                            const quizQuestionId = question.id
-                            const answer = (
-                              document.getElementById(question.id) as HTMLInputElement
-                            )?.value
-
-                            updateQuizAnswerMutation({
-                              quizQuestionId,
-                              answer,
-                            })
-                          }}
-                        >
-                          {t("UPDATE")}
-                        </Button>
-                      </Box>
-                    </Box>
-                  )
-                })}
-              </Grid>
-            </Box>
-          </details>
-        ) : null}
         {userHasUnpredictedMatches ? (
           <Box
             display={"flex"}
