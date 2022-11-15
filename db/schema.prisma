@@ -134,7 +134,7 @@ model Match {
   resultAway        Int?
   round             String
   arena             String
-  userLeagueMatches UserLeagueMatch?
+  userLeagueMatches UserLeagueMatch[]
   scoreMultiplier   Float?           @default(1)
 
   @@unique([homeTeamId, awayTeamId, kickOff])
@@ -149,7 +149,7 @@ model UserLeagueMatch {
   user       User     @relation(fields: [userId], references: [id])
   userId     String   @db.Uuid
   match      Match    @relation(fields: [matchId], references: [id])
-  matchId    String   @unique @db.Uuid
+  matchId    String   @db.Uuid
 
   @@unique([userId, matchId])
 }
