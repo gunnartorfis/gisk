@@ -73,7 +73,7 @@ export const League = () => {
 
   return (
     <>
-      <Flex direction="column">
+      <Flex direction="column" overflowX="scroll">
         <Box>
           <Flex direction="row" justifyContent="space-between" alignItems="center">
             <Box>
