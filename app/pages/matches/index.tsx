@@ -7,7 +7,6 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Box,
-  Button,
   Flex,
   Input,
   Table,
@@ -20,6 +19,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react"
+import { Button } from "@chakra-ui/button"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useUserLocale from "app/core/hooks/useUserLocale"
 import Layout from "app/core/layouts/Layout"
@@ -27,9 +27,7 @@ import ArrowPath from "app/icons/ArrowPath"
 import updateResultForUser from "app/matches/mutations/updateResultForUser"
 import getMatches, { MatchWithScore } from "app/matches/queries/getMatches"
 import getQuizQuestions from "app/matches/queries/getQuizQuestions"
-import getTeams from "app/teams/queries/getTeams"
 import randomGeneratePredictionsMutation from "app/users/mutations/randomGeneratePredictions"
-import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
 import { BlitzPage, Head, Image, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
 import "dayjs/locale/en"
@@ -60,9 +58,6 @@ export const MatchesList = () => {
   const [randomGeneratePredictions, { isLoading: isRandomGeneratingPredictions }] = useMutation(
     randomGeneratePredictionsMutation
   )
-  const [quizQuestions, { isLoading: isLoadingQuiz }] = useQuery(getQuizQuestions, {})
-  const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
-  const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
 
   const router = useRouter()
   const toast = useToast()
@@ -111,7 +106,7 @@ export const MatchesList = () => {
     return null
   }
 
-  if (isLoading || isLoadingQuiz) {
+  if (isLoading) {
     return null
   }
 
