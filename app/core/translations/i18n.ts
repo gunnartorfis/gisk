@@ -30,7 +30,9 @@ const resources = {
       SCORING_RULE_1: "Correct result (1X2)",
       SCORING_RULE_2: "Correct score",
       SCORING_TOTAL: "Maximum",
+      SCORING_PER_CORRECT_QUESTION: "Correct answer to a question",
       POINT: "point",
+      POINTS: "points",
 
       INVITE_CODE_TO_LEAGUE: "Invite code to league",
       INVITE_CODE: "Invite code",
@@ -52,6 +54,7 @@ const resources = {
       YOU_CAN_GUESS_UNTIL_KICKOFF:
         "You can submit your predictions up until the kickoff of each match",
 
+      QUESTIONS: "Questions",
       QUIZ_ALERT: "Answer questions before the league starts for a chance to earn bonus points!",
       QUIZ_QUESTION_1: "Which country will win the World cup 2022?",
       QUIZ_QUESTION_2: "Which country will be runner up?",
@@ -63,6 +66,8 @@ const resources = {
       AWAY: "Away",
       ANSWER: "Answer",
       SELECT_A_TEAM: "Select a team",
+      SELECT_PLAYER: "Select a player",
+      UNANSWERED: "Unanswered",
 
       GROUP: "Group",
       TODAY: "Today",
@@ -125,7 +130,9 @@ const resources = {
       SCORING_RULE_1: "Rétt sigurlið (1X2)",
       SCORING_RULE_2: "Rétt úrslit",
       SCORING_TOTAL: "Hámark",
+      SCORING_PER_CORRECT_QUESTION: "Rétt svar við spurningu",
       POINT: "stig",
+      POINTS: "stig",
 
       INVITE_CODE_TO_LEAGUE: "Boðskóði í deild",
       INVITE_CODE: "Boðskóði",
@@ -144,6 +151,8 @@ const resources = {
         "Gisk mun búa til spá fyrir óspáða leiki hjá þér, í eitt skipti.",
       YOU_CAN_GUESS_UNTIL_KICKOFF:
         "Þú getur sent inn gisk fyrir hvern leik alveg þangað til hann byrjar",
+      
+      QUESTIONS: "Spurningar",
       QUIZ_ALERT:
         "Svaraðu spurningum áður en mótið byrjar til að eiga möguleika á að fá bónus stig!",
       QUIZ_QUESTION_1: "Hvaða þjóð vinnur HM?",
@@ -156,6 +165,8 @@ const resources = {
       AWAY: "Útilið",
       ANSWER: "Svar",
       SELECT_A_TEAM: "Veldu lið",
+      SELECT_PLAYER: "Veldu leikmann",
+      UNANSWERED: "Ósvarað",
 
       GROUP: "Riðill",
       TODAY: "Í dag",
