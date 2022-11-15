@@ -56,7 +56,7 @@ const seed = async () => {
                 arena: match.venue,
                 // Not sure how important this is
                 round: `1`,
-                kickOff: match.datetime,
+                kickOff: match.datetime
               },
             })
           } catch (error) {}
