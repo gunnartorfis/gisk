@@ -67,8 +67,7 @@ const seed = async () => {
   
 
   const quizQuestionsCount = await db.quizQuestion.count()
-  if (quizQuestionsCount === 0 || true) {
-    db.quizQuestion.deleteMany({});
+  if (quizQuestionsCount === 0) {
     for (let i = 0; i < quizQuestions.length; i++) {
       const quizQuestion = quizQuestions[i]
 

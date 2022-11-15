@@ -60,7 +60,6 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
 
   const getQuestionScore = (userId: string) => questionsForUsers.reduce<number>((score, q) => {
     const userAnswer = getAnswer(q.UserQuizQuestion.filter(a => a.userId === userId).find(u => u.quizQuestionId === q.id)?.answer);
-    console.log("userAnswer", userAnswer, q.answer);
     return score + (q.answer === userAnswer ? 10 : 0);
   }
    
