@@ -1,4 +1,4 @@
-import { Box, Button, Flex, FormControl, Stack, useColorModeValue } from "@chakra-ui/react"
+import { Box, Flex, FormControl, Stack, useColorModeValue } from "@chakra-ui/react"
 import Form, { FormContext } from "app/core/components/Form"
 import LabeledTextField from "app/core/components/LabeledTextField"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
@@ -7,6 +7,7 @@ import updateUser, { UpdateUserForm } from "app/mutations/updateUser"
 import { BlitzPage, useMutation, useRouter } from "blitz"
 import { Suspense } from "react"
 import { useTranslation } from "react-i18next"
+import { Button } from "@chakra-ui/button"
 
 export const SettingsPage: BlitzPage = () => {
   const [updateUserMutation] = useMutation(updateUser)

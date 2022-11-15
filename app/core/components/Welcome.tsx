@@ -1,18 +1,9 @@
-import {
-  Box,
-  Button,
-  Container,
-  createIcon,
-  Icon,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
+import { Box, Container, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import Head from "next/head"
-import Link from "next/link"
 import { useTranslation } from "react-i18next"
 import GradientTitle from "./GradientTitle"
 import styles from "./Welcome.module.css"
+import { Icon, createIcon } from "@chakra-ui/icons"
 
 export default function Welcome() {
   const { t } = useTranslation()

@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Container,
   Flex,
   Image,
@@ -21,6 +20,7 @@ import { BlitzPage, getSession, Head, useQuery } from "blitz"
 import dayjs from "dayjs"
 import { Suspense, useRef } from "react"
 import MatchDrawer from "../../core/components/MatchDrawer"
+import { Button } from "@chakra-ui/button"
 
 export type MatchWithTeams = Match & {
   homeTeam: Team

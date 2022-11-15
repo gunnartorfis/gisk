@@ -7,8 +7,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Button,
-  IconButton,
   Table,
   Tbody,
   Td,
@@ -28,9 +26,10 @@ import { BlitzPage, Head, Link, useMutation, useQuery, useRouter } from "blitz"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import { FiStar } from "react-icons/fi"
+import { Button, IconButton } from "@chakra-ui/button"
 
 export const League = () => {
-  const theme = useTheme();
+  const theme = useTheme()
   const router = useRouter()
   const currentUser = useCurrentUser()
   const [removeUser, { isLoading: isRemovingUser }] = useMutation(removeUserFromLeagueIfExists)
@@ -123,16 +122,24 @@ export const League = () => {
                   <Link
                     href={currentUser?.id === ul.user.id ? "/matches" : `/matches/${ul.user.id}`}
                   >
-                    <Text color={theme.colors.primary} _hover={{ textDecoration: "underline", cursor: "pointer" }}>
+                    <Text
+                      color={theme.colors.primary}
+                      _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                    >
                       {t("PREDICTION")}
                     </Text>
                   </Link>
                 </Td>
                 <Td>
                   <Link
-                    href={currentUser?.id === ul.user.id ? "/questions" : `/questions/${ul.user.id}`}
+                    href={
+                      currentUser?.id === ul.user.id ? "/questions" : `/questions/${ul.user.id}`
+                    }
                   >
-                    <Text color={theme.colors.primary} _hover={{ textDecoration: "underline", cursor: "pointer" }}>
+                    <Text
+                      color={theme.colors.primary}
+                      _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                    >
                       {t("QUESTIONS")}
                     </Text>
                   </Link>
