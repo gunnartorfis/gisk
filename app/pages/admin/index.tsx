@@ -1,5 +1,13 @@
-import { Box, Container, Flex, Image, useColorModeValue, useDisclosure } from "@chakra-ui/react"
-import { Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/table"
+import {
+  Box,
+  Container,
+  Flex,
+  Image,
+  useColorModeValue,
+  useDisclosure,
+  Text,
+} from "@chakra-ui/react"
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
 import { Match, Team } from "@prisma/client"
 import Layout from "app/core/layouts/Layout"
 import getMatchResults from "app/matches/queries/getMatchResults"
