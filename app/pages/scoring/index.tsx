@@ -1,5 +1,5 @@
-import { Box, Center, Flex } from "@chakra-ui/react"
-import { Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/table"
+import { Box, Center, Flex, Text } from "@chakra-ui/react"
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
 import Layout from "app/core/layouts/Layout"
 import { BlitzPage } from "blitz"
 import { Suspense } from "react"
