@@ -1,3 +1,4 @@
+import { calculateScoreForMatch } from "app/utils/calculateScore"
 import { resolver } from "blitz"
 import dayjs from "dayjs"
 import db, { Match, Team, UserLeagueMatch } from "db"
@@ -81,34 +82,3 @@ export default resolver.pipe(
     return matchesToReturn
   }
 )
-
-export const calculateScoreForMatch = (
-  match: Match & {
-    homeTeam: Team
-    awayTeam: Team
-  },
-  prediction: UserLeagueMatch
-): number => {
-  let score = 0
-
-  const { resultHome, resultAway } = match
-  if (resultHome !== null && resultAway !== null) {
-    if (resultHome === prediction.resultHome && resultAway === prediction.resultAway) {
-      score += 1
-    }
-
-    if (resultHome === resultAway && prediction.resultHome === prediction.resultAway) {
-      score += 1
-    } else {
-      const resultMatch = Math.sign(resultHome - resultAway)
-      const resultUser = Math.sign((prediction.resultHome ?? 0) - (prediction.resultAway ?? 0))
-      if (resultMatch === resultUser) {
-        score += 1
-      }
-    }
-
-    score *= match.scoreMultiplier ?? 1
-  }
-
-  return score
-}
