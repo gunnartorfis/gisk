@@ -8,6 +8,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react"
+import GoogleIcon from "app/icons/GoogleIcon"
 import Head from "next/head"
 import Link from "next/link"
 import { useTranslation } from "react-i18next"
@@ -45,9 +46,16 @@ export default function Welcome() {
             alignSelf={"center"}
             position={"relative"}
           >
-            <a href="/api/auth/facebook" className={styles.facebookButton}>
+            <a
+              href="/api/auth/facebook"
+              className={`${styles.loginButton} ${styles.facebookButton}`}
+            >
               <img src={"/fblogo.png"} className={styles.facebookLogo} />
               <span>Continue with Facebook</span>
+            </a>
+            <a href="/api/auth/google" className={`${styles.loginButton} ${styles.googleButton}`}>
+              <GoogleIcon size={30} />
+              <span className={styles.googleButtonText}>Continue with Google</span>
             </a>
             <Box>
               <Icon

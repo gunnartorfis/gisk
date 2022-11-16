@@ -77,5 +77,26 @@ export default passportAuth({
         }
       ),
     },
+    {
+      strategy: new GoogleStrategy(
+        {
+          clientID: process.env.GOOGLE_CLIENT_ID,
+          clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          callbackURL:
+            process.env.NODE_ENV === "production"
+              ? "https://gisk.app/api/auth/google/callback"
+              : "http://localhost:3000/api/auth/google/callback",
+          profileFields: ["id", "displayName", "name", "emails"],
+          scope: ["email", "https://www.googleapis.com/auth/userinfo.profile"],
+        },
+        async (_token, _tokenSecret, profile, done) => {
+          oauthHandler({
+            profile,
+            source: "google",
+            done,
+          })
+        }
+      ),
+    },
   ],
 })
