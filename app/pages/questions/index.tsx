@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  FormLabel,
-  Grid,
-  Select,
-  useColorModeValue
-} from "@chakra-ui/react"
+import { Box, Button, FormLabel, Grid, Select, useColorModeValue } from "@chakra-ui/react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useUserLocale from "app/core/hooks/useUserLocale"
 import Layout from "app/core/layouts/Layout"
@@ -20,21 +13,29 @@ import getMatches from "../../matches/queries/getMatches"
 import getPlayers from "../../matches/queries/getPlayers"
 
 export const MatchesList = () => {
-  const user = useCurrentUser();
+  const user = useCurrentUser()
   const [quizQuestions, { isLoading: isLoadingQuiz }] = useQuery(getQuizQuestions, {})
   const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
-  const [players] = useQuery(getPlayers, { useGoalies: false }, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 });
-  const [goalies] = useQuery(getPlayers, { useGoalies: true }, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 });
+  const [players] = useQuery(
+    getPlayers,
+    { useGoalies: false },
+    { enabled: !isLoadingQuiz || quizQuestions?.length > 0 }
+  )
+  const [goalies] = useQuery(
+    getPlayers,
+    { useGoalies: true },
+    { enabled: !isLoadingQuiz || quizQuestions?.length > 0 }
+  )
   const [matches] = useQuery(
     getMatches,
     {},
     {
       enabled: (user?.userLeague?.length ?? 0) > 0,
     }
-  );
+  )
 
-  const firstMatchKickoff = matches?.[0].kickOff;
-  const hasTournamentStarted = firstMatchKickoff && dayjs(new Date()).isAfter(firstMatchKickoff);
+  const firstMatchKickoff = matches?.[0].kickOff
+  const hasTournamentStarted = firstMatchKickoff && dayjs(new Date()).isAfter(firstMatchKickoff)
 
   const [updateQuizAnswerMutation] = useMutation(updateQuizAnswer)
   const { t, i18n } = useTranslation()
@@ -42,7 +43,6 @@ export const MatchesList = () => {
   useUserLocale(user)
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
   const questionsBg = useColorModeValue("white", "gray.700")
-
 
   // Need to disable questions when first match has started
   return (
@@ -57,33 +57,27 @@ export const MatchesList = () => {
           margin="0 auto"
           bg={questionsBg}
         >
-          <Grid
-            templateColumns={{ base: "auto", md: "auto auto" }}
-            gap={5}
-            justifyItems="start"
-          >
+          <Grid templateColumns={{ base: "auto", md: "auto auto" }} gap={5} justifyItems="start">
             {quizQuestions.map((question) => {
-              const localizedQuestion = question.translations.find((t) => t.language === i18n.language);
+              const localizedQuestion = question.translations.find(
+                (t) => t.language === i18n.language
+              )
 
               return (
                 <Box key={question.id}>
-                  <FormLabel>
-                    {localizedQuestion?.question}
-                  </FormLabel>
+                  <FormLabel>{localizedQuestion?.question}</FormLabel>
                   <Box>
                     <Select
                       id={question.id}
                       defaultValue={
-                        question.UserQuizQuestion.find(
-                          (uq) => uq.quizQuestionId === question.id
-                        )?.answer ?? "-1"
+                        question.UserQuizQuestion.find((uq) => uq.quizQuestionId === question.id)
+                          ?.answer ?? "-1"
                       }
                       disabled={hasTournamentStarted}
                       onChange={async () => {
                         const quizQuestionId = question.id
-                        const answer = (
-                          document.getElementById(question.id) as HTMLInputElement
-                        )?.value
+                        const answer = (document.getElementById(question.id) as HTMLInputElement)
+                          ?.value
 
                         updateQuizAnswerMutation({
                           quizQuestionId,
@@ -115,7 +109,7 @@ export const MatchesList = () => {
                           ))}
                         </>
                       )}
-                      {!localizedQuestion?.useGoalies && !localizedQuestion?.useGoalies &&
+                      {!localizedQuestion?.useGoalies && !localizedQuestion?.usePlayers && (
                         <>
                           <option disabled value="-1">
                             {t("SELECT_A_TEAM")}
@@ -126,7 +120,7 @@ export const MatchesList = () => {
                             </option>
                           ))}
                         </>
-                      }
+                      )}
                     </Select>
                   </Box>
                 </Box>
@@ -135,7 +129,8 @@ export const MatchesList = () => {
           </Grid>
         </Box>
       ) : null}
-    </Box>)
+    </Box>
+  )
 }
 
 const QuestionsPage: BlitzPage = () => {
