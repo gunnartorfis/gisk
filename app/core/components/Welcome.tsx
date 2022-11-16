@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next"
 import GradientTitle from "./GradientTitle"
 import styles from "./Welcome.module.css"
 import { Icon, createIcon } from "@chakra-ui/icons"
+import GoogleIcon from "app/icons/GoogleIcon"
 
 export default function Welcome() {
   const { t } = useTranslation()
@@ -36,9 +37,16 @@ export default function Welcome() {
             alignSelf={"center"}
             position={"relative"}
           >
-            <a href="/api/auth/facebook" className={styles.facebookButton}>
+            <a
+              href="/api/auth/facebook"
+              className={`${styles.loginButton} ${styles.facebookButton}`}
+            >
               <img src={"/fblogo.png"} className={styles.facebookLogo} />
               <span>Continue with Facebook</span>
+            </a>
+            <a href="/api/auth/google" className={`${styles.loginButton} ${styles.googleButton}`}>
+              <GoogleIcon size={30} />
+              <span className={styles.googleButtonText}>Continue with Google</span>
             </a>
             <Box>
               <Icon
@@ -48,7 +56,7 @@ export default function Welcome() {
                 position={"absolute"}
                 right={[0, -71]}
                 left={[71, "unset"]}
-                top={["90px", "20px"]}
+                top={["150px", "55px"]}
                 transform={["rotate(90deg)", "unset"]}
               />
               <Text
@@ -57,7 +65,7 @@ export default function Welcome() {
                 position={"absolute"}
                 right={[0, "-125px"]}
                 left={["40px", "unset"]}
-                top={["120px", "-15px"]}
+                top={["180px", "20px"]}
                 transform={["rotate(-20deg)", "rotate(10deg)"]}
               >
                 {t("WELCOME_FREE")}
