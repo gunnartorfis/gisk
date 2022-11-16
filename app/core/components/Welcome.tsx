@@ -5,9 +5,12 @@ import GradientTitle from "./GradientTitle"
 import styles from "./Welcome.module.css"
 import { Icon, createIcon } from "@chakra-ui/icons"
 import GoogleIcon from "app/icons/GoogleIcon"
+import { useRouter } from "next/stdlib"
 
 export default function Welcome() {
   const { t } = useTranslation()
+  const { asPath } = useRouter()
+
   return (
     <>
       <Head>
@@ -38,13 +41,16 @@ export default function Welcome() {
             position={"relative"}
           >
             <a
-              href="/api/auth/facebook"
+              href={`/api/auth/facebook?redirectUrl=${asPath}`}
               className={`${styles.loginButton} ${styles.facebookButton}`}
             >
               <img src={"/fblogo.png"} className={styles.facebookLogo} />
               <span>Continue with Facebook</span>
             </a>
-            <a href="/api/auth/google" className={`${styles.loginButton} ${styles.googleButton}`}>
+            <a
+              href={`/api/auth/google?redirectUrl=${asPath}`}
+              className={`${styles.loginButton} ${styles.googleButton}`}
+            >
               <GoogleIcon size={30} />
               <span className={styles.googleButtonText}>Continue with Google</span>
             </a>
