@@ -127,6 +127,18 @@ const scoreTests: {
     },
     expectedScore: 3,
   },
+  {
+    match: {
+      resultHome: 1,
+      resultAway: 0,
+      scoreMultiplier: 1,
+    },
+    prediction: {
+      resultHome: 2,
+      resultAway: 0,
+    },
+    expectedScore: 1,
+  },
 ]
 
 it("calculates scores for matches correctly", () => {
