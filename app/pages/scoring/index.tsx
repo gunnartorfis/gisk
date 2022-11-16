@@ -27,7 +27,7 @@ export const ScoringPage: BlitzPage = () => {
             </Tr>
             <Tr>
               <Td>{t("SCORING_RULE_2")}</Td>
-              <Td>2 {t("POINTS")}</Td>
+              <Td>3 {t("POINTS")}</Td>
             </Tr>
             <Tr>
               <Td>{t("SCORING_PER_CORRECT_QUESTION")}</Td>
