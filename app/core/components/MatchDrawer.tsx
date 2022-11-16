@@ -1,4 +1,4 @@
-import { useQuery } from "blitz"
+import { useQuery, useMutation } from "@blitzjs/rpc"
 import {
   Box,
   Drawer,
@@ -17,12 +17,11 @@ import createMatch from "app/matches/mutations/createMatch"
 import deleteMatch from "app/matches/mutations/deleteMatch"
 import updateMatch from "app/matches/mutations/updateMatch"
 import getTeams from "app/teams/queries/getTeams"
-import { useMutation } from "blitz"
 import React, { forwardRef, useRef } from "react"
 import DatePicker from "react-datepicker"
-import { MatchWithTeams } from "../../pages/adminMatches"
 import "react-datepicker/dist/react-datepicker.css"
 import { Button } from "@chakra-ui/button"
+import { MatchWithTeams } from "app/types/MatchWithTeams"
 
 const MatchDrawer: React.FunctionComponent<{
   isOpen: boolean

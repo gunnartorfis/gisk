@@ -1,5 +1,6 @@
+import { resolver } from "@blitzjs/rpc"
 import { calculateScoreForMatch } from "app/utils/calculateScore"
-import { resolver, NotFoundError } from "blitz"
+import { NotFoundError } from "blitz"
 import db from "db"
 import * as z from "zod"
 

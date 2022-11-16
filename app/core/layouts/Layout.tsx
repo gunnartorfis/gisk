@@ -1,6 +1,6 @@
+import Head from "next/head"
 import { Box } from "@chakra-ui/layout"
 import { useColorModeValue } from "@chakra-ui/react"
-import { Head } from "blitz"
 import React, { ReactNode, Suspense } from "react"
 import Header, { HeaderFallback } from "./Header"
 

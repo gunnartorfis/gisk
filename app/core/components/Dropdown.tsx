@@ -1,7 +1,6 @@
 import {
   Box,
-  ChakraComponent,
-  ChakraStyleProps,
+  ChakraProps,
   Flex,
   Link,
   ResponsiveValue,
@@ -15,7 +14,7 @@ import useOutsideAlerter from "../hooks/useOutsideAlerter"
 const Summary: React.FunctionComponent<
   {
     href?: string
-  } & ChakraStyleProps
+  } & ChakraProps
 > = ({ children, href, ...props }) => {
   if (href) {
     return (
@@ -109,7 +108,7 @@ const DropdownContext = createContext<{
 
 interface DropdownProps {
   onClickItemWithKey?: (key: string) => void
-  containerProps?: ChakraStyleProps
+  containerProps?: ChakraProps
 }
 const Dropdown: React.FunctionComponent<DropdownProps> & {
   Items: typeof Items

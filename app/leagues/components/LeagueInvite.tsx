@@ -1,3 +1,5 @@
+import { useRouter } from "next/router"
+import { invoke } from "@blitzjs/rpc"
 import {
   Box,
   Flex,
@@ -13,7 +15,6 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react"
-import { invoke, useRouter } from "blitz"
 import React from "react"
 import { useTranslation } from "react-i18next"
 import addUserToLeagueIfExists from "../mutations/addUserToLeagueIfExists"

@@ -1,9 +1,12 @@
-import { BlitzPage, Head, useRouter, useMutation, invoke } from "blitz"
 import React, { useEffect } from "react"
 import Layout from "../../core/layouts/Layout"
 import addUserToLeagueIfExists from "../../leagues/mutations/addUserToLeagueIfExists"
 import { Text } from "@chakra-ui/react"
 import { Spinner } from "@chakra-ui/spinner"
+import { BlitzPage } from "@blitzjs/next"
+import { useRouter } from "next/router"
+import { invoke } from "@blitzjs/rpc"
+import Head from "next/head"
 
 const InvitePage: BlitzPage = () => {
   const {
