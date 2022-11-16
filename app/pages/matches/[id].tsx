@@ -1,14 +1,8 @@
 import {
-  Alert,
-  AlertIcon,
   Box,
-  Button,
   Flex,
-  FormLabel,
-  Grid,
   Image,
   Input,
-  Select,
   Table,
   Tbody,
   Td,
@@ -23,8 +17,6 @@ import { Match, Team, UserLeagueMatch } from "@prisma/client"
 import Layout from "app/core/layouts/Layout"
 import updateResultForUser from "app/matches/mutations/updateResultForUser"
 import getQuizQuestions from "app/matches/queries/getQuizQuestions"
-import getTeams from "app/teams/queries/getTeams"
-import updateQuizAnswer from "app/users/mutations/updateQuizAnswers"
 import { BlitzPage, Head, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
 import "dayjs/locale/is"
@@ -40,15 +32,10 @@ export const MatchList = () => {
   const userId = router.query.id
   const user = useCurrentUser()
   const [matches, { isLoading }] = useQuery(getMatchesFromCompetitors, { userId })
-  const [quizQuestions, { isLoading: isLoadingQuiz }] = useQuery(getQuizQuestions, {})
-  const [teams] = useQuery(getTeams, {}, { enabled: !isLoadingQuiz || quizQuestions?.length > 0 })
-  const [updateQuizAnswerMutation, { isLoading: isSubmittingQuiz }] = useMutation(updateQuizAnswer)
-
   const toast = useToast()
   const tableBgColorMode = useColorModeValue("white", "gray.700")
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
-  const questionsBg = useColorModeValue("white", "gray.700")
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   useUserLocale(user)
 
@@ -57,7 +44,7 @@ export const MatchList = () => {
     return null
   }
 
-  if (isLoading || isLoadingQuiz) {
+  if (isLoading) {
     return null
   }
 
@@ -132,75 +119,14 @@ export const MatchList = () => {
 
   return (
     <Box pb="16px" bg={bgColorMode}>
-      {quizQuestions.length > 0 ? (
-        <details>
-          <summary>
-            <Alert bg={questionsBg} status="info">
-              <AlertIcon />
-              {t("QUIZ_ALERT")}
-            </Alert>
-          </summary>
-
-          <Box
-            padding="32px"
-            borderTop="1px"
-            borderBottom="1px"
-            borderColor="gray.200"
-            boxShadow="md"
-            margin="0 auto"
-            bg={questionsBg}
-          >
-            <Grid templateColumns={{ base: "auto", md: "auto auto" }} gap={5} justifyItems="start">
-              {quizQuestions.map((question) => {
-                return (
-                  <Box key={question.id}>
-                    <FormLabel>
-                      {question.translations.find((t) => t.language === i18n.language)?.question}
-                    </FormLabel>
-                    <Box>
-                      <Select
-                        id={question.id}
-                        defaultValue={
-                          question.UserQuizQuestion.find((uq) => uq.quizQuestionId === question.id)
-                            ?.answer ?? "-1"
-                        }
-                      >
-                        <option disabled value="-1">
-                          {t("SELECT_A_TEAM")}
-                        </option>
-                        {teams?.map((team) => (
-                          <option key={team.id} value={team.id}>
-                            {team.name}
-                          </option>
-                        ))}
-                      </Select>
-                      <Button
-                        disabled={isSubmittingQuiz}
-                        variant="text"
-                        onClick={async () => {
-                          const quizQuestionId = question.id
-                          const answer = (document.getElementById(question.id) as HTMLInputElement)
-                            ?.value
-
-                          updateQuizAnswerMutation({
-                            quizQuestionId,
-                            answer,
-                          })
-                        }}
-                      >
-                        {t("UPDATE")}
-                      </Button>
-                    </Box>
-                  </Box>
-                )
-              })}
-            </Grid>
-          </Box>
-        </details>
-      ) : null}
       <Text width="100%" textAlign="center" marginTop="8px">
         {t("MATCHES_TIMEZONE_INFO")}
       </Text>
+      {matches.length === 0 && (
+        <Text width="100%" textAlign="center" marginTop="8px">
+          {t("NO_MATCHES_DISPLAY")}
+        </Text>
+      )}
       {Object.keys(matchesByDate).map((date) => {
         const matchesForDay = matchesByDate[date]
         return (

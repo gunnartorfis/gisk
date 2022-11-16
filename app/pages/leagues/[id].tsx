@@ -7,14 +7,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Button,
-  IconButton,
   Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
+  useTheme,
   useToast,
 } from "@chakra-ui/react"
 import { UserLeague } from "@prisma/client"
@@ -27,8 +26,10 @@ import { BlitzPage, Head, Link, useMutation, useQuery, useRouter } from "blitz"
 import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import { FiStar } from "react-icons/fi"
+import { Button, IconButton } from "@chakra-ui/button"
 
 export const League = () => {
+  const theme = useTheme()
   const router = useRouter()
   const currentUser = useCurrentUser()
   const [removeUser, { isLoading: isRemovingUser }] = useMutation(removeUserFromLeagueIfExists)
@@ -72,7 +73,7 @@ export const League = () => {
 
   return (
     <>
-      <Flex direction="column">
+      <Flex direction="column" overflowX="scroll">
         <Box>
           <Flex direction="row" justifyContent="space-between" alignItems="center">
             <Box>
@@ -97,26 +98,51 @@ export const League = () => {
           <Thead>
             <Tr>
               <Th>{t("NAME")}</Th>
+              <Th>{t("SHOW_PREDICTED_MATCHES")}</Th>
+              <Th>{t("QUESTIONS")}</Th>
               <Th isNumeric>{t("SCORE")}</Th>
+
               {userIsLeagueAdmin ? <Th></Th> : null}
             </Tr>
           </Thead>
           <Tbody>
             {league.UserLeague.map((ul, i) => (
               <Tr key={ul.userId}>
-                <Td _hover={{ textDecoration: "underline" }}>
+                <Td>
                   <Flex direction="row" alignItems="center">
-                    <Link
-                      href={currentUser?.id === ul.user.id ? "/matches" : `/matches/${ul.user.id}`}
-                    >
-                      {ul.user.name}
-                    </Link>
+                    {ul.user.name}
                     {ul.role === "ADMIN" ? (
                       <Box ml="8px">
                         <FiStar />
                       </Box>
                     ) : null}
                   </Flex>
+                </Td>
+                <Td>
+                  <Link
+                    href={currentUser?.id === ul.user.id ? "/matches" : `/matches/${ul.user.id}`}
+                  >
+                    <Text
+                      color={theme.colors.primary}
+                      _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                    >
+                      {t("PREDICTION")}
+                    </Text>
+                  </Link>
+                </Td>
+                <Td>
+                  <Link
+                    href={
+                      currentUser?.id === ul.user.id ? "/questions" : `/questions/${ul.user.id}`
+                    }
+                  >
+                    <Text
+                      color={theme.colors.primary}
+                      _hover={{ textDecoration: "underline", cursor: "pointer" }}
+                    >
+                      {t("QUESTIONS")}
+                    </Text>
+                  </Link>
                 </Td>
                 <Td isNumeric>{ul.score}</Td>
                 {userIsLeagueAdmin ? (
@@ -234,7 +260,7 @@ const LeaguesPage: BlitzPage = () => {
         <title>League</title>
       </Head>
 
-      <Container paddingTop="16px">
+      <Container paddingTop="16px" maxW="75ch">
         <Suspense fallback={<div></div>}>
           <League />
         </Suspense>

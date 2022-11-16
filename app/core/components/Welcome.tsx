@@ -1,19 +1,10 @@
-import {
-  Box,
-  Button,
-  Container,
-  createIcon,
-  Icon,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react"
-import GoogleIcon from "app/icons/GoogleIcon"
+import { Box, Container, Stack, Text, useColorModeValue } from "@chakra-ui/react"
 import Head from "next/head"
-import Link from "next/link"
 import { useTranslation } from "react-i18next"
 import GradientTitle from "./GradientTitle"
 import styles from "./Welcome.module.css"
+import { Icon, createIcon } from "@chakra-ui/icons"
+import GoogleIcon from "app/icons/GoogleIcon"
 
 export default function Welcome() {
   const { t } = useTranslation()
@@ -65,7 +56,7 @@ export default function Welcome() {
                 position={"absolute"}
                 right={[0, -71]}
                 left={[71, "unset"]}
-                top={["90px", "20px"]}
+                top={["150px", "55px"]}
                 transform={["rotate(90deg)", "unset"]}
               />
               <Text
@@ -74,7 +65,7 @@ export default function Welcome() {
                 position={"absolute"}
                 right={[0, "-125px"]}
                 left={["40px", "unset"]}
-                top={["120px", "-15px"]}
+                top={["180px", "20px"]}
                 transform={["rotate(-20deg)", "rotate(10deg)"]}
               >
                 {t("WELCOME_FREE")}

@@ -1,7 +1,6 @@
 import { useQuery } from "blitz"
 import {
   Box,
-  Button,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -23,6 +22,7 @@ import React, { forwardRef, useRef } from "react"
 import DatePicker from "react-datepicker"
 import { MatchWithTeams } from "../../pages/adminMatches"
 import "react-datepicker/dist/react-datepicker.css"
+import { Button } from "@chakra-ui/button"
 
 const MatchDrawer: React.FunctionComponent<{
   isOpen: boolean

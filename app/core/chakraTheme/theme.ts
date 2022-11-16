@@ -6,7 +6,7 @@ const theme = extendTheme({
   components: {
     Button: ButtonTheme,
   },
-  colors: Colors,
+  colors: Colors
 })
 
 export default theme

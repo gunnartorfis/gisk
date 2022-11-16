@@ -1,4 +1,3 @@
-
 import { SecurePassword } from "blitz"
 import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat"
@@ -8,6 +7,8 @@ import db from "./index"
 import newMatches from "./newMatches";
 import groups from "./groups";
 import quizQuestions from "./quizQuestions"
+import players, { goalies } from "./players";
+
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
@@ -38,7 +39,6 @@ const seed = async () => {
 
   const matchCount = await db.match.count()
   if (matchCount === 0) {
-
         newMatches.forEach(async match => {
           try {
             await db.match.create({
@@ -56,7 +56,7 @@ const seed = async () => {
                 arena: match.venue,
                 // Not sure how important this is
                 round: `1`,
-                kickOff: match.datetime,
+                kickOff: match.datetime
               },
             })
           } catch (error) {}
@@ -85,7 +85,6 @@ const seed = async () => {
 
   const usersCount = await db.user.count()
   if (usersCount <= 1) {
-    // example@example gets generated from tests.
     const hashedPassword = await SecurePassword.hash(process.env.GISK_ADMIN_PASSWORD)
     await db.user.create({
       data: {
@@ -96,6 +95,24 @@ const seed = async () => {
         language: "en",
       },
     })
+  }
+
+  const playersCount = await db.player.count();
+
+  if(playersCount <= 0) {
+    await db.player.createMany({
+      data: players.map(player => ({
+        name: player,
+      }))
+   })
+
+   await db.player.createMany({
+    data: goalies.map(player => ({
+      name: player,
+      isGoalie: true
+    }))
+ })
+   
   }
 }
 

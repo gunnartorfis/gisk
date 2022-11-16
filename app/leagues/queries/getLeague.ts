@@ -34,7 +34,7 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
     },
   })
 
-  const usersInLeague = league?.UserLeague.map((ul) => ul.userId)
+  const usersInLeague = league?.UserLeague.map((ul) => ul.userId) ?? []
 
   const predictionsForUsers = await db.userLeagueMatch.findMany({
     where: {
@@ -45,6 +45,34 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
   })
 
   if (!league) throw new NotFoundError()
+
+  const questionsForUsers = await db.quizQuestion.findMany({
+    include: {
+      UserQuizQuestion: {
+        where: {
+          userId: {
+            in: usersInLeague,
+          },
+        },
+      },
+      translations: true,
+    },
+  })
+
+  const teams = await db.team.findMany()
+  const players = await db.player.findMany()
+  const getAnswer = (answerId?: string | null) =>
+    teams?.find((team) => team.id === answerId)?.name ||
+    players?.find((player) => player.id === answerId)?.name
+
+  const getQuestionScore = (userId: string) =>
+    questionsForUsers.reduce<number>((score, q) => {
+      const userAnswer = getAnswer(
+        q.UserQuizQuestion.filter((a) => a.userId === userId).find((u) => u.quizQuestionId === q.id)
+          ?.answer
+      )
+      return score + (q.answer === userAnswer ? 10 : 0)
+    }, 0)
 
   return {
     ...league,
@@ -61,7 +89,7 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
           }
 
           return prev
-        }, 0),
+        }, getQuestionScore(ul.userId)),
     })).sort((a, b) => b.score - a.score),
   }
 })
