@@ -1,5 +1,6 @@
 import { Box, Container, Flex, Text } from "@chakra-ui/layout"
-import { Table, Tbody, Td, Th, Thead, Tr, useTheme } from "@chakra-ui/react"
+import { useTheme } from "@chakra-ui/react"
+import { Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/table"
 import Layout from "app/core/layouts/Layout"
 import getTeams from "app/teams/queries/getTeams"
 import { BlitzPage, Head, Image, Link, useQuery } from "blitz"
