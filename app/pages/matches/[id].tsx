@@ -1,22 +1,8 @@
-import {
-  Box,
-  Flex,
-  Image,
-  Input,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  useColorModeValue,
-  useToast,
-} from "@chakra-ui/react"
+import { Box, Flex, Image, Input, useColorModeValue, useToast } from "@chakra-ui/react"
+import { Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/table"
 import { Match, Team, UserLeagueMatch } from "@prisma/client"
 import Layout from "app/core/layouts/Layout"
 import updateResultForUser from "app/matches/mutations/updateResultForUser"
-import getQuizQuestions from "app/matches/queries/getQuizQuestions"
 import { BlitzPage, Head, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"
 import "dayjs/locale/is"

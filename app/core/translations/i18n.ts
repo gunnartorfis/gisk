@@ -35,6 +35,7 @@ const resources = {
       POINTS: "points",
 
       INVITE_CODE_TO_LEAGUE: "Invite code to league",
+      INVITE_LINK_TO_LEAGUE: "Invite link to league",
       INVITE_CODE: "Invite code",
       SCORE: "points",
 
@@ -136,6 +137,7 @@ const resources = {
       POINTS: "stig",
 
       INVITE_CODE_TO_LEAGUE: "Boðskóði í deild",
+      INVITE_LINK_TO_LEAGUE: "Boðshlekkur í deild",
       INVITE_CODE: "Boðskóði",
       SCORE: "stig",
       REMOVE_USER_FROM_LEAGUE_MODAL_TITLE: "Fjarlægja notanda úr deild",

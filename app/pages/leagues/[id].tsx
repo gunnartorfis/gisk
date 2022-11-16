@@ -7,15 +7,10 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogOverlay,
-  Table,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
   useTheme,
   useToast,
 } from "@chakra-ui/react"
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
 import { UserLeague } from "@prisma/client"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import Layout from "app/core/layouts/Layout"
@@ -27,6 +22,10 @@ import React, { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import { FiStar } from "react-icons/fi"
 import { Button, IconButton } from "@chakra-ui/button"
+import { useClipboard } from "@chakra-ui/react"
+import { CopyIcon } from "@chakra-ui/icons"
+
+const BASEURL = process.env.NODE_ENV === "production" ? "https://gisk.app" : "http://localhost:3000"
 
 export const League = () => {
   const theme = useTheme()
@@ -41,6 +40,7 @@ export const League = () => {
   })
   const toast = useToast()
   const { t } = useTranslation()
+  const { onCopy } = useClipboard(`${BASEURL}/invite/${league.inviteCode}`)
 
   const [deleteModalIsOpen, setDeleteModalIsOpen] = React.useState(false)
   const onCloseDeleteModal = () => setDeleteModalIsOpen(false)
@@ -81,7 +81,12 @@ export const League = () => {
                 {league.name}
               </Text>
               <Text fontSize="xl">
-                {t("INVITE_CODE_TO_LEAGUE")}: <strong>{league.inviteCode}</strong>
+                {t("INVITE_CODE_TO_LEAGUE")}: <strong>{league.inviteCode}</strong>{" "}
+                <CopyIcon
+                  _hover={{ cursor: "pointer" }}
+                  onClick={onCopy}
+                  title={t("INVITE_LINK_TO_LEAGUE")}
+                />
               </Text>
             </Box>
             {userIsLeagueAdmin ? (

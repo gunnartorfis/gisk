@@ -9,16 +9,11 @@ import {
   Box,
   Flex,
   Input,
-  Table,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react"
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
 import { Button } from "@chakra-ui/button"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useUserLocale from "app/core/hooks/useUserLocale"
@@ -26,7 +21,6 @@ import Layout from "app/core/layouts/Layout"
 import ArrowPath from "app/icons/ArrowPath"
 import updateResultForUser from "app/matches/mutations/updateResultForUser"
 import getMatches, { MatchWithScore } from "app/matches/queries/getMatches"
-import getQuizQuestions from "app/matches/queries/getQuizQuestions"
 import randomGeneratePredictionsMutation from "app/users/mutations/randomGeneratePredictions"
 import { BlitzPage, Head, Image, invoke, useMutation, useQuery, useRouter } from "blitz"
 import dayjs from "dayjs"

@@ -1,5 +1,5 @@
 import { Flex, Text } from "@chakra-ui/layout"
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react"
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
 import Layout from "app/core/layouts/Layout"
 import getTeam from "app/teams/queries/getTeam"
 import { BlitzPage, Head, useQuery, useRouter } from "blitz"
@@ -11,21 +11,6 @@ export const TeamDetails = () => {
   const [team] = useQuery(getTeam, {
     name: router.query.name as string,
   })
-
-  // const matches = [
-  //   ...team.homeMatches.map((m) => ({
-  //     ...m,
-  //     isHome: true,
-  //   })),
-  //   ...team.awayMatches.map((m) => ({
-  //     ...m,
-  //     isHome: false,
-  //   })),
-  // ].sort((a, b) => {
-  //   if (a.kickOff > b.kickOff) return -1
-  //   if (a.kickOff < b.kickOff) return 1
-  //   return 0
-  // })
 
   return (
     <Flex direction="column" wrap="wrap">
