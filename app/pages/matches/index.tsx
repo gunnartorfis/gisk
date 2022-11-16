@@ -9,16 +9,11 @@ import {
   Box,
   Flex,
   Input,
-  Table,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react"
+import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
 import { Button } from "@chakra-ui/button"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useUserLocale from "app/core/hooks/useUserLocale"
