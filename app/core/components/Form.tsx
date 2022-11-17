@@ -63,6 +63,7 @@ export function Form<S extends z.ZodType<any, any>>({
               </Box>
             ) : null}
 
+            {/* eslint-disable-next-line react/no-unknown-property */}
             <style global jsx>{`
               .form > * + * {
                 margin-top: 1rem;

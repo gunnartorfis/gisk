@@ -37,6 +37,7 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
           </div>
         )}
 
+        {/*eslint-disable-next-line react/no-unknown-property*/}
         <style jsx>{`
           label {
             display: flex;

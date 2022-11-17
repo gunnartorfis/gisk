@@ -1,1 +1,6 @@
-module.exports = require("@blitzjs/next/eslint")
+module.exports = {
+  extends: ["blitz"],
+  rules: {
+    "@typescript-eslint/no-floating-promises": "off",
+  },
+}
