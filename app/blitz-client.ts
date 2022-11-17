@@ -3,7 +3,7 @@ import { setupBlitzClient } from "@blitzjs/next"
 import { BlitzRpcPlugin } from "@blitzjs/rpc"
 
 export const authConfig = {
-  cookiePrefix: "myAppName",
+  cookiePrefix: "gisk",
 }
 
 export const { withBlitz } = setupBlitzClient({
