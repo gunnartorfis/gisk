@@ -17,10 +17,12 @@ export const TeamsList = () => {
   const { t } = useTranslation()
   const theme = useTheme()
   const groups = Array.from(new Set(teams.map((t) => t.group)))
-  const teamsByGroups = groups.map((group) => ({
-    group,
-    teams: teams.filter((t) => t.group === group),
-  }))
+  const teamsByGroups = groups
+    .map((group) => ({
+      group,
+      teams: teams.filter((t) => t.group === group),
+    }))
+    .sort((firstGroup, secondGroup) => firstGroup.group.localeCompare(secondGroup.group))
 
   return (
     <Flex

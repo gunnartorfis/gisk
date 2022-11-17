@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
-import Layout from "../../core/layouts/Layout"
-import addUserToLeagueIfExists from "../../leagues/mutations/addUserToLeagueIfExists"
+import Layout from "../../app/core/layouts/Layout"
+import addUserToLeagueIfExists from "../../app/leagues/mutations/addUserToLeagueIfExists"
 import { Text } from "@chakra-ui/react"
 import { Spinner } from "@chakra-ui/spinner"
 import { BlitzPage } from "@blitzjs/next"
@@ -22,14 +22,14 @@ const InvitePage: BlitzPage = () => {
           const league = await invoke(addUserToLeagueIfExists, {
             inviteCode: id,
           })
-          push(`/leagues/${league.id}`)
+          await push(`/leagues/${league.id}`)
         }
       } catch {
         setError("League not found")
       }
     }
 
-    addUserToLeague()
+    addUserToLeague().catch((_) => setError("League not found"))
   }, [id, push])
 
   return (

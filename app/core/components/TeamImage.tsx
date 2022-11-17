@@ -12,7 +12,7 @@ interface TeamImageProps {
 const TeamImage: React.FC<TeamImageProps> = ({ team, size = 30 }) => {
   const breakpoint = useBreakpoint()
   const shouldDisplaySmall = ["base", "sm"].includes(breakpoint)
-  console.log(breakpoint)
+
   return (
     <Box
       className={styles.teamImageContainer}
