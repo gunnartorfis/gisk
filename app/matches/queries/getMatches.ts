@@ -1,5 +1,5 @@
+import { resolver } from "@blitzjs/rpc"
 import { calculateScoreForMatch } from "app/utils/calculateScore"
-import { resolver } from "blitz"
 import dayjs from "dayjs"
 import db, { Match, Team, UserLeagueMatch } from "db"
 import * as z from "zod"
@@ -8,8 +8,8 @@ export type MatchWithScore = (Match & {
   homeTeam: Team
   awayTeam: Team
 }) & {
-  userPredictionHome?: number | null
-  userPredictionAway?: number | null
+  userPredictionHome: number | null | undefined
+  userPredictionAway: number | null | undefined
   score?: number
 }
 
@@ -75,6 +75,8 @@ export default resolver.pipe(
         matchesToReturn.push({
           ...match,
           score: 0,
+          userPredictionAway: undefined,
+          userPredictionHome: undefined,
         })
       }
     })

@@ -1,4 +1,4 @@
-import { resolver } from "blitz"
+import { resolver } from "@blitzjs/rpc"
 import dayjs from "dayjs"
 import db from "db"
 
@@ -41,7 +41,7 @@ export default resolver.pipe(resolver.authorize(), async (input, ctx) => {
         resultHome: 0,
         match: {
           connect: {
-            id: missingMatch.id,
+            id: missingMatch?.id,
           },
         },
         user: {

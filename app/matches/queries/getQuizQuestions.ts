@@ -1,5 +1,5 @@
+import { resolver } from "@blitzjs/rpc"
 import { z } from "zod"
-import { resolver } from "blitz"
 import db from "db"
 
 const GetQuizQuestionsInput = z.object({

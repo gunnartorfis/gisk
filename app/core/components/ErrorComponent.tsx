@@ -1,4 +1,4 @@
-import { ErrorComponent as DefaultErrorComponent } from "blitz"
+import { ErrorComponent as DefaultErrorComponent } from "@blitzjs/next"
 import Sentry from "integrations/sentry"
 
 type ExtraProps = {

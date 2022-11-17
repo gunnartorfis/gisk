@@ -43,24 +43,24 @@ const quizQuestions = [
     {
       language: "en",
       question: "Which player will be the top scorer?",
-      usePlayers: true
+      usePlayers: true,
     },
     {
       language: "is",
       question: "Hvaða leikmaður skorar flest mörk?",
-      usePlayers: true
+      usePlayers: true,
     },
   ],
   [
     {
       language: "en",
       question: "Which goalkeeper will win the golden glove?",
-      useGoalies: true
+      useGoalies: true,
     },
     {
       language: "is",
       question: "Hvaða markmaður fær gullna hanskann?",
-      useGoalies: true
+      useGoalies: true,
     },
   ],
 ]

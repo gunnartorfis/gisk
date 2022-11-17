@@ -1,4 +1,4 @@
-import { Ctx, resolver } from "blitz"
+import { Ctx } from "blitz"
 import dayjs from "dayjs"
 import db from "db"
 
@@ -47,7 +47,7 @@ const randomGeneratePredictions = async (_, ctx: Ctx) => {
         },
         match: {
           connect: {
-            id: unpredictedMatch.id,
+            id: unpredictedMatch?.id,
           },
         },
         resultHome: randomHome,

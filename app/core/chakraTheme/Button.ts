@@ -44,6 +44,10 @@ const ButtonTheme = {
         bg: "dangerdarker",
       },
     },
+    icon: {
+      bg: "transparent",
+      color: "white",
+    },
   },
   // The default size and variant values
   defaultProps: {

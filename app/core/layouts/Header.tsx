@@ -1,3 +1,6 @@
+import { useSession } from "@blitzjs/auth"
+import { useRouter } from "next/router"
+import { useMutation, useQuery } from "@blitzjs/rpc"
 import {
   AddIcon,
   ChevronDownIcon,
@@ -23,7 +26,6 @@ import logout from "app/auth/mutations/logout"
 import { LeagueInviteModal } from "app/leagues/components/LeagueInvite"
 import getLeagues from "app/leagues/queries/getLeagues"
 import updateUserLanguage from "app/users/mutations/updateUserLanguage"
-import { useMutation, useQuery, useRouter, useSession } from "blitz"
 import dayjs from "dayjs"
 import { Suspense, useEffect } from "react"
 import { useTranslation } from "react-i18next"
@@ -144,7 +146,6 @@ const useNavItems = ({
       label: t("SCORING"),
       href: "/scoring",
     },
-
   ]
 
   if (user?.role === "ADMIN") {
