@@ -1,23 +1,23 @@
 name: Update scores cronjob
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: "0 * * * *"
 
 jobs:
   update-scores:
     runs-on: ubuntu-latest
-    name: 
+    name:
     steps:
       - uses: actions/checkout@v3
 
       - name: Use Node.js 15
         uses: actions/setup-node@v3
         with:
-          node-version: 15
+          node-version: 16
 
       - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
