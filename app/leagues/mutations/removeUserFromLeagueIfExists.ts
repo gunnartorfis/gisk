@@ -27,23 +27,26 @@ const removeUserFromLeagueIfExists = resolver.pipe(
       throw new Error()
     }
 
-    const updatedLeague = await db.league.update({
-      where: {
-        id: leagueId,
-      },
-      data: {
-        UserLeague: {
-          delete: {
-            userId_leagueId: {
-              leagueId: leagueId,
-              userId: userIdToDelete,
+    try {
+      const updatedLeague = await db.league.update({
+        where: {
+          id: leagueId,
+        },
+        data: {
+          UserLeague: {
+            delete: {
+              userId_leagueId: {
+                leagueId: leagueId,
+                userId: userIdToDelete,
+              },
             },
           },
         },
-      },
-    })
-
-    return updatedLeague
+      })
+      return updatedLeague
+    } catch (error) {
+      console.error("Error deleting league", error)
+    }
   }
 )
 
