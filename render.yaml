@@ -2,9 +2,7 @@ services:
   - type: web
     name: gisk
     env: node
-    plan: starter
-    buildCommand:
-      yarn --frozen-lockfile --prod=false &&
+    buildCommand: yarn --frozen-lockfile --prod=false &&
       blitz prisma generate &&
       blitz build &&
       blitz prisma migrate deploy
@@ -23,4 +21,3 @@ services:
 
 databases:
   - name: gisk-db
-    plan: starter
