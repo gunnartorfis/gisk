@@ -1,6 +1,7 @@
 import { resolver } from "@blitzjs/rpc"
 import { calculateScoreForMatch } from "app/utils/calculateScore"
 import { NotFoundError } from "blitz"
+import dayjs from "dayjs"
 import db, { UserLeagueMatch } from "db"
 import * as z from "zod"
 
@@ -90,7 +91,7 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
               const match = matches.find((m) => m.id === prediction.matchId)
 
               if (match) {
-                const score = calculateScoreForMatch(match, prediction)
+                const score = calculateScoreForMatch(match, prediction, ul.user)
                 return prev + score
               }
 
