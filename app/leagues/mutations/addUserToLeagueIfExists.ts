@@ -18,28 +18,33 @@ const addUserToLeagueIfExists = resolver.pipe(
         inviteCode,
       },
     })
+
     if (!league) {
       throw new NotFoundError()
     }
 
-    const updatedLeague = await db.league.update({
-      where: {
-        inviteCode,
-      },
-      data: {
-        UserLeague: {
-          create: {
-            user: {
-              connect: {
-                id: userId,
+    try {
+      const updatedLeague = await db.league.update({
+        where: {
+          inviteCode,
+        },
+        data: {
+          UserLeague: {
+            create: {
+              user: {
+                connect: {
+                  id: userId,
+                },
               },
             },
           },
         },
-      },
-    })
+      })
 
-    return updatedLeague
+      return updatedLeague
+    } catch (error) {
+      console.error("Error adding user to league", error)
+    }
   }
 )
 
