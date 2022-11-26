@@ -1,7 +1,7 @@
 import { resolver } from "@blitzjs/rpc"
 import { calculateScoreForMatch } from "app/utils/calculateScore"
 import { NotFoundError } from "blitz"
-import db from "db"
+import db, { UserLeagueMatch } from "db"
 import * as z from "zod"
 
 const GetLeague = z.object({
@@ -75,22 +75,27 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
       return score + (q.answer === userAnswer ? 10 : 0)
     }, 0)
 
+  const isInactiveUser = (matches: UserLeagueMatch[]) =>
+    matches.every((match) => match.createdAt === match.updatedAt)
+
   return {
     ...league,
     UserLeague: league.UserLeague.map((ul) => ({
       ...ul,
-      score: predictionsForUsers
-        .filter((p) => p.userId === ul.userId)
-        .reduce((prev, prediction) => {
-          const match = matches.find((m) => m.id === prediction.matchId)
+      score: isInactiveUser(predictionsForUsers.filter((p) => p.userId === ul.userId))
+        ? 0
+        : predictionsForUsers
+            .filter((p) => p.userId === ul.userId)
+            .reduce((prev, prediction) => {
+              const match = matches.find((m) => m.id === prediction.matchId)
 
-          if (match) {
-            const score = calculateScoreForMatch(match, prediction)
-            return prev + score
-          }
+              if (match) {
+                const score = calculateScoreForMatch(match, prediction)
+                return prev + score
+              }
 
-          return prev
-        }, getQuestionScore(ul.userId)),
+              return prev
+            }, getQuestionScore(ul.userId)),
     })).sort((a, b) => b.score - a.score),
   }
 })
