@@ -14,21 +14,39 @@ export default resolver.pipe(
     const userLeagueMatches = await db.user.findMany({
       include: {
         userLeagueMatches: {
-          include: {
-            match: true,
+          select: {
+            resultAway: true,
+            resultHome: true,
+            matchId: true,
           },
         },
       },
     })
 
+    const matches = await db.match.findMany()
+
     const usersWithScore = userLeagueMatches.map((user) => {
       const userLeagueMatches = user.userLeagueMatches
 
       const score = userLeagueMatches.reduce((acc, userLeagueMatch) => {
-        const score = calculateScoreForMatch(userLeagueMatch.match, {
-          resultHome: userLeagueMatch.resultHome,
-          resultAway: userLeagueMatch.resultAway,
-        })
+        const match = matches.find((match) => (match.id = userLeagueMatch.matchId))
+
+        if (!match) {
+          return acc
+        }
+
+        const score = calculateScoreForMatch(
+          {
+            kickOff: match.kickOff,
+            resultAway: match?.resultAway,
+            resultHome: match?.resultHome,
+            scoreMultiplier: match.scoreMultiplier,
+          },
+          {
+            resultHome: userLeagueMatch.resultHome,
+            resultAway: userLeagueMatch.resultAway,
+          }
+        )
 
         return acc + score
       }, 0)
@@ -40,7 +58,6 @@ export default resolver.pipe(
     })
 
     const sortedUsers = usersWithScore.sort((a, b) => b.score - a.score).slice(0, 20)
-
     return sortedUsers
   }
 )
