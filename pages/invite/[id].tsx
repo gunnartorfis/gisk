@@ -22,7 +22,12 @@ const InvitePage: BlitzPage = () => {
           const league = await invoke(addUserToLeagueIfExists, {
             inviteCode: id,
           })
-          await push(`/leagues/${league.id}`)
+
+          if (league) {
+            await push(`/leagues/${league.id}`)
+          } else {
+            setError("League not found")
+          }
         }
       } catch {
         setError("League not found")
