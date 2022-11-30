@@ -7,7 +7,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-js",
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
 }
 
 model User {
@@ -84,8 +85,8 @@ model QuizQuestionTranslation {
   language       String
   question       String
   answer         String?
-  usePlayers     Boolean  @default(false)
-  useGoalies     Boolean  @default(false)
+  usePlayers     Boolean      @default(false)
+  useGoalies     Boolean      @default(false)
   quizQuestion   QuizQuestion @relation(fields: [quizQuestionId], references: [id])
   quizQuestionId String       @db.Uuid
 }
@@ -111,31 +112,31 @@ model League {
 }
 
 model Team {
-  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt             DateTime @default(now())
-  updatedAt             DateTime @updatedAt
-  name                  String   @unique
-  countryCode           String   @unique
-  group                 String
-  homeMatches           Match[]  @relation("homeMatches")
-  awayMatches           Match[]  @relation("awayMatches")
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  name        String   @unique
+  countryCode String   @unique
+  group       String
+  homeMatches Match[]  @relation("homeMatches")
+  awayMatches Match[]  @relation("awayMatches")
 }
 
 model Match {
-  id                String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @updatedAt
-  homeTeam          Team             @relation("homeMatches", fields: [homeTeamId], references: [id])
-  homeTeamId        String           @db.Uuid
-  awayTeam          Team             @relation("awayMatches", fields: [awayTeamId], references: [id])
-  awayTeamId        String           @db.Uuid
+  id                String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  homeTeam          Team              @relation("homeMatches", fields: [homeTeamId], references: [id])
+  homeTeamId        String            @db.Uuid
+  awayTeam          Team              @relation("awayMatches", fields: [awayTeamId], references: [id])
+  awayTeamId        String            @db.Uuid
   kickOff           DateTime
   resultHome        Int?
   resultAway        Int?
   round             String
   arena             String
   userLeagueMatches UserLeagueMatch[]
-  scoreMultiplier   Float?           @default(1)
+  scoreMultiplier   Float?            @default(1)
 
   @@unique([homeTeamId, awayTeamId, kickOff])
 }
@@ -155,9 +156,9 @@ model UserLeagueMatch {
 }
 
 model Player {
-  id                  String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                  String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                String
-  isGoalie            Boolean  @default(false)
-  isTopScorer         Boolean  @default(false)
-  isGoldenGloveWinner Boolean  @default(false)
+  isGoalie            Boolean @default(false)
+  isTopScorer         Boolean @default(false)
+  isGoldenGloveWinner Boolean @default(false)
 }
