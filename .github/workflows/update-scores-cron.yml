@@ -1,12 +1,12 @@
 name: Update scores cronjob
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: "0 * * * *"
 
 jobs:
   update-scores:
-    runs-on: ubuntu-latest
-    name: 
+    runs-on: ubuntu-22.04.05
+    name:
     steps:
       - uses: actions/checkout@v3
 
@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/cache@v3
         with:
-          path: '**/node_modules'
+          path: "**/node_modules"
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install dependencies
