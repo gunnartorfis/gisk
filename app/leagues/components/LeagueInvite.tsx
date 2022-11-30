@@ -85,7 +85,11 @@ export const LeagueInviteModal = ({
                         const league = await invoke(addUserToLeagueIfExists, {
                           inviteCode: newInviteCode,
                         })
-                        router.push(`/leagues/${league.id}`)
+                        if (league) {
+                          router.push(`/leagues/${league.id}`)
+                        } else {
+                          setError("League not found")
+                        }
                         _onClose()
                       } catch (error) {
                         setError("League not found")

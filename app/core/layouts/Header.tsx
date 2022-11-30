@@ -146,6 +146,10 @@ const useNavItems = ({
       label: t("SCORING"),
       href: "/scoring",
     },
+    {
+      label: t("LEADERBOARDS_TITLE"),
+      href: "/leaderboards",
+    },
   ]
 
   if (user?.role === "ADMIN") {

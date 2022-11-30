@@ -21,7 +21,7 @@ import { MatchesForDay } from "./matches"
 export const CORRECT_RESULT = "correct_result"
 export const CORRECT_SCORE = "correct_score"
 
-const date = new Date()
+const date = dayjs().set("hour", 0).set("minutes", 0).toDate()
 
 const Dashboard = () => {
   const currentUser = useCurrentUser()

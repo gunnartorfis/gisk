@@ -35,16 +35,20 @@ const deleteLeague = resolver.pipe(
       throw new Error("Only admins can delete a league.")
     }
 
-    const updatedLeague = await db.league.update({
-      where: {
-        id: leagueId,
-      },
-      data: {
-        deletedAt: new Date(),
-      },
-    })
+    try {
+      const updatedLeague = await db.league.update({
+        where: {
+          id: leagueId,
+        },
+        data: {
+          deletedAt: new Date(),
+        },
+      })
+    } catch (error) {
+      console.error("Error deleting league", error)
+    }
 
-    return updatedLeague
+    return undefined
   }
 )
 

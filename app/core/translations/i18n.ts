@@ -100,6 +100,9 @@ const resources = {
       NO_LEAGUE_WARNING_TITLE: "You are not part of any league yet",
       NO_LEAGUE_WARNING_DESCRIPTION: "Create a league or join one to start playing",
       NO_MATCHES_DISPLAY: "You can view predicitons from others after game has started",
+      LEADERBOARDS_TITLE: "Leaderboards",
+      LEADERBOARDS_NAME: "Name",
+      LEADERBOARDS_POINTS: "Points",
     },
   },
   is: {
@@ -197,6 +200,9 @@ const resources = {
 
       NO_LEAGUE_WARNING_TITLE: "Þú ert ekki í neinni deild",
       NO_LEAGUE_WARNING_DESCRIPTION: "Búðu til eða skrá þig í deild til að taka þátt",
+      LEADERBOARDS_TITLE: "Stigahæstu giskarar",
+      LEADERBOARDS_NAME: "Nafn",
+      LEADERBOARDS_POINTS: "Stig",
     },
   },
 }

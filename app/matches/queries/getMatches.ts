@@ -1,7 +1,7 @@
 import { resolver } from "@blitzjs/rpc"
 import { calculateScoreForMatch } from "app/utils/calculateScore"
 import dayjs from "dayjs"
-import db, { Match, Team, UserLeagueMatch } from "db"
+import db, { Match, Team, User, UserLeagueMatch } from "db"
 import * as z from "zod"
 
 export type MatchWithScore = (Match & {
@@ -33,6 +33,8 @@ export default resolver.pipe(
         user: { id: userId },
       },
     })
+
+    const user = await db.user.findFirst({ where: { id: userId } })
 
     const allMatches = await db.match.findMany({
       where: date
@@ -68,7 +70,7 @@ export default resolver.pipe(
             ...match,
             userPredictionHome: userLeagueMatch.resultHome,
             userPredictionAway: userLeagueMatch.resultAway,
-            score: calculateScoreForMatch(match, userLeagueMatch),
+            score: calculateScoreForMatch(match, userLeagueMatch, user),
           })
         }
       } else {

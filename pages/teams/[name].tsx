@@ -15,6 +15,8 @@ import React from "react"
 import { calculateScoreForMatch } from "app/utils/calculateScore"
 import Image from "next/image"
 import TeamImage from "app/core/components/TeamImage"
+import { useCurrentUser } from "../../app/core/hooks/useCurrentUser"
+import { User } from "@prisma/client"
 
 export const TeamDetails = () => {
   const router = useRouter()
@@ -27,6 +29,8 @@ export const TeamDetails = () => {
 
   const homeMatches = team.homeMatches
   const awayMatches = team.awayMatches
+
+  const user = useCurrentUser()
 
   const matchesByDate = React.useMemo(() => {
     const matches: MatchWithScore[] = [...team.homeMatches, ...team.awayMatches].map((match) => {
@@ -42,11 +46,13 @@ export const TeamDetails = () => {
             resultHome: match.resultHome,
             resultAway: match.resultAway,
             scoreMultiplier: match.scoreMultiplier,
+            kickOff: match.kickOff,
           },
           {
             resultHome: userLeagueMatch?.resultHome ?? null,
             resultAway: userLeagueMatch?.resultAway ?? null,
-          }
+          },
+          user
         ),
       }
     })

@@ -12,6 +12,7 @@ const scoreTests: {
       resultHome: 1,
       resultAway: 0,
       scoreMultiplier: 1,
+      kickOff: new Date(),
     },
     prediction: {
       resultHome: 1,
@@ -24,6 +25,7 @@ const scoreTests: {
       resultHome: 1,
       resultAway: 0,
       scoreMultiplier: 3,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 1,
@@ -36,6 +38,7 @@ const scoreTests: {
       resultHome: 1,
       resultAway: 0,
       scoreMultiplier: 2.5,
+      kickOff: new Date(),
     },
     prediction: {
       resultHome: 1,
@@ -48,6 +51,7 @@ const scoreTests: {
       resultHome: 0,
       resultAway: 0,
       scoreMultiplier: 1,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 0,
@@ -60,6 +64,7 @@ const scoreTests: {
       resultHome: 1,
       resultAway: 0,
       scoreMultiplier: 1,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 2,
@@ -72,6 +77,7 @@ const scoreTests: {
       resultHome: 2,
       resultAway: 0,
       scoreMultiplier: 1,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 1,
@@ -84,6 +90,7 @@ const scoreTests: {
       resultHome: 2,
       resultAway: 0,
       scoreMultiplier: 2,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 1,
@@ -96,6 +103,7 @@ const scoreTests: {
       resultHome: 0,
       resultAway: 2,
       scoreMultiplier: 1,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 1,
@@ -108,6 +116,7 @@ const scoreTests: {
       resultHome: 2,
       resultAway: 2,
       scoreMultiplier: 1,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 2,
@@ -120,6 +129,7 @@ const scoreTests: {
       resultHome: 0,
       resultAway: 2,
       scoreMultiplier: 1,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 0,
@@ -132,6 +142,7 @@ const scoreTests: {
       resultHome: 1,
       resultAway: 0,
       scoreMultiplier: 1,
+      kickOff: new Date("2022-26-11"),
     },
     prediction: {
       resultHome: 2,
@@ -143,7 +154,7 @@ const scoreTests: {
 
 it("calculates scores for matches correctly", () => {
   scoreTests.forEach(({ match, prediction, expectedScore }) => {
-    expect(calculateScoreForMatch(match, prediction)).toEqual(expectedScore)
+    expect(calculateScoreForMatch(match, prediction, null)).toEqual(expectedScore)
   })
 })
 
