@@ -6,7 +6,7 @@ on:
 jobs:
   update-scores:
     runs-on: ubuntu-22.04.05
-    name:
+    name: Update scores
     steps:
       - uses: actions/checkout@v3
 
