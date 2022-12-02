@@ -41,12 +41,12 @@ const MatchDrawer: React.FunctionComponent<{
   const [deleteMutation, { isLoading: isLoadingDelete }] = useMutation(deleteMatch)
   const [createMutation, { isLoading: isLoadingCreate }] = useMutation(createMatch)
 
-  const [kickOff, setKickOff] = React.useState<any>()
   const homeTeamRef = useRef<any>()
   const awayTeamRef = useRef<any>()
   const homeResultRef = useRef<any>()
   const awayResultRef = useRef<any>()
   const scoreMultiplierRef = useRef<any>()
+  const dateRef = useRef<any>()
 
   if (isLoading || !teams) {
     return null
@@ -120,26 +120,7 @@ const MatchDrawer: React.FunctionComponent<{
                 </Box>
                 <Box>
                   <FormLabel htmlFor="owner">Kickoff</FormLabel>
-                  <DatePicker
-                    customInput={<DatePickerInput />}
-                    selected={kickOff ?? match?.kickOff ?? new Date()}
-                    dateFormat="dd. MMMM yyyy HH:mm"
-                    onChange={(date) => setKickOff(date)}
-                    showTimeSelect
-                    popperClassName="match-drawer"
-                    popperPlacement="left-end"
-                    popperModifiers={{
-                      offset: {
-                        enabled: true,
-                        offset: "5px, 10px",
-                      },
-                      preventOverflow: {
-                        enabled: true,
-                        escapeWithReference: false,
-                        boundariesElement: "viewport",
-                      },
-                    }}
-                  />
+                  <input type="datetime-local" ref={dateRef} />
                 </Box>
                 {match ? (
                   <Box>
@@ -175,6 +156,8 @@ const MatchDrawer: React.FunctionComponent<{
               <Button
                 disabled={isSubmitting}
                 onClick={async () => {
+                  const kickOff = new Date(dateRef.current.value)
+
                   const homeResult = homeResultRef.current.value
                   const awayResult = awayResultRef.current.value
                   const newMatch = {
