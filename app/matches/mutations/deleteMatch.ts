@@ -1,4 +1,5 @@
 import { resolver } from "@blitzjs/rpc"
+import { assert } from "blitz"
 import db from "db"
 import * as z from "zod"
 
@@ -10,9 +11,7 @@ const deleteMatch = resolver.pipe(
   resolver.zod(DeleteMatch),
   resolver.authorize(),
   async (input, ctx) => {
-    if (ctx.session.role !== "ADMIN") {
-      throw new Error()
-    }
+    assert(ctx.session.$isAuthorized("ADMIN"), "You must an admin to perform this action")
 
     const { id } = input
 
