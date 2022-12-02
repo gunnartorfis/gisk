@@ -20,6 +20,8 @@ import { Match, Team } from "@prisma/client"
 import Layout from "app/core/layouts/Layout"
 import getAllLeagues from "app/leagues/queries/getAllLeagues"
 import { Suspense } from "react"
+import { GetServerSideProps } from "next"
+import { assert } from "blitz"
 
 export type MatchWithTeams = Match & {
   homeTeam: Team
@@ -67,21 +69,19 @@ export const AdminList = () => {
                   <Th pl={[0, "1.5rem"]} pr={[0, "1.5rem"]} textAlign="center">
                     Deild
                   </Th>
-                  <Th colSpan={3} textAlign="center">
-                    Fjöldi notenda
-                  </Th>
+                  <Th textAlign="center">Fjöldi notenda</Th>
                 </Tr>
               </Thead>
               <Tbody>
                 {leagues?.map((m) => (
                   <Tr key={m.id}>
-                    <Td w={["70px", "150px"]}>
+                    <Td flex={1}>
                       <Text>
                         {m.name} ({m.inviteCode})
                       </Text>
                     </Td>
                     <Td>
-                      <Text textAlign="center" w="60px">
+                      <Text textAlign="center">
                         {m.UserLeague.map(() => 1).reduce((a, b) => a + b, 0)}
                       </Text>
                     </Td>
@@ -112,10 +112,12 @@ const AdminLeaguesPage: BlitzPage = () => {
   )
 }
 
-export const getServerSideProps = gSSP(async ({ req, res }) => {
-  const session = await getSession(req, res)
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context.req, context.res)
 
-  if (session.role !== "ADMIN") {
+  try {
+    assert(session.$isAuthorized("ADMIN"), "You must be logged in to access this page")
+  } catch (error) {
     return {
       redirect: {
         destination: "/",
@@ -125,7 +127,7 @@ export const getServerSideProps = gSSP(async ({ req, res }) => {
   }
 
   return { props: {} }
-})
+}
 
 AdminLeaguesPage.authenticate = true
 AdminLeaguesPage.getLayout = (page) => <Layout>{page}</Layout>
