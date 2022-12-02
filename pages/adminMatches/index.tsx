@@ -18,7 +18,10 @@ import TeamImage from "app/core/components/TeamImage"
 import Layout from "app/core/layouts/Layout"
 import getMatchResults from "app/matches/queries/getMatchResults"
 import { MatchWithTeams } from "app/types/MatchWithTeams"
+import getCurrentUser from "app/users/queries/getCurrentUser"
+import { assert } from "blitz"
 import dayjs from "dayjs"
+import { GetServerSideProps } from "next"
 import Head from "next/head"
 import { Suspense, useRef } from "react"
 
@@ -183,10 +186,12 @@ const AdminMatchesPage: BlitzPage = () => {
   )
 }
 
-export const getServerSideProps = gSSP(async ({ req, res }) => {
-  const session = await getSession(req, res)
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context.req, context.res)
 
-  if (session.role !== "ADMIN") {
+  try {
+    assert(session.$isAuthorized("ADMIN"), "You must be logged in to access this page")
+  } catch (error) {
     return {
       redirect: {
         destination: "/",
@@ -196,7 +201,7 @@ export const getServerSideProps = gSSP(async ({ req, res }) => {
   }
 
   return { props: {} }
-})
+}
 
 AdminMatchesPage.authenticate = true
 AdminMatchesPage.getLayout = (page) => <Layout>{page}</Layout>
