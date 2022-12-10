@@ -24,9 +24,19 @@ const updateScores = async () => {
       return
     }
 
-    // If the current_time is completed and it did not go into extra time we update it using the cronjob
-    // If not we need to manually update this due to api limitation
-    if (newMatch.status === "completed" && newMatch.detailed_time?.current_time !== "120'") {
+    // Each match has an event array for away and home teams, if we find a goal event that is marked in extra time we need to
+    // Manually set the score
+    const wereThereAnyExtraTimeGoals = [
+      ...(newMatch.away_team_events ?? []),
+      ...(newMatch.home_team_events ?? []),
+    ].some((event) => {
+      const time = Number(event.time.split("'")[0])
+      if (event.type_of_event === "goal" && time > 90) {
+        return true
+      }
+      return false
+    })
+    if (newMatch.status === "completed" && !wereThereAnyExtraTimeGoals) {
       await db.match.update({
         where: {
           homeTeamId_awayTeamId_kickOff: {
