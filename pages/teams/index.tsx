@@ -11,18 +11,32 @@ import getTeams from "app/teams/queries/getTeams"
 import { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import TeamImage from "app/core/components/TeamImage"
+import getActiveTournament from "app/matches/queries/getActiveTournament"
 
 export const TeamsList = () => {
   const [teams] = useQuery(getTeams, {})
   const { t } = useTranslation()
   const theme = useTheme()
-  const groups = Array.from(new Set(teams.map((t) => t.group)))
+  const [tournament] = useQuery(getActiveTournament, {})
+  const groups = Array.from(
+    new Set(
+      teams.map(
+        (t) => t.teamTournaments.find((tourney) => tourney.tournamentId === tournament?.id)?.group
+      )
+    )
+  )
   const teamsByGroups = groups
     .map((group) => ({
       group,
-      teams: teams.filter((t) => t.group === group),
+      teams: teams.filter(
+        (t) => t.teamTournaments.find((tourney) => tourney.tournamentId === tournament?.id)?.group
+      ),
     }))
-    .sort((firstGroup, secondGroup) => firstGroup.group.localeCompare(secondGroup.group))
+    .sort((firstGroup, secondGroup) => {
+      if (!firstGroup.group || !secondGroup.group) return 0
+
+      return firstGroup.group?.localeCompare(secondGroup.group)
+    })
 
   return (
     <Flex

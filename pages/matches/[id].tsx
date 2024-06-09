@@ -30,18 +30,23 @@ import getMatchesFromCompetitors from "app/matches/queries/getMatchesFromCompeti
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useUserLocale from "app/core/hooks/useUserLocale"
 import TeamImage from "app/core/components/TeamImage"
+import getActiveTournament from "app/matches/queries/getActiveTournament"
 
 export const MatchList = () => {
   const router = useRouter()
   const userId = router.query.id
   const user = useCurrentUser()
-  const [matches, { isLoading }] = useQuery(getMatchesFromCompetitors, { userId })
   const toast = useToast()
   const tableBgColorMode = useColorModeValue("white", "gray.700")
   const bgColorMode = useColorModeValue("gray.50", "gray.900")
   const { t } = useTranslation()
+  const [tournament] = useQuery(getActiveTournament, {})
+  const [matches, { isLoading }] = useQuery(getMatchesFromCompetitors, {
+    userId,
+    tournamentId: tournament?.id,
+  })
 
-  useUserLocale(user)
+  const activeTourneyId = tournament?.id
 
   if (user?.userLeague?.length === 0) {
     router.push("/")
@@ -103,12 +108,7 @@ export const MatchList = () => {
   }
 
   const matchesByDate: {
-    [key: string]: (UserLeagueMatch & {
-      match: Match & {
-        awayTeam: Team
-        homeTeam: Team
-      }
-    })[]
+    [key: string]: typeof matches[number][]
   } = {}
   matches?.forEach((m) => {
     const currentMatchDate = dayjs(getDateWithoutTimeFromDate(m.match.kickOff)).format(
@@ -181,7 +181,15 @@ export const MatchList = () => {
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.match.homeTeam.countryCode}
                           </Text>
-                          <Text marginLeft="2px">({m.match.homeTeam.group})</Text>
+                          <Text marginLeft="2px">
+                            (
+                            {
+                              m.match.homeTeam.teamTournaments.find(
+                                (tourney) => tourney.id === activeTourneyId
+                              )?.group
+                            }
+                            )
+                          </Text>
                         </Flex>
                       </Td>
                       <Td>
@@ -230,7 +238,15 @@ export const MatchList = () => {
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.match.awayTeam.countryCode}
                           </Text>
-                          <Text marginRight="2px">({m.match.awayTeam.group})</Text>
+                          <Text marginRight="2px">
+                            (
+                            {
+                              m.match.awayTeam.teamTournaments.find(
+                                (tourney) => tourney.id === activeTourneyId
+                              )?.group
+                            }
+                            )
+                          </Text>
                         </Flex>
                       </Td>
                     </Tr>

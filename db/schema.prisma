@@ -111,14 +111,41 @@ model League {
 }
 
 model Team {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String   @unique
-  countryCode String   @unique
-  group       String
-  homeMatches Match[]  @relation("homeMatches")
-  awayMatches Match[]  @relation("awayMatches")
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  name            String           @unique
+  countryCode     String           @unique
+  homeMatches     Match[]          @relation("homeMatches")
+  awayMatches     Match[]          @relation("awayMatches")
+  tournaments     Tournament[]
+  teamTournaments TeamTournament[]
+}
+
+model TeamTournament {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  teamId       String     @db.Uuid
+  team         Team       @relation(fields: [teamId], references: [id])
+  tournamentId String     @db.Uuid
+  tournament   Tournament @relation(fields: [tournamentId], references: [id])
+
+  group String
+
+  @@unique([teamId, tournamentId])
+}
+
+model Tournament {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  name            String           @unique
+  startDate       DateTime
+  endDate         DateTime
+  teams           Team[]
+  matches         Match[]
+  teamTournaments TeamTournament[]
 }
 
 model Match {
@@ -136,6 +163,8 @@ model Match {
   arena             String
   userLeagueMatches UserLeagueMatch[]
   scoreMultiplier   Float?            @default(1)
+  tournamentId      String            @db.Uuid
+  tournament        Tournament        @relation(fields: [tournamentId], references: [id])
 
   @@unique([homeTeamId, awayTeamId, kickOff])
 }

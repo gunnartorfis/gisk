@@ -2,16 +2,25 @@ import { resolver } from "@blitzjs/rpc"
 import dayjs from "dayjs"
 import db from "db"
 
-export default resolver.pipe(resolver.authorize(), async (input, ctx) => {
+export default resolver.pipe(resolver.authorize(), async (input) => {
   const userId = (input as any).userId
+  const tournamentId = (input as any).tournamentId
 
-  if (!userId) return []
+  if (!userId || !tournamentId) return []
 
   const userLeagueMatchInclude = {
     match: {
       include: {
-        awayTeam: true,
-        homeTeam: true,
+        awayTeam: {
+          include: {
+            teamTournaments: true,
+          },
+        },
+        homeTeam: {
+          include: {
+            teamTournaments: true,
+          },
+        },
       },
     },
   }
@@ -19,11 +28,22 @@ export default resolver.pipe(resolver.authorize(), async (input, ctx) => {
   const userMatches = await db.userLeagueMatch.findMany({
     where: {
       user: { id: userId },
+      match: {
+        tournament: {
+          id: tournamentId,
+        },
+      },
     },
     include: userLeagueMatchInclude,
   })
 
-  const allMatches = await db.match.findMany()
+  const allMatches = await db.match.findMany({
+    where: {
+      tournament: {
+        id: tournamentId,
+      },
+    },
+  })
   const missingMatches = allMatches.filter((m) => {
     const includesMatch = userMatches
       .map((um) => {

@@ -1,22 +1,19 @@
+import { BlitzPage } from "@blitzjs/next"
+import { useQuery } from "@blitzjs/rpc"
+import { Flex, Text } from "@chakra-ui/layout"
+import TeamImage from "app/core/components/TeamImage"
+import Layout from "app/core/layouts/Layout"
+import { MatchWithScore } from "app/matches/queries/getMatches"
+import getUserLeagueMatches from "app/matches/queries/getUserLeagueMatches"
+import getTeam from "app/teams/queries/getTeam"
+import { calculateScoreForMatch } from "app/utils/calculateScore"
+import groupMatchesByDate from "app/utils/groupMatchesByDate"
 import Head from "next/head"
 import { useRouter } from "next/router"
-import { useQuery } from "@blitzjs/rpc"
-import { BlitzPage } from "@blitzjs/next"
-import { Flex, Text } from "@chakra-ui/layout"
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
-import Layout from "app/core/layouts/Layout"
-import getTeam from "app/teams/queries/getTeam"
-import { Suspense } from "react"
 import { MatchesForDay } from "pages/matches"
-import groupMatchesByDate from "app/utils/groupMatchesByDate"
-import getUserLeagueMatches from "app/matches/queries/getUserLeagueMatches"
-import { MatchWithScore } from "app/matches/queries/getMatches"
-import React from "react"
-import { calculateScoreForMatch } from "app/utils/calculateScore"
-import Image from "next/image"
-import TeamImage from "app/core/components/TeamImage"
+import React, { Suspense } from "react"
 import { useCurrentUser } from "../../app/core/hooks/useCurrentUser"
-import { User } from "@prisma/client"
+import getActiveTournament from "app/matches/queries/getActiveTournament"
 
 export const TeamDetails = () => {
   const router = useRouter()
@@ -26,9 +23,7 @@ export const TeamDetails = () => {
   })
 
   const [userLeagueMatches] = useQuery(getUserLeagueMatches, {})
-
-  const homeMatches = team.homeMatches
-  const awayMatches = team.awayMatches
+  const [tournament] = useQuery(getActiveTournament, {})
 
   const user = useCurrentUser()
 
@@ -61,7 +56,7 @@ export const TeamDetails = () => {
     const matchesByDate = groupMatchesByDate(matches)
 
     return matchesByDate
-  }, [homeMatches, awayMatches])
+  }, [team.homeMatches, team.awayMatches, userLeagueMatches, user])
 
   return (
     <Flex direction="column" wrap="wrap" maxWidth="700px" mx="auto" pt={8}>
@@ -73,7 +68,14 @@ export const TeamDetails = () => {
       </Flex>
 
       {Object.keys(matchesByDate).map((date) => {
-        return <MatchesForDay key={date} matches={matchesByDate[date]} date={date} />
+        return (
+          <MatchesForDay
+            key={date}
+            matches={matchesByDate[date]}
+            date={date}
+            tournament={tournament}
+          />
+        )
       })}
     </Flex>
   )

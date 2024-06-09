@@ -22,6 +22,7 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Button } from "@chakra-ui/button"
 import { MatchWithTeams } from "app/types/MatchWithTeams"
+import getTournaments from "app/tournaments/getTournaments"
 
 const MatchDrawer: React.FunctionComponent<{
   isOpen: boolean
@@ -36,6 +37,7 @@ const MatchDrawer: React.FunctionComponent<{
       enabled: !match,
     }
   )
+  const [tournaments, { isLoading: isLoadingTournaments }] = useQuery(getTournaments, {})
 
   const [updateMutation, { isLoading: isLoadingUpdate }] = useMutation(updateMatch)
   const [deleteMutation, { isLoading: isLoadingDelete }] = useMutation(deleteMatch)
@@ -47,6 +49,7 @@ const MatchDrawer: React.FunctionComponent<{
   const awayResultRef = useRef<any>()
   const scoreMultiplierRef = useRef<any>()
   const dateRef = useRef<any>()
+  const tournamentIdRef = useRef<any>()
 
   if (isLoading || !teams) {
     return null
@@ -68,6 +71,19 @@ const MatchDrawer: React.FunctionComponent<{
 
             <DrawerBody>
               <Stack spacing="24px">
+                <Box>
+                  <FormLabel htmlFor="owner">Select tournament</FormLabel>
+                  <Select ref={tournamentIdRef} id="tournament">
+                    <option disabled value="-1">
+                      Select a tournament
+                    </option>
+                    {tournaments.map((tournament) => (
+                      <option key={tournament.id} value={tournament.id}>
+                        {tournament.name}
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
                 <Box>
                   <FormLabel htmlFor="owner">Select Home Team</FormLabel>
                   <Select ref={homeTeamRef} id="homeTeam" defaultValue={match?.homeTeamId ?? "-1"}>
@@ -167,6 +183,7 @@ const MatchDrawer: React.FunctionComponent<{
                     resultAway: awayResult ? Number.parseInt(awayResult) : null,
                     kickOff: kickOff ?? match?.kickOff ?? new Date(),
                     scoreMultiplier: Number.parseFloat(scoreMultiplierRef.current?.value) ?? 1,
+                    tournamentId: tournamentIdRef.current.value,
                   }
                   if (match) {
                     await updateMutation({
