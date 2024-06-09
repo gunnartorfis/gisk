@@ -65,7 +65,7 @@ const main = async () => {
         await db.teamTournament.create({
           data: {
             teamId: teamDB.id,
-            tournamentId: tournamentDB.id,
+            tournamentId: tournamentDB!.id,
             group: team.group,
           },
         })
@@ -114,7 +114,7 @@ const main = async () => {
             kickOff,
             tournament: {
               connect: {
-                id: tournamentDB.id,
+                id: tournamentDB!.id,
               },
             },
           },
