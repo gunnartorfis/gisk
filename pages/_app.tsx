@@ -1,29 +1,20 @@
-import { withBlitz } from "app/blitz-client"
-import { useSession } from "@blitzjs/auth"
-import { useQueryErrorResetBoundary } from "@blitzjs/rpc"
-import { AppProps, ErrorBoundary, ErrorFallbackProps } from "@blitzjs/next"
+import { AppProps, ErrorBoundary, ErrorComponent, ErrorFallbackProps } from "@blitzjs/next"
 import { ChakraProvider } from "@chakra-ui/react"
+import { withBlitz } from "app/blitz-client"
 import theme from "app/core/chakraTheme/theme"
-import ErrorComponent from "app/core/components/ErrorComponent"
 import Welcome from "app/core/components/Welcome"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import "app/core/translations/i18n"
 import i18n from "app/core/translations/i18n"
-import Sentry from "integrations/sentry"
-import React, { Suspense, useEffect } from "react"
+import { AuthenticationError, AuthorizationError } from "blitz"
+import React, { Suspense } from "react"
 import ReactGA from "react-ga"
 import "./_app.css"
-import { AuthenticationError, AuthorizationError } from "blitz"
 
 ReactGA.initialize("G-1291FQHLBL")
 
 function UserSession() {
-  const session = useSession()
   const currentUser = useCurrentUser()
-
-  useEffect(() => {
-    if (session.userId) Sentry.setUser({ id: session.userId.toString() })
-  }, [session])
 
   React.useEffect(() => {
     i18n.changeLanguage(currentUser?.language ?? "en")
@@ -53,15 +44,7 @@ export default withBlitz(function App({ Component, pageProps }: AppProps) {
       <Suspense fallback="">
         <UserSession />
       </Suspense>
-      <ErrorBoundary
-        FallbackComponent={RootErrorFallback}
-        onError={(error, componentStack) => {
-          if (process.env.NODE_ENV === "production") {
-            Sentry.captureException(error, { contexts: { react: { componentStack } } })
-          }
-        }}
-        onReset={useQueryErrorResetBoundary().reset}
-      >
+      <ErrorBoundary FallbackComponent={RootErrorFallback}>
         {getLayout(<Component {...pageProps} />)}
       </ErrorBoundary>
     </ChakraProvider>

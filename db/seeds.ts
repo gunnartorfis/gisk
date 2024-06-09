@@ -6,7 +6,7 @@ import newMatches from "./newMatches"
 import groups from "./groups"
 import quizQuestions from "./quizQuestions"
 import players, { goalies } from "./players"
-import { SecurePassword } from "@blitzjs/auth"
+import { SecurePassword } from "@blitzjs/auth/secure-password"
 import db from "db"
 
 dayjs.extend(customParseFormat)
