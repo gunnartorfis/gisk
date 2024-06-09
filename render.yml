@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: gisk
+    env: node
+    buildCommand: yarn --frozen-lockfile --prod=false &&
+      blitz prisma generate &&
+      blitz build &&
+      blitz prisma migrate deploy
+    startCommand: blitz start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gisk-db
+          property: connectionString
+      - key: SESSION_SECRET_KEY
+        generateValue: true
+      - key: APP_ORIGIN
+        value: https://gisk.onrender.com
+
+databases:
+  - name: gisk-db
