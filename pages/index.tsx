@@ -17,6 +17,7 @@ import dayjs from "dayjs"
 import { Suspense } from "react"
 import { useTranslation } from "react-i18next"
 import { MatchesForDay } from "./matches"
+import getActiveTournament from "app/matches/queries/getActiveTournament"
 
 export const CORRECT_RESULT = "correct_result"
 export const CORRECT_SCORE = "correct_score"
@@ -39,6 +40,7 @@ const Dashboard = () => {
       enabled: !!currentUser,
     }
   )
+  const [tournament] = useQuery(getActiveTournament, {})
 
   useUserLocale(currentUser)
 
@@ -82,7 +84,7 @@ const Dashboard = () => {
 
   return (
     <Box>
-      <MatchesForDay matches={matchesForToday} date={dayjs().toString()} />
+      <MatchesForDay matches={matchesForToday} date={dayjs().toString()} tournament={tournament} />
     </Box>
   )
 }

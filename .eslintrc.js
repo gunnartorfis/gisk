@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ["blitz"],
+  extends: ["./node_modules/@blitzjs/next/eslint"],
   rules: {
     "@typescript-eslint/no-floating-promises": "off",
   },

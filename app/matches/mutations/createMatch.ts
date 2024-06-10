@@ -11,6 +11,7 @@ const CreateMatch = z.object({
   resultHome: z.nullable(z.number()),
   resultAway: z.nullable(z.number()),
   scoreMultiplier: z.optional(z.number()),
+  tournamentId: z.string(),
 })
 
 const createMatch = resolver.pipe(
@@ -19,7 +20,15 @@ const createMatch = resolver.pipe(
   async (input, ctx) => {
     assert(ctx.session.$isAuthorized("ADMIN"), "You must an admin to perform this action")
 
-    const { homeTeamId, awayTeamId, kickOff, resultHome, resultAway, scoreMultiplier } = input
+    const {
+      homeTeamId,
+      awayTeamId,
+      kickOff,
+      resultHome,
+      resultAway,
+      scoreMultiplier,
+      tournamentId,
+    } = input
 
     const newMatch = await db.match.create({
       data: {
@@ -39,6 +48,11 @@ const createMatch = resolver.pipe(
         resultAway,
         resultHome,
         scoreMultiplier: scoreMultiplier ?? 1,
+        tournament: {
+          connect: {
+            id: tournamentId,
+          },
+        },
       },
     })
 

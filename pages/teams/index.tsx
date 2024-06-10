@@ -1,28 +1,44 @@
+import { BlitzPage } from "@blitzjs/next"
+import { useQuery } from "@blitzjs/rpc"
+import { Box, Flex, Text } from "@chakra-ui/layout"
+import { useTheme } from "@chakra-ui/react"
+import TeamImage from "app/core/components/TeamImage"
+import Layout from "app/core/layouts/Layout"
+import getActiveTournament from "app/matches/queries/getActiveTournament"
+import getTeams from "app/teams/queries/getTeams"
 import Head from "next/head"
 import Link from "next/link"
-import Image from "next/image"
-import { useQuery } from "@blitzjs/rpc"
-import { BlitzPage } from "@blitzjs/next"
-import { Box, Container, Flex, Text } from "@chakra-ui/layout"
-import { useTheme } from "@chakra-ui/react"
-import { Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/table"
-import Layout from "app/core/layouts/Layout"
-import getTeams from "app/teams/queries/getTeams"
 import { Suspense } from "react"
 import { useTranslation } from "react-i18next"
-import TeamImage from "app/core/components/TeamImage"
 
 export const TeamsList = () => {
   const [teams] = useQuery(getTeams, {})
   const { t } = useTranslation()
   const theme = useTheme()
-  const groups = Array.from(new Set(teams.map((t) => t.group)))
+  const [tournament] = useQuery(getActiveTournament, {})
+  const groups = Array.from(
+    new Set(
+      teams.map(
+        (t) =>
+          t.teamTournaments.find((teamTourney) => teamTourney.tournamentId === tournament?.id)
+            ?.group
+      )
+    )
+  )
   const teamsByGroups = groups
     .map((group) => ({
       group,
-      teams: teams.filter((t) => t.group === group),
+      teams: teams.filter(
+        (t) =>
+          t.teamTournaments.find((teamTourney) => teamTourney.tournamentId === tournament?.id)
+            ?.group
+      ),
     }))
-    .sort((firstGroup, secondGroup) => firstGroup.group.localeCompare(secondGroup.group))
+    .sort((firstGroup, secondGroup) => {
+      if (!firstGroup.group || !secondGroup.group) return 0
+
+      return firstGroup.group?.localeCompare(secondGroup.group)
+    })
 
   return (
     <Flex

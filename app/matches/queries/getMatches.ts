@@ -1,12 +1,16 @@
 import { resolver } from "@blitzjs/rpc"
 import { calculateScoreForMatch } from "app/utils/calculateScore"
 import dayjs from "dayjs"
-import db, { Match, Team, User, UserLeagueMatch } from "db"
+import db, { Match, Team, TeamTournament } from "db"
 import * as z from "zod"
 
 export type MatchWithScore = (Match & {
-  homeTeam: Team
-  awayTeam: Team
+  homeTeam: Team & {
+    teamTournaments: TeamTournament[]
+  }
+  awayTeam: Team & {
+    teamTournaments: TeamTournament[]
+  }
 }) & {
   userPredictionHome: number | null | undefined
   userPredictionAway: number | null | undefined
@@ -52,8 +56,16 @@ export default resolver.pipe(
           }
         : {},
       include: {
-        homeTeam: true,
-        awayTeam: true,
+        awayTeam: {
+          include: {
+            teamTournaments: true,
+          },
+        },
+        homeTeam: {
+          include: {
+            teamTournaments: true,
+          },
+        },
       },
       orderBy: {
         kickOff: "asc",

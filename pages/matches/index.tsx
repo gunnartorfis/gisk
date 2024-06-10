@@ -37,6 +37,8 @@ import timezone from "dayjs/plugin/timezone"
 import groupMatchesByDate from "app/utils/groupMatchesByDate"
 import TeamImage from "app/core/components/TeamImage"
 import Link from "next/link"
+import getActiveTournament from "app/matches/queries/getActiveTournament"
+import { Tournament } from "@prisma/client"
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.guess()
@@ -52,6 +54,8 @@ export const MatchesList = () => {
       enabled: (user?.userLeague?.length ?? 0) > 0,
     }
   )
+  const [tournament] = useQuery(getActiveTournament, {})
+
   const [randomGeneratePredictions, { isLoading: isRandomGeneratingPredictions }] = useMutation(
     randomGeneratePredictionsMutation
   )
@@ -117,7 +121,14 @@ export const MatchesList = () => {
         ) : null}
 
         {Object.keys(matchesByDate).map((date) => {
-          return <MatchesForDay key={date} matches={matchesByDate[date]} date={date} />
+          return (
+            <MatchesForDay
+              key={date}
+              matches={matchesByDate[date]}
+              date={date}
+              tournament={tournament}
+            />
+          )
         })}
       </Box>
       <AlertDialog
@@ -161,7 +172,15 @@ export const MatchesList = () => {
   )
 }
 
-export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; date: string }) => {
+export const MatchesForDay = ({
+  matches,
+  date,
+  tournament: activeTournament,
+}: {
+  matches?: MatchWithScore[]
+  date: string
+  tournament: Tournament | null
+}) => {
   const dayjsDate = dayjs(date)
   const currentDate = dayjs()
   const dateIsToday = dayjsDate.isSame(currentDate, "day")
@@ -296,7 +315,6 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.homeTeam.countryCode}
                           </Text>
-                          <Text marginLeft="2px">({m.homeTeam.group})</Text>
                         </Flex>
                       </Link>
                     </Td>
@@ -364,7 +382,6 @@ export const MatchesForDay = ({ matches, date }: { matches?: MatchWithScore[]; d
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.awayTeam.countryCode}
                           </Text>
-                          <Text marginLeft="2px">({m.awayTeam.group})</Text>
                         </Flex>
                       </Link>
                     </Td>

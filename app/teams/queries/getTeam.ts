@@ -13,14 +13,30 @@ export default resolver.pipe(resolver.zod(GetTeam), resolver.authorize(), async 
     include: {
       awayMatches: {
         include: {
-          homeTeam: true,
-          awayTeam: true,
+          awayTeam: {
+            include: {
+              teamTournaments: true,
+            },
+          },
+          homeTeam: {
+            include: {
+              teamTournaments: true,
+            },
+          },
         },
       },
       homeMatches: {
         include: {
-          homeTeam: true,
-          awayTeam: true,
+          awayTeam: {
+            include: {
+              teamTournaments: true,
+            },
+          },
+          homeTeam: {
+            include: {
+              teamTournaments: true,
+            },
+          },
         },
       },
     },
