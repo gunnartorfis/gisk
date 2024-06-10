@@ -1,10 +1,10 @@
 import { calculateScoreForMatch } from "./calculateScore"
 
-type CalculateScoreParams = Parameters<typeof calculateScoreForMatch>
+type CalculateScoreParams = Parameters<typeof calculateScoreForMatch>[0]
 
 const scoreTests: {
-  match: CalculateScoreParams[0]
-  prediction: CalculateScoreParams[1]
+  match: CalculateScoreParams["match"]
+  prediction: CalculateScoreParams["prediction"]
   expectedScore: number
 }[] = [
   {
