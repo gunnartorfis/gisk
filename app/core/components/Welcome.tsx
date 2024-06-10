@@ -41,13 +41,6 @@ export default function Welcome() {
             position={"relative"}
           >
             <a
-              href={`/api/auth/facebook?redirectUrl=${asPath}`}
-              className={`${styles.loginButton} ${styles.facebookButton}`}
-            >
-              <img src={"/fblogo.png"} className={styles.facebookLogo} />
-              <span>Continue with Facebook</span>
-            </a>
-            <a
               href={`/api/auth/google?redirectUrl=${asPath}`}
               className={`${styles.loginButton} ${styles.googleButton}`}
             >
