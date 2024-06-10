@@ -19,7 +19,9 @@ export const TeamsList = () => {
   const groups = Array.from(
     new Set(
       teams.map(
-        (t) => t.teamTournaments.find((tourney) => tourney.tournamentId === tournament?.id)?.group
+        (t) =>
+          t.teamTournaments.find((teamTourney) => teamTourney.tournamentId === tournament?.id)
+            ?.group
       )
     )
   )
@@ -27,7 +29,9 @@ export const TeamsList = () => {
     .map((group) => ({
       group,
       teams: teams.filter(
-        (t) => t.teamTournaments.find((tourney) => tourney.tournamentId === tournament?.id)?.group
+        (t) =>
+          t.teamTournaments.find((teamTourney) => teamTourney.tournamentId === tournament?.id)
+            ?.group
       ),
     }))
     .sort((firstGroup, secondGroup) => {

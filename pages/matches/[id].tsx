@@ -185,7 +185,7 @@ export const MatchList = () => {
                             (
                             {
                               m.match.homeTeam.teamTournaments.find(
-                                (tourney) => tourney.id === activeTourneyId
+                                (teamTourney) => teamTourney.tournamentId === activeTourneyId
                               )?.group
                             }
                             )
@@ -242,7 +242,7 @@ export const MatchList = () => {
                             (
                             {
                               m.match.awayTeam.teamTournaments.find(
-                                (tourney) => tourney.id === activeTourneyId
+                                (teamTourney) => teamTourney.tournamentId === activeTourneyId
                               )?.group
                             }
                             )
