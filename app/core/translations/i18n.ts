@@ -6,9 +6,9 @@ import { initReactI18next } from "react-i18next"
 const resources = {
   en: {
     translation: {
-      NAV_BAR_MOBILE_TITLE: "World cup 2022",
+      NAV_BAR_MOBILE_TITLE: "EM 2024",
 
-      WELCOME_TITLE: "FIFA World Cup Qatar 2022",
+      WELCOME_TITLE: "EM 2024",
       WELCOME_DESCRIPTION: "Compete with your friends! Who's the football genius in your group?",
       WELCOME_LOGIN: "Already have an account?",
       WELCOME_SIGNUP: "Create an account",
