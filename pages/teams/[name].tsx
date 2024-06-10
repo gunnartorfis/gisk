@@ -36,19 +36,19 @@ export const TeamDetails = () => {
         ...match,
         userPredictionAway: userLeagueMatch?.resultAway,
         userPredictionHome: userLeagueMatch?.resultHome,
-        score: calculateScoreForMatch(
-          {
+        score: calculateScoreForMatch({
+          match: {
             resultHome: match.resultHome,
             resultAway: match.resultAway,
             scoreMultiplier: match.scoreMultiplier,
             kickOff: match.kickOff,
           },
-          {
+          prediction: {
             resultHome: userLeagueMatch?.resultHome ?? null,
             resultAway: userLeagueMatch?.resultAway ?? null,
           },
-          user
-        ),
+          user,
+        }),
       }
     })
     matches.sort((a, b) => new Date(a.kickOff).getTime() - new Date(b.kickOff).getTime())
