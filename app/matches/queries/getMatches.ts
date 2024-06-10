@@ -40,6 +40,9 @@ export default resolver.pipe(
 
     const user = await db.user.findFirst({ where: { id: userId } })
 
+    // TODO: replace with some logic for an active/selected tournament
+    const tournament = await db.tournament.findFirst()
+
     const allMatches = await db.match.findMany({
       where: date
         ? {
@@ -74,7 +77,9 @@ export default resolver.pipe(
 
     const matchesToReturn: Array<MatchWithScore> = []
     allMatches.map((match) => {
-      const userLeagueMatch = matchesForUser.find((um) => um.matchId === match.id)
+      const userLeagueMatch = matchesForUser.find(
+        (um) => um.matchId === match.id && match.tournamentId === tournament?.id
+      )
 
       if (userLeagueMatch) {
         if (showPredictedMatches) {
@@ -82,7 +87,7 @@ export default resolver.pipe(
             ...match,
             userPredictionHome: userLeagueMatch.resultHome,
             userPredictionAway: userLeagueMatch.resultAway,
-            score: calculateScoreForMatch(match, userLeagueMatch, user),
+            score: calculateScoreForMatch({ match, prediction: userLeagueMatch, user }),
           })
         }
       } else {

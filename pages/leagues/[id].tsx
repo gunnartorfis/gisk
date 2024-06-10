@@ -97,7 +97,6 @@ export const League = () => {
               <Tr>
                 <Th>{t("NAME")}</Th>
                 <Th>{t("SHOW_PREDICTED_MATCHES")}</Th>
-                <Th>{t("QUESTIONS")}</Th>
                 <Th isNumeric>{t("SCORE")}</Th>
 
                 {userIsLeagueAdmin ? <Th></Th> : null}
@@ -128,20 +127,7 @@ export const League = () => {
                       </Text>
                     </Link>
                   </Td>
-                  <Td>
-                    <Link
-                      href={
-                        currentUser?.id === ul.user.id ? "/questions" : `/questions/${ul.user.id}`
-                      }
-                    >
-                      <Text
-                        color={theme.colors.primary}
-                        _hover={{ textDecoration: "underline", cursor: "pointer" }}
-                      >
-                        {t("QUESTIONS")}
-                      </Text>
-                    </Link>
-                  </Td>
+
                   <Td isNumeric>{ul.score}</Td>
                   {userIsLeagueAdmin ? (
                     <Td

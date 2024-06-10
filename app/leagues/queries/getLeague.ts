@@ -10,6 +10,9 @@ const GetLeague = z.object({
 })
 
 export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), async ({ id }, ctx) => {
+  // TODO: replace with some logic for an active/selected tournament
+  const tournament = await db.tournament.findFirst()
+
   const league = await db.league.findFirst({
     where: {
       id,
@@ -30,6 +33,9 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
   })
 
   const matches = await db.match.findMany({
+    where: {
+      tournamentId: tournament?.id,
+    },
     include: {
       homeTeam: true,
       awayTeam: true,
@@ -89,9 +95,9 @@ export default resolver.pipe(resolver.zod(GetLeague), resolver.authorize(), asyn
             .filter((p) => p.userId === ul.userId)
             .reduce((prev, prediction) => {
               const match = matches.find((m) => m.id === prediction.matchId)
-
+              console.log({ match, prediction })
               if (match) {
-                const score = calculateScoreForMatch(match, prediction, ul.user)
+                const score = calculateScoreForMatch({ match, prediction, user: ul.user })
                 return prev + score
               }
 

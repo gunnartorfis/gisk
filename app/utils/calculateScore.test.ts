@@ -154,7 +154,7 @@ const scoreTests: {
 
 it("calculates scores for matches correctly", () => {
   scoreTests.forEach(({ match, prediction, expectedScore }) => {
-    expect(calculateScoreForMatch(match, prediction, null)).toEqual(expectedScore)
+    expect(calculateScoreForMatch({ match, prediction })).toEqual(expectedScore)
   })
 })
 

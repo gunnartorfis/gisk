@@ -107,9 +107,9 @@ const resources = {
   },
   is: {
     translation: {
-      NAV_BAR_MOBILE_TITLE: "HM 2022",
+      NAV_BAR_MOBILE_TITLE: "EM 2024",
 
-      WELCOME_TITLE: "HM 2022",
+      WELCOME_TITLE: "EM 2024",
       WELCOME_DESCRIPTION: "Kepptu við vini þína! Hver er fótboltasnillingurinn í hópnum þínum?",
       WELCOME_LOGIN: "Nú þegar með aðgang?",
       WELCOME_SIGNUP: "Stofna aðgang",

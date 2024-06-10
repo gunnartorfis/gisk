@@ -135,14 +135,6 @@ const useNavItems = ({
       href: "/matches",
     },
     {
-      label: t("TEAMS"),
-      href: "/teams",
-    },
-    {
-      label: t("QUESTIONS"),
-      href: "/questions",
-    },
-    {
       label: t("SCORING"),
       href: "/scoring",
     },

@@ -11,6 +11,8 @@ export default resolver.pipe(
       }
     >
   > => {
+    // TODO: replace with some logic for an active/selected tournament
+    const tournament = await db.tournament.findFirst()
     const users = await db.user.findMany({
       include: {
         userLeagueMatches: {
@@ -29,23 +31,25 @@ export default resolver.pipe(
       const userLeagueMatches = user.userLeagueMatches
 
       const score = userLeagueMatches.reduce((acc, userLeagueMatch) => {
-        const match = matches.find((match) => match.id === userLeagueMatch.matchId)
+        const match = matches.find(
+          (match) => match.id === userLeagueMatch.matchId && match.tournamentId === tournament?.id
+        )
         if (!match) {
           return acc
         }
 
-        const score = calculateScoreForMatch(
-          {
+        const score = calculateScoreForMatch({
+          match: {
             kickOff: match.kickOff,
             resultAway: match.resultAway,
             resultHome: match.resultHome,
             scoreMultiplier: match.scoreMultiplier,
           },
-          {
-            resultHome: userLeagueMatch.resultHome,
+          prediction: {
             resultAway: userLeagueMatch.resultAway,
-          }
-        )
+            resultHome: userLeagueMatch.resultHome,
+          },
+        })
         return acc + score
       }, 0)
 

@@ -2,11 +2,15 @@ import { User } from "db"
 import { Match, UserLeagueMatch } from "@prisma/client"
 import dayjs from "dayjs"
 
-export const calculateScoreForMatch = (
-  match: Pick<Match, "resultHome" | "resultAway" | "scoreMultiplier" | "kickOff">,
-  prediction: Pick<UserLeagueMatch, "resultHome" | "resultAway">,
+export const calculateScoreForMatch = ({
+  match,
+  prediction,
+  user,
+}: {
+  match: Pick<Match, "resultHome" | "resultAway" | "scoreMultiplier" | "kickOff">
+  prediction: Pick<UserLeagueMatch, "resultHome" | "resultAway">
   user?: Omit<User, "updatedAt" | "hashedPassword" | "facebookId" | "googleId"> | null
-): number => {
+}): number => {
   let score = 0
 
   if (user && dayjs(match.kickOff).isBefore(user.createdAt)) {
