@@ -1,36 +1,15 @@
-import Head from "next/head"
-import { useRouter } from "next/router"
-import { invoke, useMutation, useQuery } from "@blitzjs/rpc"
 import { BlitzPage } from "@blitzjs/next"
-import {
-  Box,
-  Flex,
-  Image,
-  Input,
-  Table,
-  Tbody,
-  Td,
-  Text,
-  Th,
-  Thead,
-  Tr,
-  useColorModeValue,
-  useToast,
-} from "@chakra-ui/react"
-import { Match, Team, UserLeagueMatch } from "@prisma/client"
-import Layout from "app/core/layouts/Layout"
-import updateResultForUser from "app/matches/mutations/updateResultForUser"
-import getQuizQuestions from "app/matches/queries/getQuizQuestions"
-import dayjs from "dayjs"
-import "dayjs/locale/is"
-import "dayjs/locale/en"
-import React, { Suspense } from "react"
-import { useTranslation } from "react-i18next"
-import getMatchesFromCompetitors from "app/matches/queries/getMatchesFromCompetitors"
+import { useQuery } from "@blitzjs/rpc"
+import { Box, Table, Tbody, Td, Th, Thead, Tr, useColorModeValue } from "@chakra-ui/react"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import useUserLocale from "app/core/hooks/useUserLocale"
-import TeamImage from "app/core/components/TeamImage"
+import Layout from "app/core/layouts/Layout"
 import getLeaderboards from "app/matches/queries/getLeaderboards"
+import "dayjs/locale/en"
+import "dayjs/locale/is"
+import Head from "next/head"
+import { Suspense } from "react"
+import { useTranslation } from "react-i18next"
 
 export const Leaderboards = () => {
   const [users, { isLoading }] = useQuery(getLeaderboards, {})
@@ -75,7 +54,7 @@ export const Leaderboards = () => {
   )
 }
 
-const MatchesLeaguePage: BlitzPage = () => {
+const LeaderboardsMatchesLeaguePage: BlitzPage = () => {
   return (
     <>
       <Head>
@@ -89,7 +68,7 @@ const MatchesLeaguePage: BlitzPage = () => {
   )
 }
 
-MatchesLeaguePage.authenticate = true
-MatchesLeaguePage.getLayout = (page) => <Layout>{page}</Layout>
+LeaderboardsMatchesLeaguePage.authenticate = true
+LeaderboardsMatchesLeaguePage.getLayout = (page) => <Layout>{page}</Layout>
 
-export default MatchesLeaguePage
+export default LeaderboardsMatchesLeaguePage

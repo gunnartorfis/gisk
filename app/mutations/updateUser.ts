@@ -2,11 +2,9 @@ import { resolver } from "@blitzjs/rpc"
 import db from "db"
 import * as z from "zod"
 
-export const UpdateUserForm = z
-  .object({
-    name: z.string(),
-  })
-  .nonstrict()
+export const UpdateUserForm = z.object({
+  name: z.string(),
+})
 
 export default resolver.pipe(
   resolver.zod(UpdateUserForm),

@@ -1,9 +1,11 @@
 import { Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react"
 import Colors from "../chakraTheme/colors"
 
-const GradientTitle: React.FunctionComponent<{
-  smaller?: boolean
-}> = ({ smaller, children }) => {
+const GradientTitle: React.FunctionComponent<
+  React.PropsWithChildren<{
+    smaller?: boolean
+  }>
+> = ({ smaller, children }) => {
   return (
     <Text
       textAlign={useBreakpointValue({ base: "center", md: "left" })}

@@ -303,6 +303,14 @@ export const MatchesForDay = ({
             </Thead>
             <Tbody>
               {matches?.map((m) => {
+                const homeTeamGroup = m.homeTeam.teamTournaments.find(
+                  (tourney) => tourney.id === activeTournament?.id
+                )?.group
+
+                const awayTeamGroup = m.awayTeam.teamTournaments.find(
+                  (tourney) => tourney.id === activeTournament?.id
+                )?.group
+
                 return (
                   <Tr key={m.id}>
                     <Td p="0">
@@ -315,13 +323,7 @@ export const MatchesForDay = ({
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.homeTeam.countryCode}
                           </Text>
-                          <Text marginLeft="2px">
-                            (
-                            {m.homeTeam.teamTournaments.find(
-                              (tourney) => tourney.id === activeTournament?.id
-                            )}
-                            )
-                          </Text>
+                          <Text marginLeft="2px">`(${homeTeamGroup})`</Text>
                         </Flex>
                       </Link>
                     </Td>
@@ -389,13 +391,7 @@ export const MatchesForDay = ({
                           <Text display={{ base: "inline", md: "none" }}>
                             {m.awayTeam.countryCode}
                           </Text>
-                          <Text marginLeft="2px">
-                            (
-                            {m.awayTeam.teamTournaments.find(
-                              (tourney) => tourney.id === activeTournament?.id
-                            )}
-                            )
-                          </Text>
+                          <Text marginLeft="2px">({awayTeamGroup})</Text>
                         </Flex>
                       </Link>
                     </Td>

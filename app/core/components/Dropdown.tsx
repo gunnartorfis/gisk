@@ -12,9 +12,11 @@ import React, { createContext, useContext, useRef, useState } from "react"
 import useOutsideAlerter from "../hooks/useOutsideAlerter"
 
 const Summary: React.FunctionComponent<
-  {
-    href?: string
-  } & ChakraProps
+  React.PropsWithChildren<
+    {
+      href?: string
+    } & ChakraProps
+  >
 > = ({ children, href, ...props }) => {
   if (href) {
     return (
@@ -31,12 +33,14 @@ const ItemSeparator = () => {
 }
 
 type AbsoluteValue = ResponsiveValue<CSS.Property.Right<string | 0 | number>>
-const Items: React.FunctionComponent<{
-  top?: AbsoluteValue
-  right?: AbsoluteValue
-  left?: AbsoluteValue
-  bottom?: AbsoluteValue
-}> = ({ children, ...props }) => {
+const Items: React.FunctionComponent<
+  React.PropsWithChildren<{
+    top?: AbsoluteValue
+    right?: AbsoluteValue
+    left?: AbsoluteValue
+    bottom?: AbsoluteValue
+  }>
+> = ({ children, ...props }) => {
   const { isOpen } = useContext(DropdownContext)
 
   return (
@@ -55,14 +59,16 @@ const Items: React.FunctionComponent<{
   )
 }
 
-const Item: React.FunctionComponent<{
-  title?: string
-  icon?: JSX.Element
-  href?: string
-  onClick?: (itemTitle?: string) => void
-  render?: () => JSX.Element
-  valueForOnClick?: string
-}> = ({ children, title, icon, onClick, href, render, valueForOnClick }) => {
+const Item: React.FunctionComponent<
+  React.PropsWithChildren<{
+    title?: string
+    icon?: JSX.Element
+    href?: string
+    onClick?: (itemTitle?: string) => void
+    render?: () => JSX.Element
+    valueForOnClick?: string
+  }>
+> = ({ children, title, icon, onClick, href, render, valueForOnClick }) => {
   const bg = useColorModeValue("gray.100", "gray.500")
   const { isOpen, onClickItem } = useContext(DropdownContext)
   const renderChildren = () => (
@@ -110,7 +116,7 @@ interface DropdownProps {
   onClickItemWithKey?: (key: string) => void
   containerProps?: ChakraProps
 }
-const Dropdown: React.FunctionComponent<DropdownProps> & {
+const Dropdown: React.FC<React.PropsWithChildren<DropdownProps>> & {
   Items: typeof Items
   Item: typeof Item
   Summary: typeof Summary

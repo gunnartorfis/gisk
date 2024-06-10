@@ -29,54 +29,52 @@ const main = async () => {
     })
   }
 
-  if (teamsDB.length === 0) {
-    const teams = groups.groups.reduce(
-      (teams, group) => [
-        ...teams,
-        ...group.teams.map((team) => ({
-          countryCode: team.code,
-          name: team.name,
-          group: group.name,
-        })),
-      ],
-      []
-    )
+  const teams = groups.groups.reduce(
+    (teams, group) => [
+      ...teams,
+      ...group.teams.map((team) => ({
+        countryCode: team.code,
+        name: team.name,
+        group: group.name,
+      })),
+    ],
+    []
+  )
 
-    const teamsPromises = teams.map(async (team) => {
-      try {
-        // does team exist?
-        let teamDB = await db.team.findFirst({
-          where: { name: team.name },
-        })
+  const teamsPromises = teams.map(async (team) => {
+    try {
+      // does team exist?
+      let teamDB = await db.team.findFirst({
+        where: { name: team.name, countryCode: team.countryCode },
+      })
 
-        if (teamDB) {
-          return
-        }
-
-        console.log("Creating team with tournament", team.name, tournamentDB!.id)
-
-        teamDB = await db.team.create({
-          data: {
-            name: team.name,
-            countryCode: team.countryCode,
-          },
-        })
-
-        await db.teamTournament.create({
-          data: {
-            teamId: teamDB.id,
-            tournamentId: tournamentDB!.id,
-            group: team.group,
-          },
-        })
-
-        teamsDB.push(teamDB)
-      } catch (error) {
-        console.error(error)
+      if (teamDB) {
+        return
       }
-    })
-    await Promise.all(teamsPromises)
-  }
+
+      console.log("Creating team with tournament", team.name, tournamentDB!.id)
+
+      teamDB = await db.team.create({
+        data: {
+          name: team.name,
+          countryCode: team.countryCode,
+        },
+      })
+
+      await db.teamTournament.create({
+        data: {
+          teamId: teamDB.id,
+          tournamentId: tournamentDB!.id,
+          group: team.group,
+        },
+      })
+
+      teamsDB.push(teamDB)
+    } catch (error) {
+      console.error(error)
+    }
+  })
+  await Promise.all(teamsPromises)
 
   const matchCount = await db.match.count({
     where: {
