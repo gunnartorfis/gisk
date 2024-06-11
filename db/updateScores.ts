@@ -9,9 +9,9 @@ dayjs.extend(utc);
 const updateScores = async () => {
   const matches = (await (
     await fetch(
-      `https://prod-public-api.livescore.com/v1/api/app/date/soccer/${dayjs()
-        .add(3, 'day')
-        .format('YYYYMMDD')}/0?locale=en&MD=1`,
+      `https://prod-public-api.livescore.com/v1/api/app/date/soccer/${dayjs().format(
+        'YYYYMMDD',
+      )}/0?locale=en&MD=1`,
     )
   ).json()) as typeof results;
 
@@ -60,8 +60,8 @@ const updateScores = async () => {
         },
       },
       data: {
-        resultHome: Number(newMatch.Tr1) || 1,
-        resultAway: Number(newMatch.Tr2) || 1,
+        resultHome: Number(newMatch.Tr1) || null,
+        resultAway: Number(newMatch.Tr2) || null,
       },
     });
   });
