@@ -2,9 +2,6 @@ import dayjs from 'dayjs';
 import fetch from 'node-fetch';
 import db from './index';
 import { results } from './results';
-import utc from 'dayjs/plugin/utc';
-
-dayjs.extend(utc);
 
 const updateScores = async () => {
   const matches = (await (
