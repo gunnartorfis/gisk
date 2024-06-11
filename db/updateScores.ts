@@ -1,57 +1,70 @@
-import fetch from "node-fetch"
-import db from "./index"
-import defaultMatches from "./newMatches"
+import dayjs from 'dayjs';
+import fetch from 'node-fetch';
+import db from './index';
+import { results } from './results';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 const updateScores = async () => {
   const matches = (await (
-    await fetch("https://world-cup-json-2022.fly.dev/matches?details=true")
-  ).json()) as typeof defaultMatches
+    await fetch(
+      `https://prod-public-api.livescore.com/v1/api/app/date/soccer/${dayjs().format(
+        'YYYYMMDD',
+      )}/0?locale=en&MD=1`,
+    )
+  ).json()) as typeof results;
 
-  matches.forEach(async (newMatch) => {
+  const euroMatches = matches.Stages.find(
+    (stage) => stage.Cnm === 'Euro 2024',
+  )?.Events;
+
+  if (!euroMatches) {
+    throw new Error('No matches found');
+  }
+
+  euroMatches.forEach(async (newMatch) => {
     const hometeam = await db.team.findFirst({
       where: {
-        name: newMatch.home_team.name,
+        name: newMatch.T1[0]?.Nm,
       },
-    })
+    });
 
     const awayTeam = await db.team.findFirst({
       where: {
-        name: newMatch.away_team.name,
+        name: newMatch['T2'][0]?.Nm,
       },
-    })
+    });
 
     if (!hometeam || !awayTeam) {
-      return
+      return;
     }
 
-    // Each match has an event array for away and home teams, if we find a goal event that is marked in extra time we need to
-    // Manually set the score
-    const wereThereAnyExtraTimeGoals = [
-      ...(newMatch.away_team_events ?? []),
-      ...(newMatch.home_team_events ?? []),
-    ].some((event) => {
-      const time = Number(event.time.split("'")[0])
-      if (event.type_of_event === "goal" && time > 90) {
-        return true
-      }
-      return false
-    })
-    if (newMatch.status === "completed" && !wereThereAnyExtraTimeGoals) {
-      await db.match.update({
-        where: {
-          homeTeamId_awayTeamId_kickOff: {
-            homeTeamId: hometeam?.id as string,
-            awayTeamId: awayTeam?.id as string,
-            kickOff: newMatch.datetime,
-          },
-        },
-        data: {
-          resultHome: newMatch.home_team.goals ?? 0,
-          resultAway: newMatch.away_team.goals ?? 0,
-        },
-      })
-    }
-  })
-}
+    const kickOff = newMatch.Esd.toString();
 
-updateScores()
+    const year = Number(kickOff.slice(0, 4));
+    const month = Number(kickOff.slice(4, 6)) - 1;
+    const day = Number(kickOff.slice(6, 8));
+    const hour = Number(kickOff.slice(8, 10));
+    const minute = Number(kickOff.slice(10, 12));
+    const second = Number(kickOff.slice(12, 14));
+
+    const date = new Date(year, month, day, hour, minute, second);
+
+    await db.match.update({
+      where: {
+        homeTeamId_awayTeamId_kickOff: {
+          homeTeamId: hometeam?.id as string,
+          awayTeamId: awayTeam?.id as string,
+          kickOff: date.toISOString(),
+        },
+      },
+      data: {
+        resultHome: Number(newMatch.Tr1) || null,
+        resultAway: Number(newMatch.Tr2) || null,
+      },
+    });
+  });
+};
+
+updateScores();

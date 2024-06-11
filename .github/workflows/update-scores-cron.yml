@@ -2,11 +2,14 @@ name: Update scores cronjob
 on:
   schedule:
     - cron: "50 * * * *"
+env:
+  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
   update-scores:
     runs-on: ubuntu-20.04
     name: Update scores
+
     steps:
       - uses: actions/checkout@v3
 
@@ -25,6 +28,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Update scores
-        run: DATABASE_URL=${{env.DATABASE_URL}} node -r @swc-node/register ./db/updateScores.ts
+        run: DATABASE_URL=${{env.DATABASE_URL}},NPM_TOKEN={{env.NPM_TOKEN}} npx --yes tsx ./db/updateScores.ts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
