@@ -1,9 +1,7 @@
 name: Update scores cronjob
 on:
   schedule:
-    - cron: "50 * * * *"
-env:
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - cron: "20 * * * *"
 
 jobs:
   update-scores:
@@ -18,14 +16,9 @@ jobs:
         with:
           node-version: '20.12.2'
 
-      - uses: actions/cache@v4
-        with:
-          path: "**/node_modules"
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
       - name: Install dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn --frozen-lockfile
+        run: rm yarn.lock package.json .yarnrc.yml && npm install node-fetch dayjs blitz @prisma/client && npx --yes prisma generate --schema='./db/schema.prisma'
 
       - name: Update scores
         run: DATABASE_URL=${{env.DATABASE_URL}},NPM_TOKEN={{env.NPM_TOKEN}} npx --yes tsx ./db/updateScores.ts
