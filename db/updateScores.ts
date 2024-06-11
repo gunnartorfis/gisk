@@ -17,7 +17,8 @@ const updateScores = async () => {
   )?.Events;
 
   if (!euroMatches) {
-    throw new Error('No matches found');
+    console.log('No matches found');
+    return;
   }
 
   euroMatches.forEach(async (newMatch) => {
