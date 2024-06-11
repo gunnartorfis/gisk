@@ -25,6 +25,7 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: Update scores
-        run: DATABASE_URL=${{env.DATABASE_URL}} node -r @swc-node/register ./db/updateScores.ts
+        run: DATABASE_URL=${{env.DATABASE_URL}},NPM_TOKEN={{env.NPM_TOKEN}} npx --yes tsx ./db/updateScores.ts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
