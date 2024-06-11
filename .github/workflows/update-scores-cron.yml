@@ -1,7 +1,7 @@
 name: Update scores cronjob
 on:
   schedule:
-    - cron: "25 * * * *"
+    - cron: "50 * * * *"
 
 jobs:
   update-scores:
@@ -21,7 +21,7 @@ jobs:
         run: rm yarn.lock package.json .yarnrc.yml && npm install node-fetch dayjs blitz @prisma/client && npx --yes prisma generate --schema='./db/schema.prisma'
 
       - name: Update scores
-        run: DATABASE_URL=${{env.DATABASE_URL}},NPM_TOKEN={{env.NPM_TOKEN}} npx --yes tsx ./db/updateScores.ts
+        run: DATABASE_URL=${{env.DATABASE_URL}} npx --yes tsx ./db/updateScores.ts
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
