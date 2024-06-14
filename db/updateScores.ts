@@ -58,8 +58,8 @@ const updateScores = async () => {
         },
       },
       data: {
-        resultHome: Number(newMatch.Tr1) || null,
-        resultAway: Number(newMatch.Tr2) || null,
+        resultHome: newMatch.Tr1 ? Number(newMatch.Tr1) : null,
+        resultAway: newMatch.Tr2 ? Number(newMatch.Tr2) : null,
       },
     });
   });
