@@ -1,3 +1,4 @@
+import { match } from 'assert';
 import dayjs from 'dayjs';
 import fetch from 'node-fetch';
 import db from './index';
@@ -48,6 +49,26 @@ const updateScores = async () => {
     const second = Number(kickOff.slice(12, 14));
 
     const date = new Date(year, month, day, hour, minute, second);
+
+    const match = await db.match.findFirst({
+      where: {
+        homeTeamId: hometeam.id as string,
+        awayTeamId: awayTeam.id as string,
+        kickOff: date.toISOString(),
+      },
+    });
+
+    // If match is not found
+    // Match is already played
+    // Or the match is not in fulltime yet
+    // We don't need to update the scores
+    if (
+      !match ||
+      (match.resultHome !== null && match.resultAway !== null) ||
+      newMatch.Eps !== 'FT'
+    ) {
+      return;
+    }
 
     await db.match.update({
       where: {
