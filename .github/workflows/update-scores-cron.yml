@@ -1,7 +1,7 @@
 name: Update scores cronjob
 on:
   schedule:
-    - cron: "50 * * * *"
+    - cron: "*/30 * * * *"
 
 jobs:
   update-scores:
