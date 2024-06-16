@@ -16,7 +16,7 @@ const updateScores = async () => {
     (stage) => stage.Cnm === 'Euro 2024',
   ).flatMap((stage) => stage.Events);
 
-  if (!euroMatches) {
+  if (euroMatches.length === 0) {
     console.log('No matches found');
     return;
   }
