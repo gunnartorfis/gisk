@@ -12,11 +12,11 @@ const updateScores = async () => {
     )
   ).json()) as typeof results;
 
-  const euroMatches = matches.Stages.find(
+  const euroMatches = matches.Stages.filter(
     (stage) => stage.Cnm === 'Euro 2024',
-  )?.Events;
+  ).flatMap((stage) => stage.Events);
 
-  if (!euroMatches) {
+  if (euroMatches.length === 0) {
     console.log('No matches found');
     return;
   }
