@@ -27,8 +27,6 @@ const updateScores = async () => {
     return;
   }
 
-  console.log('Matches found:', euroMatches);
-
   euroMatches.forEach(async (newMatch) => {
     const hometeam = await db.team.findFirst({
       where: {
