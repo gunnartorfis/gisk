@@ -3,6 +3,12 @@ import fetch from 'node-fetch';
 import db from './index';
 import { results } from './results';
 
+const normalizeName = (name?: string) => {
+  if (name === 'Czechia') return 'Czech Republic';
+  if (name === 'Turkiye') return 'Turkey';
+  return name;
+};
+
 const updateScores = async () => {
   const matches = (await (
     await fetch(
@@ -21,16 +27,18 @@ const updateScores = async () => {
     return;
   }
 
+  console.log('Matches found:', euroMatches);
+
   euroMatches.forEach(async (newMatch) => {
     const hometeam = await db.team.findFirst({
       where: {
-        name: newMatch.T1[0]?.Nm,
+        name: normalizeName(newMatch.T1[0]?.Nm),
       },
     });
 
     const awayTeam = await db.team.findFirst({
       where: {
-        name: newMatch['T2'][0]?.Nm,
+        name: normalizeName(newMatch['T2'][0]?.Nm),
       },
     });
 
