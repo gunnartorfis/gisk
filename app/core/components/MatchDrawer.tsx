@@ -22,7 +22,7 @@ import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css"
 import { Button } from "@chakra-ui/button"
 import { MatchWithTeams } from "app/types/MatchWithTeams"
-import getTournaments from "app/tournaments/getTournaments"
+import getTournaments from "app/tournaments/queries/getTournaments"
 
 const MatchDrawer: React.FunctionComponent<{
   isOpen: boolean
