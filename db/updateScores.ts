@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import fetch from 'node-fetch';
-import { date } from 'zod';
 import db from './index';
 import { results } from './results';
 
