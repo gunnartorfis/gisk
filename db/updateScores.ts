@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import fetch from 'node-fetch';
+import { date } from 'zod';
 import db from './index';
 import { results } from './results';
 
@@ -8,6 +9,8 @@ const normalizeName = (name?: string) => {
   if (name === 'Turkiye') return 'Turkey';
   return name;
 };
+
+const FINAL_STATUSES = ['FT', 'AET', 'AP'];
 
 const updateScores = async () => {
   const matches = (await (
@@ -70,7 +73,7 @@ const updateScores = async () => {
     if (
       !match ||
       (match.resultHome !== null && match.resultAway !== null) ||
-      newMatch.Eps !== 'FT'
+      !FINAL_STATUSES.includes(newMatch.Eps)
     ) {
       return;
     }
