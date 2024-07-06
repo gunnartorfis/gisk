@@ -9,6 +9,8 @@ const normalizeName = (name?: string) => {
   return name;
 };
 
+const FINAL_STATUSES = ['FT', 'AET', 'AP'];
+
 const updateScores = async () => {
   const matches = (await (
     await fetch(
@@ -70,7 +72,7 @@ const updateScores = async () => {
     if (
       !match ||
       (match.resultHome !== null && match.resultAway !== null) ||
-      newMatch.Eps !== 'FT'
+      !FINAL_STATUSES.includes(newMatch.Eps)
     ) {
       return;
     }
